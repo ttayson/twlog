@@ -9,19 +9,33 @@ const User = new Schema({
   email: {
     type: String,
     require: true,
+    unique: true,
   },
   login: {
     type: String,
     require: true,
+    unique: true,
   },
-  isadmin: {
+  type: {
     type: Number,
     default: 0,
+    require: true,
   },
-  senha: {
+  userpass: {
     type: String,
     require: true,
   },
+  token: {
+    type: String,
+    require: false,
+  },
+  Id_client: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "client",
+      require: false,
+    },
+  ],
 });
 
 mongoose.model("user", User);

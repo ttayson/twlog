@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const randToken = require("rand-token");
 
 require("../models/User");
 
@@ -22,13 +23,79 @@ router.get("/login", (req, res) => {
   // res.json({ ok: "Teste"})
 });
 
-router.post("/login", (req, res, next) => {
-  // Rota de Login
+router.post(
+  "/login",
   passport.authenticate("local", {
-    successRedirect: "/admin",
     failureRedirect: "/login",
     failureFlash: true,
-  })(req, res, next);
+  }),
+  function (req, res) {
+    User.updateOne(
+      { login: req.body.login },
+      { $set: { token: randToken.generate(64) } }
+    )
+      .then(() => {
+        console.log("Token Salvo");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    res.redirect("/admin");
+  }
+);
+
+router.post(
+  "/apilogin",
+  passport.authenticate("local", {
+    failureRedirect: "",
+  }),
+  function (req, res) {
+    User.updateOne(
+      { login: req.body.login },
+      { $set: { token: randToken.generate(64) } }
+    )
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      });
+
+    User.findOne({ login: req.body.login }).then((user) => {
+      res.json({
+        name: user.nome,
+        user: user.login,
+        token: user.token,
+      });
+    });
+  }
+);
+
+router.get("/cadastrar", (req, res) => {
+  const user = {
+    nome: "Talles Tayson",
+    login: "ttayson",
+    email: "tallestayson@gmail.com",
+    userpass: "123456",
+  };
+
+  bcrypt.genSalt(10, (erro, salt) => {
+    bcrypt.hash(user.userpass, salt, (erro, hash) => {
+      if (erro) {
+        console.log("Erro ao salvar usuário");
+      } else {
+        user.userpass = hash;
+
+        new User(user)
+          .save()
+          .then(() => {
+            console.log("Usuário Cadastrado");
+            res.redirect("/login");
+          })
+          .catch((err) => {
+            console.log("Erro ao Salvar no Banco (User)");
+          });
+      }
+    });
+  });
 });
 
 module.exports = router;
