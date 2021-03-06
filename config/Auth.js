@@ -7,7 +7,6 @@ require("../models/User");
 const Usuario = mongoose.model("user");
 
 module.exports = function (passport) {
-  console.log("usuario");
   passport.use(
     new localstrategy({ usernameField: "login" }, (login, password, done) => {
       Usuario.findOne({ login: login })
