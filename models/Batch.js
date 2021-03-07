@@ -6,6 +6,13 @@ const Batch = new Schema({
     type: Array,
     require: false,
   },
+  Id_motorista: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      require: false,
+    },
+  ],
   status: {
     type: String,
   },

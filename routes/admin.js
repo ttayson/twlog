@@ -21,13 +21,26 @@ router.get("/", (req, res) => {
 });
 
 router.get("/pacotes", (req, res) => {
-  // res.json({ ok: "Teste admin" });
-  res.render("admin/pacotes");
+  Packages.find({ status: "Aguardando" }).then((allpackage) => {
+    res.render("admin/pacotes", { allpackage: allpackage });
+  });
+});
+
+router.get("/addpacote", (req, res) => {
+  res.render("admin/addpackage");
+});
+
+router.get("/editpacote", (req, res) => {
+  res.render("admin/editpackage");
 });
 
 router.get("/lotes", (req, res) => {
   // res.json({ ok: "Teste admin" });
   res.render("admin/lotes");
+});
+
+router.get("/addlote", (req, res) => {
+  res.render("admin/addbatch");
 });
 
 router.post("/importpackage", UploadCSV.single("file"), (req, res) => {

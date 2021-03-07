@@ -1,0 +1,154 @@
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Criar Lote</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <br>
+
+        <a href="/admin/lotes">
+          <button class="btn btn-info"> Voltar </button>
+        </a>
+        
+        <br>
+        <br>
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<div class="col-md-6" style="display: contents;">
+            <!-- general form elements -->
+        <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Novo Lote</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+          <form id="frm-example">
+                <div class="card-body">
+
+                     
+        <label for="exampleInputPassword1">Selecionar Entregador:</label>
+                      <select class="form-control">
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                      </select>
+                    
+                    <!-- /.card-body -->
+                    <br>
+
+
+                    <table id="example" class="display" >
+                            <thead>
+                                <tr>
+                                    <th><input name="select_all" value="1" type="checkbox"></th>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>Office</th>
+                                    <th>Age</th>
+                                    <th>Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>$320,800</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Garrett Winters</td>
+                                    <td>Accountant</td>
+                                    <td>Tokyo</td>
+                                    <td>63</td>
+                                    <td>$170,750</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Ashton Cox</td>
+                                    <td>Junior Technical Author</td>
+                                    <td>San Francisco</td>
+                                    <td>66</td>
+                                    <td>$86,000</td>
+                                </tr>
+                            </tbody>
+                    </table>
+
+                  <button type="reset" id="kkkk" class="btn btn-info">Adicionar</button>
+
+                </dir>
+
+          </form>
+
+          </div>
+      </div>
+            <!-- /.card -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+
+<script>
+$(document).ready(function() {
+   var table = $('#example').DataTable({
+      "ordering": false,
+      "info":     false,     
+      'columnDefs': [
+         {
+            'targets': 0,
+            'checkboxes': {
+               'selectRow': true
+            }
+         }
+      ],
+      'select': {
+         'style': 'os'
+      },
+      'order': [[1, 'asc']]
+   });	
+   
+   
+   
+   $('#kkkk').on('click', function(e){
+   var form = this;
+
+   var rows_selected = table.rows('.selected').data();
+
+   var selected_items = [];
+// Loop through to get the selected id
+    $.each(rows_selected, function(index, rowId){
+      //this add selected ID as object into array
+      selected_items.push({id:rowId});
+      
+    });   
+
+    console.log(selected_items)
+   // Iterate over all selected checkboxes
+   $.each(rows_selected, function(index, rowId){
+      // Create a hidden element
+      $(form).append(
+          $('<input>')
+             .attr('type', 'hidden')
+             .attr('name', 'id[]')
+             .val(rowId)
+      );
+
+
+   });
+  });
+
+});	
+</script>
