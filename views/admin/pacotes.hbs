@@ -2,6 +2,7 @@
   <link rel="stylesheet" href="/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="/AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -71,21 +72,16 @@
                     <td>{{address}}</td>
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
-                        <a class="btn btn-primary btn-sm" href="#">
-                              <i class="fas fa-folder">
-                              </i>
-                              View
-                          </a>
-                          <a class="btn btn-info btn-sm" href="#">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                              Edit
-                          </a>
-                          <a class="btn btn-danger btn-sm" href="#">
-                              <i class="fas fa-trash">
-                              </i>
-                              Delete
-                          </a>
+                        <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
+                          <i class="fas fa-pencil-alt"></i> 
+                          Editar 
+                        </button>
+
+                        <button class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
+                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+                          <i class="fas fa-pencil-alt"></i> 
+                          Deletar 
+                        </button>
                       </td>
                     </td>
                   </tr>
@@ -98,9 +94,6 @@
 
 </div>
 
-
-
-<script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
 
 <!-- DataTables  & Plugins -->
 <script src="/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -125,6 +118,50 @@
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
+
+		<script>
+
+		function deletar(id) {
+                    Swal.fire({
+                      title: 'Deseja deletar?',
+                      text: "",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Sim'
+                    }).then((result) => {
+                      if (result.value) {
+                        var form = $('#typedel-'+id);
+                        $.ajax({
+                          url:'/admin/delpackage',
+                          method:'POST',
+                          data: $(form).serialize()
+                        })
+                        .done(function(retorno){
+	  
+                           if (retorno.ok == "deletok"){
+							    msg()
+							    async function msg(){
+
+									await Swal.fire({
+										position: 'top-end',
+										icon: 'success',
+										title: 'Deletado',
+										showConfirmButton: false,
+										timer: 1500
+									})
+
+									location.reload();
+
+							   }
+
+                          }
+                      })
+                      }  
+                    })
+                }
+	</script>
 
 
 

@@ -1,3 +1,9 @@
+{{#each erros}}
+  <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
+
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -25,32 +31,33 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form action="/admin/editpacote" method="POST">
                 <div class="card-body">
+                  <input type="hidden" name="id" value="{{package._id}}">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Nº do Pacote</label>
-                    <input type="text" class="form-control" id="" placeholder="Código do Pacote">
+                    <input type="text" class="form-control" name="code" placeholder="Código do Pacote" value="{{package.code}}">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Destinatário</label>
-                    <input type="text" class="form-control" id="" placeholder="Destinatário">
+                    <input type="text" class="form-control" name="receiver" placeholder="Destinatário" value="{{package.receiver}}">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">CEP</label>
-                    <input type="text" class="form-control" id="" placeholder="">
+                    <input type="text" class="form-control" name="cep" placeholder="" value="{{package.cep}}">
                   </div>               
                   <div class="form-group">
                     <label for="exampleInputPassword1">Endereço</label>
-                    <input type="text" class="form-control" id="" placeholder="Endereço">
+                    <input type="text" class="form-control" name="address" placeholder="Endereço" value="{{package.address}}">
                   </div>
                   <div class="row">
                   <div class="form-group" style="padding-inline-end: 20px; width: 500px; padding-left: 6px;">
                     <label for="exampleInputPassword1">Cidade</label>
-                    <input type="text" class="form-control" id="" placeholder="Cidade">
+                    <input type="text" class="form-control" name="city" placeholder="Cnameade" value="{{package.city}}">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Estado</label>
-                    <input type="text" class="form-control" id="" placeholder="Estado">
+                    <input type="text" class="form-control" name="state" placeholder="Estado" value="{{package.state}}">
                   </div>
                    </div>
 

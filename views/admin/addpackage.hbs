@@ -1,3 +1,8 @@
+{{#each erros}}
+  <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -25,32 +30,32 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form action="/admin/addpacote" method="POST">
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Nº do Pacote</label>
-                    <input type="text" class="form-control" id="" placeholder="Código do Pacote">
+                    <label for="">Nº do Pacote</label>
+                    <input type="text" class="form-control" name="code" placeholder="Código do Pacote">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Destinatário</label>
-                    <input type="text" class="form-control" id="" placeholder="Destinatário">
+                    <label for="">Destinatário</label>
+                    <input type="text" class="form-control" name="receiver" placeholder="Destinatário">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputPassword1">CEP</label>
-                    <input type="text" class="form-control" id="" placeholder="">
+                    <label for="">CEP</label>
+                    <input type="text" class="form-control" name="cep" placeholder="">
                   </div>               
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Endereço</label>
-                    <input type="text" class="form-control" id="" placeholder="Endereço">
+                    <label for="">Endereço</label>
+                    <input type="text" class="form-control" name="address" placeholder="Endereço">
                   </div>
                   <div class="row">
                   <div class="form-group" style="padding-inline-end: 20px; width: 500px; padding-left: 6px;">
-                    <label for="exampleInputPassword1">Cidade</label>
-                    <input type="text" class="form-control" id="" placeholder="Cidade">
+                    <label for="">Cidade</label>
+                    <input type="text" class="form-control" name="city" placeholder="Cidade">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Estado</label>
-                    <input type="text" class="form-control" id="" placeholder="Estado">
+                    <label for="">Estado</label>
+                    <input type="text" class="form-control" name="state" placeholder="Estado">
                   </div>
                    </div>
 
