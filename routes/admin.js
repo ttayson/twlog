@@ -520,7 +520,18 @@ router.get("/lotes", (req, res) => {
 });
 
 router.get("/addlote", (req, res) => {
-  res.render("admin/addbatch");
+  User.find({ type: "deliveryman" }).then((alldeliveryman) => {
+    Packages.find({ status: "Aguardando" }).then((allpackage) => {
+      res.render("admin/addbatch", {
+        alldeliveryman: alldeliveryman,
+        allpackage: allpackage,
+      });
+    });
+  });
+});
+
+router.post("/addlote", (req, res) => {
+  console.log(req.body);
 });
 
 router.post("/importpackage", UploadCSV.single("file"), (req, res) => {

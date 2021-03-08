@@ -32,57 +32,42 @@
               <!-- form start -->
           <form id="frm-example">
                 <div class="card-body">
-
-                     
-        <label for="exampleInputPassword1">Selecionar Entregador:</label>
-                      <select class="form-control">
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
+ 
+                  <div class="form-group">
+                      <label for="">Selecionar Entregador</label>
+                      <select class="form-control" name="deliveryman">
+                        {{#each alldeliveryman}}
+                        <option value={{_id}}>{{name}}</option>
+                        {{else}}
+                        <option>Entregador não cadastrado</option>
+                        {{/each}}
                       </select>
-                    
-                    <!-- /.card-body -->
+                  </div>
+
                     <br>
-
-
                     <table id="example" class="display" >
                             <thead>
                                 <tr>
                                     <th><input name="select_all" value="1" type="checkbox"></th>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Salary</th>
+                                    <th>ID</th>
+                                    <th>Nº do Pacote</th>
+                                    <th>Destinatário</th>
+                                    <th>Endereço</th>
+
                                 </tr>
                             </thead>
                             <tbody>
+                              {{#each allpackage}}
                                 <tr>
                                     <td></td>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>$320,800</td>
+                                    <td>{{_id}}</td>
+                                    <td>{{code}}</td>
+                                    <td>{{receiver}}</td>
+                                    <td>{{address}}</td>
                                 </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>$170,750</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>$86,000</td>
-                                </tr>
+
+                                {{else}}
+                                {{/each}} 
                             </tbody>
                     </table>
 
@@ -121,34 +106,18 @@ $(document).ready(function() {
    });	
    
    
-   
    $('#kkkk').on('click', function(e){
    var form = this;
-
    var rows_selected = table.rows('.selected').data();
-
    var selected_items = [];
-// Loop through to get the selected id
+
     $.each(rows_selected, function(index, rowId){
-      //this add selected ID as object into array
+
       selected_items.push({id:rowId});
       
     });   
 
     console.log(selected_items)
-   // Iterate over all selected checkboxes
-   $.each(rows_selected, function(index, rowId){
-      // Create a hidden element
-      $(form).append(
-          $('<input>')
-             .attr('type', 'hidden')
-             .attr('name', 'id[]')
-             .val(rowId)
-      );
-
-
-   });
-  });
-
+}); 
 });	
 </script>
