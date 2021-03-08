@@ -9,7 +9,6 @@ const User = new Schema({
   email: {
     type: String,
     require: false,
-    unique: true,
   },
   login: {
     type: String,

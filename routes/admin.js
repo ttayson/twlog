@@ -14,9 +14,12 @@ const UploadCSV = require("../helpers/uploadCSV");
 require("../models/Package");
 require("../models/Client");
 require("../models/User");
+require("../models/Batch");
+
 const Packages = mongoose.model("package");
 const Client = mongoose.model("client");
 const User = mongoose.model("user");
+const Batch = mongoose.model("batch");
 
 const router = express.Router();
 
@@ -531,7 +534,44 @@ router.get("/addlote", (req, res) => {
 });
 
 router.post("/addlote", (req, res) => {
-  console.log(req.body);
+  var id_package = [];
+
+  length = req.body.length;
+  id_deliveryman = req.body[length - 1];
+
+  for (item in req.body) {
+    if (req.body[item].id != undefined) {
+      id_package.push(req.body[item].id);
+      Packages.updateOne(
+        { _id: req.body[item].id },
+        { $set: { status: "Em lote" } }
+      )
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+  if (id_deliveryman.deliveryman == "Não Selecionado") {
+    res.json({ ok: "deliverymanerror" });
+    return;
+  }
+
+  const NewBatch = {
+    Package_list: id_package,
+    Id_deliveryman: id_deliveryman.deliveryman,
+    status: "Aguardando",
+  };
+
+  new Batch(NewBatch)
+    .save()
+    .then(() => {
+      console.log("Lote cadastrado");
+      res.redirect("/admin/lotes");
+    })
+    .catch((err) => {
+      console.log("Erro ao Salvar no Banco (Lote)" + err);
+    });
 });
 
 router.post("/importpackage", UploadCSV.single("file"), (req, res) => {

@@ -1,4 +1,7 @@
-
+{{#each erros}}
+  <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
@@ -32,10 +35,10 @@
               <!-- form start -->
           <form id="frm-example">
                 <div class="card-body">
- 
-                  <div class="form-group">
+                   <div class="form-group">
                       <label for="">Selecionar Entregador</label>
-                      <select class="form-control" name="deliveryman">
+                      <select class="form-control" id="deliveryman">
+                        <option>Não Selecionado</option>
                         {{#each alldeliveryman}}
                         <option value={{_id}}>{{name}}</option>
                         {{else}}
@@ -73,14 +76,14 @@
 
                   <button type="reset" id="kkkk" class="btn btn-info">Adicionar</button>
 
-                </dir>
+                </div>
 
           </form>
 
           </div>
-      </div>
-            <!-- /.card -->
 </div>
+           
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
@@ -113,9 +116,41 @@ $(document).ready(function() {
 
     $.each(rows_selected, function(index, rowId){
 
-      selected_items.push({id:rowId});
+      selected_items.push({id:rowId[1]});
       
     });   
+    value = $("#deliveryman").val();
+    selected_items.push({deliveryman:value});
+ 
+        if (selected_items.length == 0){
+          Swal.fire('Selecione Pacotes', '', 'info')
+        } else {
+              Swal.fire({
+								title: 'Criar lote',
+								showDenyButton: true,
+								showCancelButton: true,
+								confirmButtonText: `Sim`,
+								denyButtonText: `Não`,
+							}).then((result) => {
+									if (result.isConfirmed) {
+											$.ajax({
+												url:'/admin/addlote',
+												method:'POST',
+												contentType: 'application/json',
+												dataType: 'json',
+												data: JSON.stringify(selected_items, "teste")
+											}).done(function(retorno){
+												if (retorno.info == 1){
+													Swal.fire('Eleição Iniciada!', '', 'success')
+												}
+											})
+									
+									} else if (result.isDenied) {
+										Swal.fire('Eleição Não Iniciada', '', 'info')
+									}
+							})
+
+        }
 
     console.log(selected_items)
 }); 
