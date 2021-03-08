@@ -23,12 +23,19 @@ const Package = new Schema({
     require: true,
   },
   cep: {
-    type: Number,
+    type: String,
     require: false,
   },
   status: {
     type: String,
   },
+  Id_client: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "client",
+      require: false,
+    },
+  ],
 });
 
 mongoose.model("package", Package);

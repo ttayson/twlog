@@ -1,0 +1,87 @@
+{{#each erros}}
+  <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Adicionar Usuário</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <br>
+
+        <a href="/admin/user">
+          <button class="btn btn-info"> Voltar </button>
+        </a>
+        
+        <br>
+        <br>
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<div class="col-md-6" style="display: contents;">
+            <!-- general form elements -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Novo Usuário</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form action="/admin/adduser" method="POST">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="">Nome</label>
+                    <input type="text" class="form-control" name="name" placeholder="Nome do usuário">
+                  </div>
+                  <div class="form-group">
+                    <label for="">Usuário</label>
+                    <input type="text" class="form-control" name="user" placeholder="">
+                  </div>
+                  <div class="form-group">
+                    <label for="">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="">
+                  </div>
+                  <div class="form-group">
+                      <label for="">Empresa</label>
+                      <select class="form-control" name="company">
+                        {{#each allcompany}}
+                        <option value={{_id}}>{{name}}</option>
+                        {{else}}
+                        <option>Empresas Não cadastradas</option>
+                        {{/each}}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                  <label for="">Tipo de Usuário</label>
+                  <select name="type" class="form-control">
+                        <option value="user">Usuário</option>
+                        <option value="admin">Adminsitrador</option>
+                        <option value="motorista">Motorista</option>
+                        <option value="client">Cliente</option>
+                  </select>      
+                  </div>         
+
+                  <div class="form-group">
+                    <label for="">Senha</label>
+                    <input type="password" class="form-control" name="userpass" placeholder="Password">
+                  </div>
+                  
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-info">Criar</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+</div>
+
+
+{{!-- </div> --}}
+
+

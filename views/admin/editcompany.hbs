@@ -1,0 +1,77 @@
+{{#each erros}}
+  <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Editar Empresa</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <br>
+
+        <a href="/admin/empresas">
+          <button class="btn btn-info"> Voltar </button>
+        </a>
+        
+        <br>
+        <br>
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<div class="col-md-6" style="display: contents;">
+            <!-- general form elements -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Editar Empresa</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form action="/admin/editempresa" method="POST">
+                <div class="card-body">
+                  <input type="hidden" name="id" value="{{company._id}}">
+                  <div class="form-group">
+                    <label for="">Nome</label>
+                    <input type="text" class="form-control" name="name" placeholder="Nome do usuário" value="{{company.name}}">
+                  </div>
+                  <div class="form-group">
+                    <label for="">CNPJ</label>
+                    <input type="text" class="form-control" name="cnpj" placeholder="" value="{{company.cnpj}}">
+                  </div>
+                  <div class="form-group">
+                    <label for="">Endereço</label>
+                    <input type="text" class="form-control" name="address" placeholder="" value="{{company.address}}">
+                  </div>
+                  <div class="form-group">
+                    <label for="">CEP</label>
+                    <input type="text" class="form-control" name="cep" placeholder="" value="{{company.cep}}">
+                  </div>               
+                  <div class="form-group">
+                    <label for="">Cidade</label>
+                    <input type="text" class="form-control" name="city" placeholder="" value="{{company.city}}">
+                  </div>
+                  <div class="form-group">
+                    <label for="">Estado</label>
+                    <input type="text" class="form-control" name="state" placeholder="" value="{{company.state}}">
+                  </div>
+
+                  
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-info">Editar</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+</div>
+
+
+{{!-- </div> --}}
+
+

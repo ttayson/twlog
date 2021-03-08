@@ -7,51 +7,14 @@
     <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Informações de Pacotes</h1>
+            <h1 class="m-0">Empresas</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
         <br>
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#importmodal"> Importar Pacotes </button>
-        
-        <a href="/admin/addpacote">
+
+        <a href="/admin/addempresa">
           <button class="btn btn-info"> Adicionar</button>
         </a>
-        
-            <div class="modal fade" id="importmodal" tabindex="-1" role="dialog" aria-labelledby="importmodalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Importar Pacotes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-
-                <div class="modal-body">
-
-                    <form action="/admin/importpackage" enctype="multipart/form-data" method="post" style="align-items: flex-end;">
-                      <div class="form-group">
-                          <label for="">Empresa cliente</label>
-                          <select class="form-control" name="company">
-                            {{#each allcompany}}
-                            <option value={{_id}}>{{name}}</option>
-                            {{else}}
-                            <option>Empresas Não cadastradas</option>
-                            {{/each}}
-                          </select>
-                        </div>
-                        <input  type="file" name="file" required="required">
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary">Upload</button>
-                        </div>
-			        </form>  
-                </div>
-
-                </div>
-            </div>
-            </div>
 
         <br>
         <br>
@@ -62,30 +25,28 @@
 
 <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listagem de Pacotes Pendentes</h3>
+                <h3 class="card-title">Listagem de Empresas</h3>
               </div>
               <!-- /.card-header -->
             <div class="card-body">
                 
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="usertalbe" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Nº Pacote</th>
-                    <th>Destinatário</th>
-                    <th>Endereço</th>
-                    <th>Status</th>
+                    <th>Nome</th>
+                    <th>CNPJ</th>
+                    <th>Cidade</th>
                     <th>Ações</th>
                   </tr>
                   </thead>
                   <tbody>
-                      {{#each allpackage}}
+                      {{#each allpcompany}}
                   <tr>
-                    <td>{{code}}</td>
-                    <td>{{receiver}}</td>
-                    <td>{{address}}</td>
-                    <td><span class="badge bg-warning">{{status}}</span></td>
+                    <td>{{name}}</td>
+                    <td>{{cnpj}}</td>
+                    <td>{{city}}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
+                        <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editempresa/{{id}}'">
                           <i class="fas fa-pencil-alt"></i> 
                           Editar 
                         </button>
@@ -99,7 +60,7 @@
                     </td>
                   </tr>
                     {{else}}
-					{{/each}} 
+				          	{{/each}} 
                   </tbody>
                  </table>
 
@@ -125,14 +86,13 @@
 
 <script>
   $(function () {
-    $("#example1").DataTable({
+    $("#usertalbe").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    }).buttons().container().appendTo('#usertalbe_wrapper .col-md-6:eq(0)');
   });
 </script>
 
-		<script>
+<script>
 
 		function deletar(id) {
                     Swal.fire({
@@ -147,7 +107,7 @@
                       if (result.value) {
                         var form = $('#typedel-'+id);
                         $.ajax({
-                          url:'/admin/delpackage',
+                          url:'/admin/delcompany',
                           method:'POST',
                           data: $(form).serialize()
                         })
@@ -174,7 +134,7 @@
                       }  
                     })
                 }
-	</script>
+</script>
 
 
 
