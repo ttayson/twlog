@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const qr = require("qr-image");
 
 const { userLogin } = require("../helpers/userLogin");
 
@@ -533,6 +534,28 @@ router.get("/addlote", (req, res) => {
   });
 });
 
+router.post("/dellote", (req, res) => {
+  Batch.findOne({ _id: req.body.id }).then(async (batch) => {
+    for (item in batch.Package_list) {
+      await Packages.updateOne(
+        { _id: batch.Package_list[item] },
+        { $set: { status: "Pendente" } }
+      )
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    Batch.remove({ _id: req.body.id })
+      .then(() => {
+        res.json({ ok: "deletok" });
+      })
+      .catch((err) => {
+        console.log("Erro ao procurar Lote");
+      });
+  });
+});
+
 router.post("/addlote", (req, res) => {
   var id_package = [];
 
@@ -612,6 +635,14 @@ router.post("/importpackage", UploadCSV.single("file"), (req, res) => {
   });
 
   res.redirect("/admin/pacotes");
+});
+
+router.get("/qrcode/:code", (req, res) => {
+  const code = qr.image(req.params.code, { type: "svg" });
+
+  res.type("svg");
+
+  code.pipe(res);
 });
 
 router.get("/logout", (req, res) => {

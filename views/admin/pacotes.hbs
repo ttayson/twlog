@@ -132,49 +132,49 @@
   });
 </script>
 
-		<script>
+<script>
 
-		function deletar(id) {
-                    Swal.fire({
-                      title: 'Deseja deletar?',
-                      text: "",
-                      icon: 'warning',
-                      showCancelButton: true,
-                      confirmButtonColor: '#3085d6',
-                      cancelButtonColor: '#d33',
-                      confirmButtonText: 'Sim'
-                    }).then((result) => {
-                      if (result.value) {
-                        var form = $('#typedel-'+id);
-                        $.ajax({
-                          url:'/admin/delpackage',
-                          method:'POST',
-                          data: $(form).serialize()
-                        })
-                        .done(function(retorno){
-	  
-                           if (retorno.ok == "deletok"){
-							    msg()
-							    async function msg(){
-
-									await Swal.fire({
-										position: 'top-end',
-										icon: 'success',
-										title: 'Deletado',
-										showConfirmButton: false,
-										timer: 1500
-									})
-
-									location.reload();
-
-							   }
-
-                          }
-                      })
-                      }  
+function deletar(id) {
+                Swal.fire({
+                  title: 'Deseja deletar?',
+                  text: "",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Sim'
+                }).then((result) => {
+                  if (result.value) {
+                    var form = $('#typedel-'+id);
+                    $.ajax({
+                      url:'/admin/delpackage',
+                      method:'POST',
+                      data: $(form).serialize()
                     })
-                }
-	</script>
+                    .done(function(retorno){
+
+                        if (retorno.ok == "deletok"){
+              msg()
+              async function msg(){
+
+              await Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Deletado',
+                showConfirmButton: false,
+                timer: 1500
+              })
+
+              location.reload();
+
+              }
+
+                      }
+                  })
+                  }  
+                })
+            }
+</script>
 
 
 
