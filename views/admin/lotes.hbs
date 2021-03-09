@@ -29,19 +29,20 @@
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>Nº Pacote</th>
-                    <th>Destinatário</th>
-                    <th>Endereço</th>
+                    <th>ID Lote</th>
+                    <th>Entregador</th>
                     <th>Status</th>
                     <th>Acções</th>
                   </tr>
                   </thead>
                   <tbody>
-                      {{#each allpackage}}
+                      {{#each allbatchs}}
                   <tr>
-                    <td>{{code}}</td>
-                    <td>{{receiver}}</td>
-                    <td>{{address}}</td>
+                    <td>{{_id}}</td>
+                    {{#each Id_deliveryman}}
+                    <td>{{name}}</td>
+                    {{else}}
+                    {{/each}} 
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
                         <a class="btn btn-primary btn-sm" href="#">

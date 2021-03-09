@@ -29,7 +29,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/pacotes", (req, res) => {
-  Packages.find({ status: "Aguardando" }).then((allpackage) => {
+  Packages.find({ status: "Pendente" }).then((allpackage) => {
     Client.find().then((allcompany) => {
       res.render("admin/pacotes", {
         allpackage: allpackage,
@@ -115,7 +115,7 @@ router.post("/addpacote", (req, res) => {
       address: req.body.address,
       city: req.body.city,
       state: req.body.state,
-      status: "Aguardando",
+      status: "Pendente",
     };
 
     new Packages(NewPackage)
@@ -137,7 +137,6 @@ router.get("/editpacote", (req, res) => {
 router.get("/editpacote/:id", (req, res) => {
   Packages.findOne({ _id: req.params.id })
     .then((package) => {
-      console.log(package);
       Client.find().then((allcompany) => {
         res.render("admin/editpackage", {
           package: package,
@@ -220,7 +219,6 @@ router.post("/editpacote", (req, res) => {
       package.address = req.body.address;
       package.city = req.body.city;
       package.state = req.body.state;
-      package.status = "Aguardando";
 
       package
         .save()
@@ -249,7 +247,6 @@ router.get("/user", (req, res) => {
   User.find()
     .populate("Id_client")
     .then((alluser) => {
-      console.log(alluser);
       res.render("admin/users", { alluser: alluser });
     });
 });
@@ -518,13 +515,16 @@ router.post("/delcompany", (req, res) => {
 });
 
 router.get("/lotes", (req, res) => {
-  // res.json({ ok: "Teste admin" });
-  res.render("admin/lotes");
+  Batch.find()
+    .populate("Id_deliveryman")
+    .then((allbatchs) => {
+      res.render("admin/lotes", { allbatchs: allbatchs });
+    });
 });
 
 router.get("/addlote", (req, res) => {
   User.find({ type: "deliveryman" }).then((alldeliveryman) => {
-    Packages.find({ status: "Aguardando" }).then((allpackage) => {
+    Packages.find({ status: "Pendente" }).then((allpackage) => {
       res.render("admin/addbatch", {
         alldeliveryman: alldeliveryman,
         allpackage: allpackage,
@@ -542,32 +542,38 @@ router.post("/addlote", (req, res) => {
   for (item in req.body) {
     if (req.body[item].id != undefined) {
       id_package.push(req.body[item].id);
-      Packages.updateOne(
-        { _id: req.body[item].id },
-        { $set: { status: "Em lote" } }
-      )
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-        });
     }
   }
+
   if (id_deliveryman.deliveryman == "Não Selecionado") {
-    res.json({ ok: "deliverymanerror" });
+    res.json({ info: "deliverymanerror" });
     return;
   }
 
   const NewBatch = {
     Package_list: id_package,
     Id_deliveryman: id_deliveryman.deliveryman,
-    status: "Aguardando",
+    received: false,
+    status: "Pendente",
   };
 
   new Batch(NewBatch)
     .save()
     .then(() => {
+      for (item in req.body) {
+        if (req.body[item].id != undefined) {
+          Packages.updateOne(
+            { _id: req.body[item].id },
+            { $set: { status: "Em lote" } }
+          )
+            .then(() => {})
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
       console.log("Lote cadastrado");
-      res.redirect("/admin/lotes");
+      res.json({ info: "loteok" });
     })
     .catch((err) => {
       console.log("Erro ao Salvar no Banco (Lote)" + err);
@@ -591,7 +597,7 @@ router.post("/importpackage", UploadCSV.single("file"), (req, res) => {
         address: PackageImport[item]["address"],
         state: PackageImport[item]["state"],
         cep: PackageImport[item]["cep"],
-        status: "Aguardando",
+        status: "Pendente",
       };
 
       await new Packages(newImport)

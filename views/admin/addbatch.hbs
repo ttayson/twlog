@@ -74,7 +74,7 @@
                             </tbody>
                     </table>
 
-                  <button type="reset" id="kkkk" class="btn btn-info">Adicionar</button>
+                  <button type="reset" id="addbutton" class="btn btn-info">Adicionar</button>
 
                 </div>
 
@@ -109,7 +109,7 @@ $(document).ready(function() {
    });	
    
    
-   $('#kkkk').on('click', function(e){
+   $('#addbutton').on('click', function(e){
    var form = this;
    var rows_selected = table.rows('.selected').data();
    var selected_items = [];
@@ -121,14 +121,13 @@ $(document).ready(function() {
     });   
     value = $("#deliveryman").val();
     selected_items.push({deliveryman:value});
- 
-        if (selected_items.length == 0){
+
+        if (selected_items[0].id == undefined){
           Swal.fire('Selecione Pacotes', '', 'info')
         } else {
               Swal.fire({
 								title: 'Criar lote',
 								showDenyButton: true,
-								showCancelButton: true,
 								confirmButtonText: `Sim`,
 								denyButtonText: `Não`,
 							}).then((result) => {
@@ -138,15 +137,19 @@ $(document).ready(function() {
 												method:'POST',
 												contentType: 'application/json',
 												dataType: 'json',
-												data: JSON.stringify(selected_items, "teste")
-											}).done(function(retorno){
-												if (retorno.info == 1){
-													Swal.fire('Eleição Iniciada!', '', 'success')
-												}
+												data: JSON.stringify(selected_items)
+											}).done(async function(retorno){
+                        if (retorno.info == "loteok"){
+                          await Swal.fire('Lote criado', '', 'success')
+                          location.reload();
+                          
+												} else if (retorno.info == "deliverymanerror"){
+                          Swal.fire('Selecione um entregador', '', 'error')
+                        }
 											})
 									
 									} else if (result.isDenied) {
-										Swal.fire('Eleição Não Iniciada', '', 'info')
+										Swal.fire('Lote não criado', '', 'info')
 									}
 							})
 

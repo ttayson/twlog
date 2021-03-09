@@ -19,6 +19,9 @@ const Batch = new Schema({
   status: {
     type: String,
   },
+  received: {
+    type: Boolean,
+  },
 });
 
 mongoose.model("batch", Batch);
