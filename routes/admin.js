@@ -15,11 +15,13 @@ const UploadCSV = require("../helpers/uploadCSV");
 require("../models/Package");
 require("../models/Client");
 require("../models/User");
+require("../models/User_type");
 require("../models/Batch");
 
 const Packages = mongoose.model("package");
 const Client = mongoose.model("client");
 const User = mongoose.model("user");
+const User_Type = mongoose.model("user_type");
 const Batch = mongoose.model("batch");
 
 const router = express.Router();
@@ -137,13 +139,16 @@ router.get("/editpacote", (req, res) => {
 
 router.get("/editpacote/:id", (req, res) => {
   Packages.findOne({ _id: req.params.id })
+    .populate("Id_client")
     .then((package) => {
-      Client.find().then((allcompany) => {
-        res.render("admin/editpackage", {
-          package: package,
-          allcompany: allcompany,
-        });
-      });
+      Client.find({ _id: { $ne: package.Id_client[0]._id } }).then(
+        (allcompany) => {
+          res.render("admin/editpackage", {
+            package: package,
+            allcompany: allcompany,
+          });
+        }
+      );
     })
     .catch((err) => {
       console.log("Erro ao editar um pacote");
@@ -235,7 +240,7 @@ router.post("/editpacote", (req, res) => {
 });
 
 router.post("/delpackage", (req, res) => {
-  Packages.remove({ _id: req.body.id })
+  Packages.deleteOne({ _id: req.body.id })
     .then(() => {
       res.json({ ok: "deletok" });
     })
@@ -246,6 +251,7 @@ router.post("/delpackage", (req, res) => {
 
 router.get("/user", (req, res) => {
   User.find()
+    .populate("type")
     .populate("Id_client")
     .then((alluser) => {
       res.render("admin/users", { alluser: alluser });
@@ -254,7 +260,12 @@ router.get("/user", (req, res) => {
 
 router.get("/adduser", (req, res) => {
   Client.find().then((allcompany) => {
-    res.render("admin/adduser", { allcompany: allcompany });
+    User_Type.find().then((usertype) => {
+      res.render("admin/adduser", {
+        allcompany: allcompany,
+        usertype: usertype,
+      });
+    });
   });
 });
 
@@ -333,6 +344,102 @@ router.post("/adduser", (req, res) => {
       });
     });
   }
+});
+
+router.post("/edituser", (req, res) => {
+  User.findOne({ _id: req.body.id }).then((edituser) => {
+    var erros = [];
+
+    if (
+      !req.body.name ||
+      typeof req.body.name == undefined ||
+      req.body.name == null
+    ) {
+      erros.push({ text: "Nome inválido" });
+    }
+
+    if (
+      !req.body.user ||
+      typeof req.body.user == undefined ||
+      req.body.user == null
+    ) {
+      erros.push({ text: "User inválido" });
+    }
+
+    if (
+      !req.body.company ||
+      typeof req.body.company == undefined ||
+      req.body.company == null
+    ) {
+      erros.push({ text: "Empresa inválida" });
+    }
+
+    if (
+      !req.body.type ||
+      typeof req.body.type == undefined ||
+      req.body.type == null
+    ) {
+      erros.push({ text: "Tipo inválido" });
+    }
+
+    if (erros.length > 0) {
+      res.render("admin/edituser", { erros: erros });
+    } else {
+      edituser.name = req.body.name;
+      edituser.email = req.body.email;
+      edituser.login = req.body.user;
+      edituser.type = req.body.type;
+      edituser.Id_client = req.body.company;
+      edituser.userpass = req.body.userpass;
+
+      bcrypt.genSalt(10, (erro, salt) => {
+        bcrypt.hash(edituser.userpass, salt, (erro, hash) => {
+          if (erro) {
+            console.log("Erro ao salvar usuário");
+          } else {
+            edituser.userpass = hash;
+
+            edituser
+              .save()
+              .then(() => {
+                console.log("Usuário editado");
+                res.redirect("/admin/user");
+              })
+              .catch((err) => {
+                console.log("Erro ao Salvar no Banco (User)");
+              });
+          }
+        });
+      });
+    }
+  });
+});
+
+router.get("/edituser/:id", (req, res) => {
+  User.findOne({ _id: req.params.id })
+    .populate("Id_client")
+    .populate("type")
+    .then((user) => {
+      Client.find({ _id: { $ne: user.Id_client[0]._id } }).then((client) => {
+        User_Type.find({ _id: { $ne: user.type[0]._id } }).then((user_type) => {
+          res.render("admin/edituser", {
+            user: user,
+            client: client,
+            user_type: user_type,
+          });
+        });
+      });
+    });
+});
+
+router.post("/deluser", (req, res) => {
+  User.deleteOne({ _id: req.body.id })
+    .then(() => {
+      res.json({ ok: "deletok" });
+    })
+    .catch((err) => {
+      console.log("Erro ao procurar user");
+    });
 });
 
 router.get("/empresas", (req, res) => {
@@ -506,7 +613,7 @@ router.post("/addempresa", (req, res) => {
 });
 
 router.post("/delcompany", (req, res) => {
-  Client.remove({ _id: req.body.id })
+  Client.deleteOne({ _id: req.body.id })
     .then(() => {
       res.json({ ok: "deletok" });
     })
@@ -524,43 +631,13 @@ router.get("/lotes", (req, res) => {
 });
 
 router.get("/addlote", (req, res) => {
-  User.find({ type: "deliveryman" }).then((alldeliveryman) => {
-    Packages.find({ status: "Pendente" }).then((allpackage) => {
-      res.render("admin/addbatch", {
-        alldeliveryman: alldeliveryman,
-        allpackage: allpackage,
-      });
-    });
-  });
-});
-
-router.post("/dellote", (req, res) => {
-  Batch.findOne({ _id: req.body.id }).then(async (batch) => {
-    for (item in batch.Package_list) {
-      await Packages.updateOne(
-        { _id: batch.Package_list[item] },
-        { $set: { status: "Pendente" } }
-      )
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    Batch.remove({ _id: req.body.id })
-      .then(() => {
-        res.json({ ok: "deletok" });
-      })
-      .catch((err) => {
-        console.log("Erro ao procurar Lote");
-      });
+  Packages.find({ status: "Pendente" }).then((allpackage) => {
+    res.render("admin/addbatch", { allpackage: allpackage });
   });
 });
 
 router.post("/addlote", (req, res) => {
   var id_package = [];
-
-  length = req.body.length;
-  id_deliveryman = req.body[length - 1];
 
   for (item in req.body) {
     if (req.body[item].id != undefined) {
@@ -568,14 +645,8 @@ router.post("/addlote", (req, res) => {
     }
   }
 
-  if (id_deliveryman.deliveryman == "Não Selecionado") {
-    res.json({ info: "deliverymanerror" });
-    return;
-  }
-
   const NewBatch = {
     Package_list: id_package,
-    Id_deliveryman: id_deliveryman.deliveryman,
     received: false,
     status: "Pendente",
   };
@@ -601,6 +672,28 @@ router.post("/addlote", (req, res) => {
     .catch((err) => {
       console.log("Erro ao Salvar no Banco (Lote)" + err);
     });
+});
+
+router.post("/dellote", (req, res) => {
+  Batch.findOne({ _id: req.body.id }).then(async (batch) => {
+    for (item in batch.Package_list) {
+      await Packages.updateOne(
+        { _id: batch.Package_list[item] },
+        { $set: { status: "Pendente" } }
+      )
+        .then(() => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    Batch.deleteOne({ _id: req.body.id })
+      .then(() => {
+        res.json({ ok: "deletok" });
+      })
+      .catch((err) => {
+        console.log("Erro ao procurar Lote");
+      });
+  });
 });
 
 router.post("/importpackage", UploadCSV.single("file"), (req, res) => {

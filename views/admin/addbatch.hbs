@@ -35,19 +35,11 @@
               <!-- form start -->
           <form id="frm-example">
                 <div class="card-body">
-                   <div class="form-group">
-                      <label for="">Selecionar Entregador</label>
-                      <select class="form-control" id="deliveryman">
-                        <option>Não Selecionado</option>
-                        {{#each alldeliveryman}}
-                        <option value={{_id}}>{{name}}</option>
-                        {{else}}
-                        <option>Entregador não cadastrado</option>
-                        {{/each}}
-                      </select>
-                  </div>
 
-                    <br>
+                  <label for="">Lista de Pacotes</label>
+                  <br><br>
+
+
                     <table id="example" class="display" >
                             <thead>
                                 <tr>

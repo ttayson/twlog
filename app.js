@@ -16,6 +16,7 @@ require("./config/Auth")(passport);
 
 const admin = require("./routes/admin");
 const guest = require("./routes/guest");
+const api = require("./routes/api");
 
 // Banco de Dados
 const mongoose = require("mongoose");
@@ -88,6 +89,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/admin", admin);
 app.use("/", guest);
+app.use("/api", api);
 
 const PORT = 3000;
 app.listen(PORT, () => {

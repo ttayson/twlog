@@ -3,8 +3,10 @@ const mongoose = require("mongoose");
 const randToken = require("rand-token");
 
 require("../models/User");
+require("../models/User_type");
 
 const User = mongoose.model("user");
+const User_type = mongoose.model("user_type");
 
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
@@ -44,58 +46,22 @@ router.post(
   }
 );
 
-router.post(
-  "/apilogin",
-  passport.authenticate("local", {
-    failureRedirect: "",
-  }),
-  function (req, res) {
-    User.updateOne(
-      { login: req.body.login },
-      { $set: { token: randToken.generate(64) } }
-    )
-      .then(() => {})
-      .catch((err) => {
-        console.log(err);
-      });
-
-    User.findOne({ login: req.body.login }).then((user) => {
-      res.json({
-        name: user.nome,
-        user: user.login,
-        token: user.token,
-      });
-    });
-  }
-);
-
 router.get("/cadastrar", (req, res) => {
   const user = {
-    nome: "Talles Tayson",
-    login: "ttayson",
-    email: "tallestayson@gmail.com",
-    userpass: "123456",
+    permission: "deliveryman",
+    name: "Entregador",
+    code: 3,
   };
 
-  bcrypt.genSalt(10, (erro, salt) => {
-    bcrypt.hash(user.userpass, salt, (erro, hash) => {
-      if (erro) {
-        console.log("Erro ao salvar usuário");
-      } else {
-        user.userpass = hash;
-
-        new User(user)
-          .save()
-          .then(() => {
-            console.log("Usuário Cadastrado");
-            res.redirect("/login");
-          })
-          .catch((err) => {
-            console.log("Erro ao Salvar no Banco (User)");
-          });
-      }
+  new User_type(user)
+    .save()
+    .then(() => {
+      console.log("Teste Cadastrado");
+      res.redirect("/login");
+    })
+    .catch((err) => {
+      console.log("Erro ao Salvar no Banco (User)");
     });
-  });
 });
 
 module.exports = router;

@@ -1,42 +1,41 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const User = new Schema({
-  name: {
+const Delivery = new Schema({
+  barcode: {
     type: String,
     require: true,
   },
-  email: {
+  location: {
+    type: String,
+    require: true,
+  },
+  img_packge: {
+    type: String,
+    require: true,
+  },
+  img_received: {
+    type: String,
+    require: true,
+  },
+  status: {
+    type: String,
+    require: true,
+  },
+  reason: {
     type: String,
     require: false,
   },
-  login: {
+  reason_description: {
     type: String,
-    require: true,
-    unique: true,
   },
-  type: [
+  Id_deliveryman: [
     {
       type: Schema.Types.ObjectId,
-      ref: "user_type",
-      require: false,
-    },
-  ],
-  userpass: {
-    type: String,
-    require: true,
-  },
-  token: {
-    type: String,
-    require: false,
-  },
-  Id_client: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "client",
+      ref: "user",
       require: false,
     },
   ],
 });
 
-mongoose.model("user", User);
+mongoose.model("delivery", Delivery);

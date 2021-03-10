@@ -41,10 +41,14 @@
                   <div class="form-group">
                       <label for="">Empresa cliente</label>
                       <select class="form-control" name="company">
+                        {{#each package.Id_client}}
+                        <option value={{_id}} selected="selected">{{name}}</option>
+                        {{else}}
+                        <option>Empresas Não cadastradas</option>
+                        {{/each}}
                         {{#each allcompany}}
                         <option value={{_id}}>{{name}}</option>
                         {{else}}
-                        <option>Empresas Não cadastradas</option>
                         {{/each}}
                       </select>
                   </div>
@@ -72,17 +76,15 @@
                    </div>
 
                 </div>
-                <!-- /.card-body -->
-
+                
                 <div class="card-footer">
                   <button type="submit" class="btn btn-info">Editar</button>
                 </div>
               </form>
             </div>
-            <!-- /.card -->
+           
 </div>
 
 
-{{!-- </div> --}}
 
 
