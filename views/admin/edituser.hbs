@@ -32,23 +32,23 @@
               <!-- form start -->
               <form action="/admin/edituser" method="POST">
                 <div class="card-body">
-                  <input type="hidden" name="id" value="{{user._id}}">
+                  <input type="hidden" name="id" value="{{edituser._id}}">
                   <div class="form-group">
                     <label for="">Nome</label>
-                    <input type="text" class="form-control" name="name" placeholder="Nome do usuário" value="{{user.name}}">
+                    <input type="text" class="form-control" name="name" placeholder="Nome do usuário" value="{{edituser.name}}">
                   </div>
                   <div class="form-group">
                     <label for="">Usuário</label>
-                    <input type="text" class="form-control" name="user" placeholder="" value="{{user.login}}">
+                    <input type="text" class="form-control" name="user" placeholder="" value="{{edituser.login}}">
                   </div>
                   <div class="form-group">
                     <label for="">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="" value="{{user.email}}">
+                    <input type="email" class="form-control" name="email" placeholder="" value="{{edituser.email}}">
                   </div>
                   <div class="form-group">
                       <label for="">Empresa</label>
                       <select class="form-control" name="company">
-                        {{#each user.Id_client}}
+                        {{#each edituser.Id_client}}
                         <option value={{_id}} selected="selected">{{name}}</option>
                         {{else}}
                         <option>Empresas Não cadastradas</option>
@@ -62,7 +62,7 @@
                   <div class="form-group">
                   <label for="">Tipo de Usuário</label>
                   <select name="type" class="form-control">
-                        {{#each user.type}}
+                        {{#each edituser.type}}
                         <option value={{_id}} selected="selected">{{name}}</option>
                         {{else}}
                         <option>Empresas Não cadastradas</option>

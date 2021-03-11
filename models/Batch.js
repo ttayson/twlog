@@ -22,6 +22,10 @@ const Batch = new Schema({
   received: {
     type: Boolean,
   },
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 mongoose.model("batch", Batch);

@@ -419,16 +419,20 @@ router.get("/edituser/:id", (req, res) => {
   User.findOne({ _id: req.params.id })
     .populate("Id_client")
     .populate("type")
-    .then((user) => {
-      Client.find({ _id: { $ne: user.Id_client[0]._id } }).then((client) => {
-        User_Type.find({ _id: { $ne: user.type[0]._id } }).then((user_type) => {
-          res.render("admin/edituser", {
-            user: user,
-            client: client,
-            user_type: user_type,
-          });
-        });
-      });
+    .then((edituser) => {
+      Client.find({ _id: { $ne: edituser.Id_client[0]._id } }).then(
+        (client) => {
+          User_Type.find({ _id: { $ne: edituser.type[0]._id } }).then(
+            (user_type) => {
+              res.render("admin/edituser", {
+                edituser: edituser,
+                client: client,
+                user_type: user_type,
+              });
+            }
+          );
+        }
+      );
     });
 });
 

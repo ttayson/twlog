@@ -8,15 +8,12 @@ const Delivery = new Schema({
   },
   location: {
     type: String,
-    require: true,
   },
   img_packge: {
     type: String,
-    require: true,
   },
   img_received: {
     type: String,
-    require: true,
   },
   status: {
     type: String,
@@ -24,10 +21,13 @@ const Delivery = new Schema({
   },
   reason: {
     type: String,
-    require: false,
   },
   reason_description: {
     type: String,
+  },
+  date: {
+    type: Date,
+    default: Date.now(),
   },
   Id_deliveryman: [
     {

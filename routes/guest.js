@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const randToken = require("rand-token");
 
 require("../models/User");
 require("../models/User_type");
@@ -17,7 +16,7 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
   // res.render("admin/index");
-  res.json({ ok: "Teste" });
+  res.json({ ok: "Teste", info: user });
 });
 
 router.get("/login", (req, res) => {
@@ -25,43 +24,53 @@ router.get("/login", (req, res) => {
   // res.json({ ok: "Teste"})
 });
 
-router.post(
-  "/login",
+// router.post(
+//   "/login",
+//   passport.authenticate("local", {
+//     failureRedirect: "/login",
+//     failureFlash: true,
+//   }),
+
+//   function (req, res, next) {
+//     User.updateOne(
+//       { login: req.body.login },
+//       { $set: { token: randToken.generate(64) } }
+//     )
+//       .then(() => {
+//         console.log("Token Salvo");
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
+//     res.redirect("/admin");
+//     next();
+//   }
+// );
+
+router.post("/login", (req, res, next) => {
+  // Rota de Login
   passport.authenticate("local", {
+    successRedirect: "/admin",
     failureRedirect: "/login",
     failureFlash: true,
-  }),
-  function (req, res) {
-    User.updateOne(
-      { login: req.body.login },
-      { $set: { token: randToken.generate(64) } }
-    )
-      .then(() => {
-        console.log("Token Salvo");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    res.redirect("/admin");
-  }
-);
+  })(req, res, next);
+});
 
 router.get("/cadastrar", (req, res) => {
-  const user = {
-    permission: "deliveryman",
-    name: "Entregador",
-    code: 3,
-  };
-
-  new User_type(user)
-    .save()
-    .then(() => {
-      console.log("Teste Cadastrado");
-      res.redirect("/login");
-    })
-    .catch((err) => {
-      console.log("Erro ao Salvar no Banco (User)");
-    });
+  // const user = {
+  //   permission: "deliveryman",
+  //   name: "Entregador",
+  //   code: 3,
+  // };
+  // new User_type(user)
+  //   .save()
+  //   .then(() => {
+  //     console.log("Teste Cadastrado");
+  //     res.redirect("/login");
+  //   })
+  //   .catch((err) => {
+  //     console.log("Erro ao Salvar no Banco (User)");
+  //   });
 });
 
 module.exports = router;

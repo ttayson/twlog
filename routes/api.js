@@ -1,14 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const randToken = require("rand-token");
 
 require("../models/User");
 require("../models/Batch");
 require("../models/Delivery");
+require("../models/Package");
 
 const User = mongoose.model("user");
 const Batch = mongoose.model("batch");
 const Delivery = mongoose.model("delivery");
+const Packages = mongoose.model("package");
 
 const router = express.Router();
 
@@ -24,9 +27,9 @@ router.post("/batch", (req, res) => {
       } else {
         Batch.findOne({ _id: req.body.qr }).then((batch) => {
           if (batch) {
-            if (batch.status != "Recebido") {
+            if (batch.status != "Em rota") {
               batch.Id_deliveryman = user._id;
-              batch.status = "Recebido";
+              batch.status = "Em rota";
 
               batch
                 .save()
@@ -37,7 +40,7 @@ router.post("/batch", (req, res) => {
                 .catch((err) => {
                   console.log("Erro no recebimento de lote");
                 });
-            } else if (batch.status == "Recebido") {
+            } else if (batch.status == "Em rota") {
               res.json({ error: "Batch received" });
             }
           } else {
@@ -70,7 +73,26 @@ router.post("/package", (req, res) => {
         Id_deliveryman: user._id,
       };
 
-      new Delivery(Newdelivery).save.then(() => {});
+      new Delivery(Newdelivery)
+        .save()
+        .then(() => {
+          console.log("Pacote salvo");
+          Packages.updateOne(
+            { code: req.body.barcode },
+            { $set: { status: req.body.status } }
+          )
+            .then((updatestatus) => {
+              if (updatestatus.nModified == 1) {
+                res.json({ success: "Delivery ok" });
+              }
+            })
+            .catch((err) => {
+              console.log("err");
+            });
+        })
+        .catch((err) => {
+          console.log("Erro ao Salvar no Banco (Entrega)");
+        });
     }
   });
 });
@@ -92,7 +114,7 @@ router.post(
 
     User.findOne({ login: req.body.login }).then((user) => {
       res.json({
-        name: user.nome,
+        name: user.name,
         user: user.login,
         token: user.token,
       });

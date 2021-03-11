@@ -29,6 +29,10 @@ const Package = new Schema({
   status: {
     type: String,
   },
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
   Id_client: [
     {
       type: Schema.Types.ObjectId,
