@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const randToken = require("rand-token");
 
 require("../models/User");
 require("../models/User_type");
@@ -24,45 +25,51 @@ router.get("/login", (req, res) => {
   // res.json({ ok: "Teste"})
 });
 
-// router.post(
-//   "/login",
-//   passport.authenticate("local", {
-//     failureRedirect: "/login",
-//     failureFlash: true,
-//   }),
-
-//   function (req, res, next) {
-//     User.updateOne(
-//       { login: req.body.login },
-//       { $set: { token: randToken.generate(64) } }
-//     )
-//       .then(() => {
-//         console.log("Token Salvo");
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//     res.redirect("/admin");
-//     next();
-//   }
-// );
-
-router.post("/login", (req, res, next) => {
-  // Rota de Login
+router.post(
+  "/login",
   passport.authenticate("local", {
-    successRedirect: "/admin",
     failureRedirect: "/login",
     failureFlash: true,
-  })(req, res, next);
-});
+  }),
+
+  function (req, res, next) {
+    User.updateOne(
+      { login: req.body.login },
+      { $set: { token: randToken.generate(64) } }
+    )
+      .then(() => {
+        console.log("Token Salvo");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    res.redirect("/admin");
+    next();
+  }
+);
 
 router.get("/cadastrar", (req, res) => {
   // const user = {
+  //   permission: "user",
+  //   name: "Usuário",
+  //   code: 0,
+  // };
+  // const user2 = {
+  //   permission: "admin",
+  //   name: "Administrador",
+  //   code: 1,
+  // };
+  // const user3 = {
   //   permission: "deliveryman",
   //   name: "Entregador",
   //   code: 3,
   // };
-  // new User_type(user)
+  // const user4 = {
+  //   permission: "client",
+  //   name: "Cliente",
+  //   code: 4,
+  // };
+  // new User_type(user4)
   //   .save()
   //   .then(() => {
   //     console.log("Teste Cadastrado");
