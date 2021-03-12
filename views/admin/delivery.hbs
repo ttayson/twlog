@@ -1,0 +1,220 @@
+  <link rel="stylesheet" href="/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="/AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Entregas</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <br>
+        
+        <a href="/admin">
+          <button class="btn btn-info"> Voltar</button>
+        </a>
+
+
+        <br>
+        <br>
+    </div><!-- /.container-fluid -->
+</div>
+
+
+
+<div class="card">
+  
+
+              <div class="card-header">
+                <h3 class="card-title">Listagem de entregas</h3>
+              </div>
+              <!-- /.card-header -->
+            <div class="card-body">
+
+                <div class="row" >
+                  <div class="col-lg-2 col-6">
+                    <input id="npackage" value="{{value.npackage}}" class="form-control" placeholder="Nº Pacote" type="text">
+                  </div>
+                    <div class="col-lg-2 col-6">
+                      <select id="status_filter" class="form-control">
+                        <option selected value="">Filtrar por status</option>
+                        <option value="Entregue">Entregue</option>
+                        <option value="Falha na Entrega">Falha na Entrega</option>
+                      </select>
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    {{#if value}}
+                    <input class="form-control" type="date" value="{{value.datein}}" id="datein">
+                    {{else}}
+                    <input class="form-control" type="date" value="{{date}}" id="datein">
+                    {{/if}}
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    {{#if value}}
+                    <input class="form-control" type="date" value="{{value.dateout}}" id="dateout">
+                    {{else}}
+                    <input class="form-control" type="date" value="{{date}}" id="dateout">
+                    {{/if}}                  
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    <button class="btn btn-info" onclick="filter()">Filtrar</button>                  
+                  </div>
+                  </div>
+                  <br>
+
+
+
+                        <div class="modal fade" id="modelcomp" tabindex="-1" role="dialog" aria-labelledby="modelcompLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="modelcompLabel">Comprovante </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body" style="align-self: center;">
+                                  <img id="img" src="" width="300">
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Localização</th>
+                    <th>Imag1</th>
+                    <th>Imag2</th>
+                    <th>status</th>
+                    <th>Ação</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                      {{#each alldelivery}}
+
+                  <tr>
+                    <td>{{barcode}}</td>
+                    <td>{{location}}</td>
+                    <td>{{img_package}}</td>
+                    <td>{{img_received}}</td>
+                    <td><span class="badge bg-warning">{{status}}</span></td>
+                    <td>
+                      <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{img_received}}')" >
+                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
+                          <i class="fas fa-pencil-alt"></i> 
+                          View 
+                      </button>
+                        {{!-- <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
+                          <i class="fas fa-pencil-alt"></i> 
+                          Editar 
+                        </button>
+
+                        <button class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
+                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
+                          <i class="fas fa-pencil-alt"></i> 
+                          Deletar 
+                        </button> --}}
+                      </td>
+                    </td>
+                  </tr>
+                    {{else}}
+					{{/each}} 
+                  </tbody>
+                 </table>
+
+            </div>
+
+</div>
+
+
+<!-- DataTables  & Plugins -->
+<script src="/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/AdminLTE/plugins/jszip/jszip.min.js"></script>
+<script src="/AdminLTE/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/AdminLTE/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/AdminLTE/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      "searching": false, "responsive": true, "lengthChange": false, "bInfo" : false, "autoWidth": true,
+      "buttons": ["excel", "pdf", "print"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  });
+</script>
+
+<script>
+function filter(){
+
+    const datein = document.getElementById("datein").value
+    const dateout = document.getElementById("dateout").value
+    const npackage = document.getElementById("npackage").value
+    const status_filter = document.getElementById("status_filter").value
+
+
+  window.location='/admin/entregas?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
+}  
+function modal(img){
+  $('#img').attr('src',img);
+  $('#modelcomp').modal('show');
+}  
+
+function deletar(id) {
+                Swal.fire({
+                  title: 'Deseja deletar?',
+                  text: "",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Sim'
+                }).then((result) => {
+                  if (result.value) {
+                    var form = $('#typedel-'+id);
+                    $.ajax({
+                      url:'/admin/delpackage',
+                      method:'POST',
+                      data: $(form).serialize()
+                    })
+                    .done(function(retorno){
+
+                        if (retorno.ok == "deletok"){
+              msg()
+              async function msg(){
+
+              await Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Deletado',
+                showConfirmButton: false,
+                timer: 1500
+              })
+
+              location.reload();
+
+              }
+
+                      }
+                  })
+                  }  
+                })
+            }
+</script>
+
+
+

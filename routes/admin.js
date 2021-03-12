@@ -17,12 +17,14 @@ require("../models/Client");
 require("../models/User");
 require("../models/User_type");
 require("../models/Batch");
+require("../models/Delivery");
 
 const Packages = mongoose.model("package");
 const Client = mongoose.model("client");
 const User = mongoose.model("user");
 const User_Type = mongoose.model("user_type");
 const Batch = mongoose.model("batch");
+const Delivery = mongoose.model("delivery");
 
 const router = express.Router();
 
@@ -698,6 +700,63 @@ router.post("/dellote", (req, res) => {
         console.log("Erro ao procurar Lote");
       });
   });
+});
+
+router.get("/entregas/", (req, res) => {
+  date = new Date().toLocaleDateString("pt-BR");
+  date = date.split("/");
+  date = date[2] + "-" + date[1] + "-" + date[0];
+
+  const value = req.query;
+
+  if (req.query.npackage == undefined) {
+    const datenow = new Date();
+    const datenow1 = new Date();
+    datenow1.setDate(datenow1.getDate() + 1);
+    datenow.setDate(datenow.getDate() - 1);
+    Delivery.find({
+      date: { $gte: new Date(datenow), $lt: new Date(datenow1) },
+    }).then((alldelivery) => {
+      res.render("admin/delivery", { alldelivery: alldelivery, date: date });
+    });
+  } else if (req.query.npackage != "") {
+    Delivery.find({ barcode: req.query.npackage }).then((alldelivery) => {
+      res.render("admin/delivery", {
+        alldelivery: alldelivery,
+        date: date,
+        value: value,
+      });
+    });
+  } else if (req.query.status_filter != "") {
+    dateout = new Date(req.query.dateout);
+    dateout.setDate(dateout.getDate() + 1);
+
+    Delivery.find()
+      .and({
+        date: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
+        status: req.query.status_filter,
+      })
+      .then((alldelivery) => {
+        res.render("admin/delivery", {
+          alldelivery: alldelivery,
+          date: date,
+          value: value,
+        });
+      });
+  } else if (req.query.status_filter == "") {
+    dateout = new Date(req.query.dateout);
+    dateout.setDate(dateout.getDate() + 1);
+    console.log("entrou aqui");
+    Delivery.find({
+      date: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
+    }).then((alldelivery) => {
+      res.render("admin/delivery", {
+        alldelivery: alldelivery,
+        date: date,
+        value: value,
+      });
+    });
+  }
 });
 
 router.post("/importpackage", UploadCSV.single("file"), (req, res) => {

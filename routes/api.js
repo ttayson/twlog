@@ -57,7 +57,7 @@ router.post("/batch", (req, res) => {
     .catch(() => {});
 });
 
-router.post("/package", (req, res) => {
+router.post("/delivery", (req, res) => {
   User.findOne({ token: req.body.token }).then((user) => {
     if (!user) {
       res.json({ error: "Invalid Token" });
@@ -65,7 +65,7 @@ router.post("/package", (req, res) => {
       const Newdelivery = {
         barcode: req.body.barcode,
         location: req.body.location,
-        img_packge: req.body.img_packge,
+        img_package: req.body.img_package,
         img_received: req.body.img_received,
         status: req.body.status,
         reason: req.body.reason,
@@ -81,10 +81,8 @@ router.post("/package", (req, res) => {
             { code: req.body.barcode },
             { $set: { status: req.body.status } }
           )
-            .then((updatestatus) => {
-              if (updatestatus.nModified == 1) {
-                res.json({ success: "Delivery ok" });
-              }
+            .then(() => {
+              res.json({ success: "Delivery ok" });
             })
             .catch((err) => {
               console.log("err");

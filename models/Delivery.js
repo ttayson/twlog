@@ -9,7 +9,7 @@ const Delivery = new Schema({
   location: {
     type: String,
   },
-  img_packge: {
+  img_package: {
     type: String,
   },
   img_received: {
