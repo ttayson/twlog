@@ -49,35 +49,30 @@ router.post(
 );
 
 router.get("/cadastrar", (req, res) => {
-  // const user = {
-  //   permission: "user",
-  //   name: "Usuário",
-  //   code: 0,
-  // };
-  // const user2 = {
-  //   permission: "admin",
-  //   name: "Administrador",
-  //   code: 1,
-  // };
-  // const user3 = {
-  //   permission: "deliveryman",
-  //   name: "Entregador",
-  //   code: 3,
-  // };
-  // const user4 = {
-  //   permission: "client",
-  //   name: "Cliente",
-  //   code: 4,
-  // };
-  // new User_type(user4)
-  //   .save()
-  //   .then(() => {
-  //     console.log("Teste Cadastrado");
-  //     res.redirect("/login");
-  //   })
-  //   .catch((err) => {
-  //     console.log("Erro ao Salvar no Banco (User)");
-  //   });
+  const user = {
+    permission: "user",
+    name: "Usuário",
+    code: 0,
+  };
+  const user2 = {
+    permission: "admin",
+    name: "Administrador",
+    code: 1,
+  };
+  const user3 = {
+    permission: "deliveryman",
+    name: "Entregador",
+    code: 3,
+  };
+  const user4 = {
+    permission: "client",
+    name: "Cliente",
+    code: 4,
+  };
+  new User_type(user).save().then(() => {});
+  new User_type(user1).save().then(() => {});
+  new User_type(user3).save().then(() => {});
+  new User_type(user4).save().then(() => {});
 });
 
 module.exports = router;
