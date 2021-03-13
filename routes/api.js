@@ -62,31 +62,57 @@ router.post("/delivery", (req, res) => {
     if (!user) {
       res.json({ error: "Invalid Token" });
     } else {
-      const Newdelivery = {
-        barcode: req.body.barcode,
-        location: req.body.location,
-        img_package: req.body.img_package,
-        img_received: req.body.img_received,
-        status: req.body.status,
-        reason: req.body.reason,
-        reason_description: req.body.reason_description,
-        Id_deliveryman: user._id,
-      };
+      console.log(req.body);
+      Packages.findOne({
+        $and: [
+          { code: req.body.barcode },
+          { $or: [{ status: "Pendente" }, { status: "Em lote" }] },
+        ],
+      })
 
-      new Delivery(Newdelivery)
-        .save()
-        .then(() => {
-          console.log("Pacote salvo");
-          Packages.updateOne(
-            { code: req.body.barcode },
-            { $set: { status: req.body.status } }
-          )
-            .then(() => {
+        .then(async (pack) => {
+          if (pack) {
+            await Packages.updateOne(
+              { _id: pack._id },
+              { $set: { status: req.body.status } }
+            )
+              .then(() => {
+                const Newdelivery = {
+                  barcode: req.body.barcode,
+                  location: req.body.location,
+                  img_package: req.body.img_package,
+                  img_received: req.body.img_received,
+                  status: req.body.status,
+                  reason: req.body.reason,
+                  reason_description: req.body.reason_description,
+                  Id_deliveryman: user._id,
+                };
+
+                new Delivery(Newdelivery).save().then(() => {
+                  console.log("Pacote salvo");
+                  res.json({ success: "Delivery ok" });
+                });
+              })
+              .catch((err) => {
+                console.log("err");
+              });
+          } else {
+            const Newdelivery = {
+              barcode: req.body.barcode,
+              location: req.body.location,
+              img_package: req.body.img_package,
+              img_received: req.body.img_received,
+              status: "Fora do sistema",
+              reason: req.body.reason,
+              reason_description: req.body.reason_description,
+              Id_deliveryman: user._id,
+            };
+
+            new Delivery(Newdelivery).save().then(() => {
+              console.log("Pacote salvo");
               res.json({ success: "Delivery ok" });
-            })
-            .catch((err) => {
-              console.log("err");
             });
+          }
         })
         .catch((err) => {
           console.log("Erro ao Salvar no Banco (Entrega)");
@@ -100,8 +126,8 @@ router.post(
   passport.authenticate("local", {
     failureRedirect: "",
   }),
-  function (req, res) {
-    User.updateOne(
+  async function (req, res) {
+    await User.updateOne(
       { login: req.body.login },
       { $set: { token: randToken.generate(64) } }
     )
