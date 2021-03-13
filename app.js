@@ -69,13 +69,22 @@ app.set("views", "views");
 
 //mongoose
 mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://'+process.env.DB_USER+':'+process.env.DB_PASS+'@ttayson.cf/'+process.env.DB_NAME, {
 mongoose
-  .connect("mongodb://localhost/twlog", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
+  .connect(
+    "mongodb://" +
+      process.env.DB_USER +
+      ":" +
+      process.env.DB_PASS +
+      "@ttayson.cf/" +
+      process.env.DB_NAME,
+    {
+      // mongoose
+      //   .connect("mongodb://localhost/twlog", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    }
+  )
   .then(() => {
     console.log("Mongo Conectado");
   })
