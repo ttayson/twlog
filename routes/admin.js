@@ -28,12 +28,11 @@ const Delivery = mongoose.model("delivery");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  // res.json({ ok: "Teste admin" });
+router.get("/", userLogin, (req, res) => {
   res.render("admin/index");
 });
 
-router.get("/pacotes", (req, res) => {
+router.get("/pacotes", userLogin, (req, res) => {
   Packages.find({ status: "Pendente" }).then((allpackage) => {
     Client.find().then((allcompany) => {
       res.render("admin/pacotes", {
@@ -44,13 +43,13 @@ router.get("/pacotes", (req, res) => {
   });
 });
 
-router.get("/addpacote", (req, res) => {
+router.get("/addpacote", userLogin, (req, res) => {
   Client.find().then((allcompany) => {
     res.render("admin/addpackage", { allcompany: allcompany });
   });
 });
 
-router.post("/addpacote", (req, res) => {
+router.post("/addpacote", userLogin, (req, res) => {
   var erros = [];
 
   if (
@@ -135,11 +134,11 @@ router.post("/addpacote", (req, res) => {
   }
 });
 
-router.get("/editpacote", (req, res) => {
+router.get("/editpacote", userLogin, (req, res) => {
   res.render("admin/editpackage");
 });
 
-router.get("/editpacote/:id", (req, res) => {
+router.get("/editpacote/:id", userLogin, (req, res) => {
   Packages.findOne({ _id: req.params.id })
     .populate("Id_client")
     .then((package) => {
@@ -157,7 +156,7 @@ router.get("/editpacote/:id", (req, res) => {
     });
 });
 
-router.post("/editpacote", (req, res) => {
+router.post("/editpacote", userLogin, (req, res) => {
   Packages.findOne({ _id: req.body.id }).then((package) => {
     var erros = [];
 
@@ -241,7 +240,7 @@ router.post("/editpacote", (req, res) => {
   });
 });
 
-router.post("/delpackage", (req, res) => {
+router.post("/delpackage", userLogin, (req, res) => {
   Packages.deleteOne({ _id: req.body.id })
     .then(() => {
       res.json({ ok: "deletok" });
@@ -251,7 +250,7 @@ router.post("/delpackage", (req, res) => {
     });
 });
 
-router.get("/user", (req, res) => {
+router.get("/user", userLogin, (req, res) => {
   User.find()
     .populate("type")
     .populate("Id_client")
@@ -260,7 +259,7 @@ router.get("/user", (req, res) => {
     });
 });
 
-router.get("/adduser", (req, res) => {
+router.get("/adduser", userLogin, (req, res) => {
   Client.find().then((allcompany) => {
     User_Type.find().then((usertype) => {
       res.render("admin/adduser", {
@@ -271,7 +270,7 @@ router.get("/adduser", (req, res) => {
   });
 });
 
-router.post("/adduser", (req, res) => {
+router.post("/adduser", userLogin, (req, res) => {
   var erros = [];
 
   if (
@@ -348,7 +347,7 @@ router.post("/adduser", (req, res) => {
   }
 });
 
-router.post("/edituser", (req, res) => {
+router.post("/edituser", userLogin, (req, res) => {
   User.findOne({ _id: req.body.id }).then((edituser) => {
     var erros = [];
 
@@ -417,7 +416,7 @@ router.post("/edituser", (req, res) => {
   });
 });
 
-router.get("/edituser/:id", (req, res) => {
+router.get("/edituser/:id", userLogin, (req, res) => {
   User.findOne({ _id: req.params.id })
     .populate("Id_client")
     .populate("type")
@@ -438,7 +437,7 @@ router.get("/edituser/:id", (req, res) => {
     });
 });
 
-router.post("/deluser", (req, res) => {
+router.post("/deluser", userLogin, (req, res) => {
   User.deleteOne({ _id: req.body.id })
     .then(() => {
       res.json({ ok: "deletok" });
@@ -448,13 +447,13 @@ router.post("/deluser", (req, res) => {
     });
 });
 
-router.get("/empresas", (req, res) => {
+router.get("/empresas", userLogin, (req, res) => {
   Client.find().then((allpcompany) => {
     res.render("admin/company", { allpcompany: allpcompany });
   });
 });
 
-router.get("/editempresa/:id", (req, res) => {
+router.get("/editempresa/:id", userLogin, (req, res) => {
   Client.findOne({ _id: req.params.id })
     .then((company) => {
       res.render("admin/editcompany", { company: company });
@@ -464,7 +463,7 @@ router.get("/editempresa/:id", (req, res) => {
     });
 });
 
-router.post("/editempresa", (req, res) => {
+router.post("/editempresa", userLogin, (req, res) => {
   Client.findOne({ _id: req.body.id }).then((company) => {
     var erros = [];
 
@@ -539,11 +538,11 @@ router.post("/editempresa", (req, res) => {
   });
 });
 
-router.get("/addempresa", (req, res) => {
+router.get("/addempresa", userLogin, (req, res) => {
   res.render("admin/addcompany");
 });
 
-router.post("/addempresa", (req, res) => {
+router.post("/addempresa", userLogin, (req, res) => {
   var erros = [];
 
   if (
@@ -618,7 +617,7 @@ router.post("/addempresa", (req, res) => {
   }
 });
 
-router.post("/delcompany", (req, res) => {
+router.post("/delcompany", userLogin, (req, res) => {
   Client.deleteOne({ _id: req.body.id })
     .then(() => {
       res.json({ ok: "deletok" });
@@ -628,7 +627,7 @@ router.post("/delcompany", (req, res) => {
     });
 });
 
-router.get("/lotes", (req, res) => {
+router.get("/lotes", userLogin, (req, res) => {
   Batch.find()
     .populate("Id_deliveryman")
     .then((allbatchs) => {
@@ -636,13 +635,13 @@ router.get("/lotes", (req, res) => {
     });
 });
 
-router.get("/addlote", (req, res) => {
+router.get("/addlote", userLogin, (req, res) => {
   Packages.find({ status: "Pendente" }).then((allpackage) => {
     res.render("admin/addbatch", { allpackage: allpackage });
   });
 });
 
-router.post("/addlote", (req, res) => {
+router.post("/addlote", userLogin, (req, res) => {
   var id_package = [];
 
   for (item in req.body) {
@@ -680,7 +679,7 @@ router.post("/addlote", (req, res) => {
     });
 });
 
-router.post("/dellote", (req, res) => {
+router.post("/dellote", userLogin, (req, res) => {
   Batch.findOne({ _id: req.body.id }).then(async (batch) => {
     for (item in batch.Package_list) {
       await Packages.updateOne(
@@ -702,7 +701,7 @@ router.post("/dellote", (req, res) => {
   });
 });
 
-router.get("/entregas/", (req, res) => {
+router.get("/entregas/", userLogin, (req, res) => {
   date = new Date().toLocaleDateString("pt-BR");
   date = date.split("/");
   date = date[2] + "-" + date[1] + "-" + date[0];
@@ -746,7 +745,6 @@ router.get("/entregas/", (req, res) => {
   } else if (req.query.status_filter == "") {
     dateout = new Date(req.query.dateout);
     dateout.setDate(dateout.getDate() + 1);
-    console.log("entrou aqui");
     Delivery.find({
       date: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
     }).then((alldelivery) => {
@@ -759,41 +757,46 @@ router.get("/entregas/", (req, res) => {
   }
 });
 
-router.post("/importpackage", UploadCSV.single("file"), (req, res) => {
-  fs.readFile("./uploads/file.csv", async (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    const PackageImport = await neatCsv(data);
+router.post(
+  "/importpackage",
+  UploadCSV.single("file"),
+  userLogin,
+  (req, res) => {
+    fs.readFile("./uploads/file.csv", async (err, data) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      const PackageImport = await neatCsv(data);
 
-    for (item in PackageImport) {
-      const newImport = {
-        Id_client: req.body.company,
-        code: PackageImport[item]["code"],
-        receiver: PackageImport[item]["receiver"],
-        city: PackageImport[item]["city"],
-        address: PackageImport[item]["address"],
-        state: PackageImport[item]["state"],
-        cep: PackageImport[item]["cep"],
-        status: "Pendente",
-      };
+      for (item in PackageImport) {
+        const newImport = {
+          Id_client: req.body.company,
+          code: PackageImport[item]["code"],
+          receiver: PackageImport[item]["receiver"],
+          city: PackageImport[item]["city"],
+          address: PackageImport[item]["address"],
+          state: PackageImport[item]["state"],
+          cep: PackageImport[item]["cep"],
+          status: "Pendente",
+        };
 
-      await new Packages(newImport)
-        .save()
-        .then(() => {
-          console.log("Pacotes Importados com Sucesso");
-        })
-        .catch((err) => {
-          console.log("Erro ao Salvar no Banco (Pacotes)");
-        });
-    }
-  });
+        await new Packages(newImport)
+          .save()
+          .then(() => {
+            console.log("Pacotes Importados com Sucesso");
+          })
+          .catch((err) => {
+            console.log("Erro ao Salvar no Banco (Pacotes)");
+          });
+      }
+    });
 
-  res.redirect("/admin/pacotes");
-});
+    res.redirect("/admin/pacotes");
+  }
+);
 
-router.get("/qrcode/:code", (req, res) => {
+router.get("/qrcode/:code", userLogin, (req, res) => {
   const code = qr.image(req.params.code, { type: "svg" });
 
   res.type("svg");
