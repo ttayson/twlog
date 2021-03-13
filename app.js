@@ -68,6 +68,8 @@ app.set("views", "views");
 // app.set('view engine', 'handlebars');
 
 //mongoose
+// mongoose
+//   .connect("mongodb://localhost/twlog", {
 mongoose.Promise = global.Promise;
 mongoose
   .connect(
@@ -78,8 +80,6 @@ mongoose
       "@ttayson.cf/" +
       process.env.DB_NAME,
     {
-      // mongoose
-      //   .connect("mongodb://localhost/twlog", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
