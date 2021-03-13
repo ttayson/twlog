@@ -131,18 +131,18 @@ router.post(
       { login: req.body.login },
       { $set: { token: randToken.generate(64) } }
     )
-      .then(() => {})
+      .then(() => {
+        User.findOne({ login: req.body.login }).then((user) => {
+          res.json({
+            name: user.name,
+            user: user.login,
+            token: user.token,
+          });
+        });
+      })
       .catch((err) => {
         console.log(err);
       });
-
-    User.findOne({ login: req.body.login }).then((user) => {
-      res.json({
-        name: user.name,
-        user: user.login,
-        token: user.token,
-      });
-    });
   }
 );
 
