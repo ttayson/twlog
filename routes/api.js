@@ -62,14 +62,12 @@ router.post("/delivery", (req, res) => {
     if (!user) {
       res.json({ error: "Invalid Token" });
     } else {
-      console.log(req.body);
       Packages.findOne({
         $and: [
           { code: req.body.barcode },
-          { $or: [{ status: "Pendente" }, { status: "Em lote" }] },
+          { $or: [{ status: "Pendente" }, { status: "Em rota" }] },
         ],
       })
-
         .then(async (pack) => {
           if (pack) {
             await Packages.updateOne(
