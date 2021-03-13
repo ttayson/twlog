@@ -69,7 +69,7 @@ router.get("/cadastrar", (req, res) => {
     code: 4,
   };
   new User_type(user).save().then(() => {});
-  new User_type(user1).save().then(() => {});
+  new User_type(user2).save().then(() => {});
   new User_type(user3).save().then(() => {});
   new User_type(user4).save().then(() => {});
 });
