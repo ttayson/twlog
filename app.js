@@ -77,11 +77,13 @@ mongoose
       process.env.DB_USER +
       ":" +
       process.env.DB_PASS +
-      "@ttayson.cf/" +
-      process.env.DB_NAME,
+      "@ttayson.cf:27017/" +
+      process.env.DB_NAME +
+      "?authSource=admin",
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
       useCreateIndex: true,
     }
   )
