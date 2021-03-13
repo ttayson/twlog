@@ -632,13 +632,17 @@ router.get("/lotes", (req, res) => {
     .populate("Id_deliveryman")
     .then((allbatchs) => {
       for (item in allbatchs) {
-        Packages.find()
-          .and({ _id: allbatchs[item].Package_list, status: "Em lote" })
-          .then((pack) => {
-            if (pack[item]) {
-              console.log(allbatchs[item]);
-            }
-          });
+        for (i in allbatchs[item].Package_list) {
+          // console.log(allbatchs[item].Package_list.length);
+
+          Packages.find()
+            .and({ _id: allbatchs[item].Package_list[i], status: "Em rota" })
+            .then((pack) => {
+              if (pack[0]) {
+                console.log("count_");
+              }
+            });
+        }
       }
 
       res.render("admin/lotes", { allbatchs: allbatchs });

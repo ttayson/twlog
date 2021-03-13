@@ -35,7 +35,12 @@ router.post("/batch", (req, res) => {
                 .save()
                 .then(() => {
                   console.log("Lote recebido");
-                  res.json({ success: "ok" });
+                  Packages.updateMany(
+                    { _id: batch.Package_list },
+                    { $set: { status: "Em rota" } }
+                  ).then(() => {
+                    res.json({ success: "ok" });
+                  });
                 })
                 .catch((err) => {
                   console.log("Erro no recebimento de lote");
@@ -48,11 +53,6 @@ router.post("/batch", (req, res) => {
           }
         });
       }
-      // res.json({
-      //   name: user.nome,
-      //   user: user.login,
-      //   token: user.token,
-      // });
     })
     .catch(() => {});
 });
