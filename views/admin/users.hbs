@@ -121,25 +121,21 @@
                           method:'POST',
                           data: $(form).serialize()
                         })
-                        .done(function(retorno){
+                        .done(async function(retorno){
 	  
-                           if (retorno.ok == "deletok"){
-							    msg()
-							    async function msg(){
+                    if (retorno.ok == "deletok"){
 
-									await Swal.fire({
-										position: 'top-end',
-										icon: 'success',
-										title: 'Deletado',
-										showConfirmButton: false,
-										timer: 1500
-									})
+                        await Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: 'Deletado',
+                          showConfirmButton: false,
+                          timer: 1500
+                        })
 
-									location.reload();
+                        location.reload();
 
-							   }
-
-                          }
+                      }
                       })
                       }  
                     })

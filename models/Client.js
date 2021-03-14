@@ -1,32 +1,35 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Client = new Schema({
-  name: {
-    type: String,
-    require: true,
+const Client = new Schema(
+  {
+    name: {
+      type: String,
+      require: true,
+    },
+    city: {
+      type: String,
+      require: true,
+    },
+    state: {
+      type: String,
+      require: true,
+    },
+    address: {
+      type: String,
+      require: true,
+    },
+    cep: {
+      type: Number,
+      require: false,
+    },
+    cnpj: {
+      type: Number,
+      require: false,
+      unique: true,
+    },
   },
-  city: {
-    type: String,
-    require: true,
-  },
-  state: {
-    type: String,
-    require: true,
-  },
-  address: {
-    type: String,
-    require: true,
-  },
-  cep: {
-    type: Number,
-    require: false,
-  },
-  cnpj: {
-    type: Number,
-    require: false,
-    unique: true,
-  },
-});
+  { timestamps: true }
+);
 
 mongoose.model("client", Client);

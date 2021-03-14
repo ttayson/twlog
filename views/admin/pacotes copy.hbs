@@ -2,19 +2,56 @@
   <link rel="stylesheet" href="/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="/AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
+
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Informações de Lotes</h1>
+            <h1 class="m-0">Informações de Pacotes</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
         <br>
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#importmodal"> Importar Pacotes </button>
         
-        <a href="/admin/addlote">
+        <a href="/admin/addpacote">
           <button class="btn btn-info"> Adicionar</button>
         </a>
+        
+            <div class="modal fade" id="importmodal" tabindex="-1" role="dialog" aria-labelledby="importmodalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Importar Pacotes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
+
+                <div class="modal-body">
+
+                    <form action="/admin/importpackage" enctype="multipart/form-data" method="post" style="align-items: flex-end;">
+                      <div class="form-group">
+                          <label for="">Empresa cliente</label>
+                          <select class="form-control" name="company">
+                            {{#each allcompany}}
+                            <option value={{_id}}>{{name}}</option>
+                            {{else}}
+                            <option>Empresas Não cadastradas</option>
+                            {{/each}}
+                          </select>
+                        </div>
+                        <input  type="file" name="file" required="required">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+			        </form>  
+                </div>
+
+                </div>
+            </div>
+            </div>
 
         <br>
         <br>
@@ -23,63 +60,37 @@
 
 
 
-
 <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listagem de Lotes</h3>
+                <h3 class="card-title">Listagem de Pacotes Pendentes</h3>
               </div>
               <!-- /.card-header -->
             <div class="card-body">
-                       <!-- /model -->
-                          <div class="modal fade" id="modelqrcode" tabindex="-1" role="dialog" aria-labelledby="modelqrcodeLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="modelqrcodeLabel">Vincular Entregador</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <div class="modal-body" style="align-self: center;">
-                                  <img id="img"  src="" width="300">
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
+                
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
                   <tr>
-                    <th>ID Lote</th>
-                    <th>Entregador</th>
+                    <th>Nº Pacote</th>
+                    <th>Destinatário</th>
+                    <th>Endereço</th>
                     <th>Status</th>
                     <th>Ações</th>
                   </tr>
                   </thead>
                   <tbody>
-                      {{#each allbatchs}}
-
-
+                      {{#each allpackage}}
                   <tr>
-                    <td>{{_id}}</td>
-                    {{#each Id_deliveryman}}
-                    <td>{{name}}</td>
-                    {{else}}
-                    <td>Não definido</td>
-                    {{/each}} 
+                    <td>{{code}}</td>
+                    <td>{{receiver}}</td>
+                    <td>{{address}}</td>
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}')">
-
-                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
+                        <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
                           <i class="fas fa-pencil-alt"></i> 
-                          View 
+                          Editar 
                         </button>
-                        <button class="btn btn-danger btn-sm" onclick="deletar('{{id}}')" >
+
+                        <button class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
                           <i class="fas fa-pencil-alt"></i> 
                           Deletar 
@@ -88,15 +99,16 @@
                     </td>
                   </tr>
                     {{else}}
-				          	{{/each}} 
+					{{/each}} 
                   </tbody>
                  </table>
-            </div>
 
-   
+            </div>
 
 </div>
 
+
+<!-- DataTables  & Plugins -->
 <script src="/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/AdminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="/AdminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
@@ -114,19 +126,13 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": true,
+      "responsive": true, "lengthChange": true, "autoWidth": true,
       "buttons": ["excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
 
 <script>
-
-function modal(id){
-  $('#img').attr('src', '/admin/qrcode/'+id);
-  $('#modelqrcode').modal('show');
-}  
-
 
 function deletar(id) {
                 Swal.fire({
@@ -141,7 +147,7 @@ function deletar(id) {
                   if (result.value) {
                     var form = $('#typedel-'+id);
                     $.ajax({
-                      url:'/admin/dellote',
+                      url:'/admin/delpackage',
                       method:'POST',
                       data: $(form).serialize()
                     })
@@ -159,11 +165,12 @@ function deletar(id) {
 
                         location.reload();
 
-                      } else {
-                        await Swal.fire('Lote já Iniciado', '', 'error')
                       }
                   })
                   }  
                 })
             }
 </script>
+
+
+

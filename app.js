@@ -94,6 +94,7 @@ mongoose
     console.log("Erro ao se conectar ao banco:" + err);
   });
 //Public
+app.use(express.static("images"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Rotas

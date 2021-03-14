@@ -4,9 +4,11 @@ const randToken = require("rand-token");
 
 require("../models/User");
 require("../models/User_type");
+require("../models/Package");
 
 const User = mongoose.model("user");
 const User_type = mongoose.model("user_type");
+const Packages = mongoose.model("package");
 
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
@@ -48,30 +50,30 @@ router.post(
 );
 
 router.get("/cadastrar", (req, res) => {
-  const user = {
-    permission: "user",
-    name: "Usuário",
-    code: 0,
-  };
-  const user2 = {
-    permission: "admin",
-    name: "Administrador",
-    code: 1,
-  };
-  const user3 = {
-    permission: "deliveryman",
-    name: "Entregador",
-    code: 3,
-  };
-  const user4 = {
-    permission: "client",
-    name: "Cliente",
-    code: 4,
-  };
-  new User_type(user).save().then(() => {});
-  new User_type(user2).save().then(() => {});
-  new User_type(user3).save().then(() => {});
-  new User_type(user4).save().then(() => {});
+  // const user = {
+  //   permission: "user",
+  //   name: "Usuário",
+  //   code: 0,
+  // };
+  // const user2 = {
+  //   permission: "admin",
+  //   name: "Administrador",
+  //   code: 1,
+  // };
+  // const user3 = {
+  //   permission: "deliveryman",
+  //   name: "Entregador",
+  //   code: 3,
+  // };
+  // const user4 = {
+  //   permission: "client",
+  //   name: "Cliente",
+  //   code: 4,
+  // };
+  // new User_type(user).save().then(() => {});
+  // new User_type(user2).save().then(() => {});
+  // new User_type(user3).save().then(() => {});
+  // new User_type(user4).save().then(() => {});
 });
 
 module.exports = router;

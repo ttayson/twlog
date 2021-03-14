@@ -29,18 +29,119 @@ const Delivery = mongoose.model("delivery");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.render("admin/index");
-});
-
-router.get("/pacotes", (req, res) => {
-  Packages.find({ status: "Pendente" }).then((allpackage) => {
-    Client.find().then((allcompany) => {
-      res.render("admin/pacotes", {
-        allpackage: allpackage,
-        allcompany: allcompany,
+  Packages.countDocuments({ status: "Pendente" }).then((pending) => {
+    Packages.countDocuments({ status: "Entregue" }).then((delyvered) => {
+      Packages.countDocuments({ status: "Em rota" }).then((onroute) => {
+        Packages.countDocuments({ status: "Falha na Entrega" }).then(
+          (faiuldelivery) => {
+            Packages.countDocuments({ status: "Fora do sistema" }).then(
+              (systemout) => {
+                res.render("admin/index", {
+                  pending: pending,
+                  delyvered: delyvered,
+                  faiuldelivery: faiuldelivery,
+                  onroute: onroute,
+                  systemout: systemout,
+                });
+              }
+            );
+          }
+        );
       });
     });
   });
+});
+
+router.get("/pacotes", (req, res) => {
+  date = new Date().toLocaleDateString("pt-BR");
+  date = date.split("/");
+  date = date[2] + "-" + date[1] + "-" + date[0];
+
+  const value = req.query;
+
+  if (req.query.filter != "") {
+    const datenow = new Date();
+    const datenow1 = new Date();
+    datenow1.setDate(datenow1.getDate() + 1);
+    datenow.setDate(datenow.getDate() - 10);
+
+    Packages.find()
+      .and({
+        updatedAt: { $gte: new Date(datenow), $lt: new Date(datenow1) },
+        status: req.query.filter,
+      })
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          res.render("admin/pacotes", {
+            allpackages: allpackages,
+            date: date,
+            value: value,
+            allcompany: allcompany,
+          });
+        });
+      });
+  } else if (req.query.npackage == undefined) {
+    const datenow = new Date();
+    const datenow1 = new Date();
+    datenow1.setDate(datenow1.getDate() + 1);
+    datenow.setDate(datenow.getDate() - 1);
+    Packages.find({
+      updatedAt: { $gte: new Date(datenow), $lt: new Date(datenow1) },
+    }).then((allpackages) => {
+      Client.find().then((allcompany) => {
+        res.render("admin/pacotes", {
+          allpackages: allpackages,
+          date: date,
+          allcompany: allcompany,
+        });
+      });
+    });
+  } else if (req.query.npackage != "") {
+    Packages.find({ code: req.query.npackage }).then((allpackages) => {
+      Client.find().then((allcompany) => {
+        res.render("admin/pacotes", {
+          allpackages: allpackages,
+          date: date,
+          value: value,
+          allcompany: allcompany,
+        });
+      });
+    });
+  } else if (req.query.status_filter != "") {
+    dateout = new Date(req.query.dateout);
+    dateout.setDate(dateout.getDate() + 1);
+
+    Packages.find()
+      .and({
+        updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
+        status: req.query.status_filter,
+      })
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          res.render("admin/pacotes", {
+            allpackages: allpackages,
+            date: date,
+            value: value,
+            allcompany: allcompany,
+          });
+        });
+      });
+  } else if (req.query.status_filter == "") {
+    dateout = new Date(req.query.dateout);
+    dateout.setDate(dateout.getDate() + 1);
+    Packages.find({
+      updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
+    }).then((allpackages) => {
+      Client.find().then((allcompany) => {
+        res.render("admin/pacotes", {
+          allpackages: allpackages,
+          date: date,
+          value: value,
+          allcompany: allcompany,
+        });
+      });
+    });
+  }
 });
 
 router.get("/addpacote", (req, res) => {
@@ -697,23 +798,27 @@ router.post("/addlote", (req, res) => {
 
 router.post("/dellote", (req, res) => {
   Batch.findOne({ _id: req.body.id }).then(async (batch) => {
-    for (item in batch.Package_list) {
-      await Packages.updateOne(
-        { _id: batch.Package_list[item] },
-        { $set: { status: "Pendente" } }
-      )
-        .then(() => {})
+    if (batch.status == "Pendente") {
+      for (item in batch.Package_list) {
+        await Packages.updateOne(
+          { _id: batch.Package_list[item] },
+          { $set: { status: "Pendente" } }
+        )
+          .then(() => {})
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      Batch.deleteOne({ _id: req.body.id })
+        .then(() => {
+          res.json({ ok: "deletok" });
+        })
         .catch((err) => {
-          console.log(err);
+          console.log("Erro ao procurar Lote");
         });
+    } else {
+      res.json({ ok: "deleterror" });
     }
-    Batch.deleteOne({ _id: req.body.id })
-      .then(() => {
-        res.json({ ok: "deletok" });
-      })
-      .catch((err) => {
-        console.log("Erro ao procurar Lote");
-      });
   });
 });
 
@@ -728,7 +833,7 @@ router.get("/entregas/", (req, res) => {
     const datenow = new Date();
     const datenow1 = new Date();
     datenow1.setDate(datenow1.getDate() + 1);
-    datenow.setDate(datenow.getDate() - 0);
+    datenow.setDate(datenow.getDate() - 1);
     Delivery.find({
       date: { $gte: new Date(datenow), $lt: new Date(datenow1) },
     }).then((alldelivery) => {
