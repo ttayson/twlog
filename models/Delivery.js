@@ -27,7 +27,6 @@ const Delivery = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now(),
   },
   Id_deliveryman: [
     {

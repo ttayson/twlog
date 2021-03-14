@@ -91,8 +91,8 @@
                   <tr>
                     <th>Código</th>
                     <th>Localização</th>
-                    <th>Imag1</th>
-                    <th>Imag2</th>
+                    <th>Motivo</th>
+                    <th>Data</th>
                     <th>status</th>
                     <th>Ação</th>
                   </tr>
@@ -104,14 +104,19 @@
                   <tr>
                     <td>{{barcode}}</td>
                     <td>{{location}}</td>
-                    <td>{{img_package}}</td>
-                    <td>{{img_received}}</td>
+                    <td>{{reason}} {{reason_description}}</td>
+                    <td>{{date}}</td>
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
                       <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{img_received}}')" >
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
                           <i class="fas fa-pencil-alt"></i> 
                           View 
+                      </button>
+                      <button class="btn btn-info btn-sm" data-toggle="modal"target="_blank" onclick="window.open('http://maps.google.com/maps?q={{location}}&ll={{location}}&z=17')"  >
+                          <input type="hidden" value="New Tab"  >
+                          <i class="fas fa-map-marker-alt"></i> 
+                          Map 
                       </button>
                         {{!-- <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
                           <i class="fas fa-pencil-alt"></i> 

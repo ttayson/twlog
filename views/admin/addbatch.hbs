@@ -43,22 +43,25 @@
                     <table id="example" class="display" >
                             <thead>
                                 <tr>
-                                    <th><input name="select_all" value="1" type="checkbox"></th>
-                                    <th>ID</th>
+                                    <th style="display:none;">ID</th>
                                     <th>Nº do Pacote</th>
                                     <th>Destinatário</th>
                                     <th>Endereço</th>
+                                    <th>Cliente</th>
 
                                 </tr>
                             </thead>
                             <tbody>
                               {{#each allpackage}}
                                 <tr>
-                                    <td></td>
-                                    <td>{{_id}}</td>
+                                    <td style="display:none;">{{_id}}</td>
                                     <td>{{code}}</td>
                                     <td>{{receiver}}</td>
                                     <td>{{address}}</td>
+                                    {{#each Id_client}}
+                                    <td>{{name}}</td>
+                                    {{else}}
+                                    {{/each}} 
                                 </tr>
 
                                 {{else}}
@@ -84,8 +87,10 @@
 <script>
 $(document).ready(function() {
    var table = $('#example').DataTable({
-      "ordering": false,
-      "info":     false,     
+      "ordering": true,
+      "info":     false, 
+      "lengthChange": false, 
+      "autoWidth": true,     
       'columnDefs': [
          {
             'targets': 0,
@@ -95,7 +100,7 @@ $(document).ready(function() {
          }
       ],
       'select': {
-         'style': 'os'
+         "style": 'multi+shift', // 'single', 'multi', 'os', 'multi+shift'
       },
       'order': [[1, 'asc']]
    });	
@@ -108,7 +113,8 @@ $(document).ready(function() {
 
     $.each(rows_selected, function(index, rowId){
 
-      selected_items.push({id:rowId[1]});
+      selected_items.push({id:rowId[0]});
+      console.log(selected_items)
       
     });   
     value = $("#deliveryman").val();

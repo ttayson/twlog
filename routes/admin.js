@@ -650,9 +650,11 @@ router.get("/lotes", (req, res) => {
 });
 
 router.get("/addlote", (req, res) => {
-  Packages.find({ status: "Pendente" }).then((allpackage) => {
-    res.render("admin/addbatch", { allpackage: allpackage });
-  });
+  Packages.find({ status: "Pendente" })
+    .populate("Id_client")
+    .then((allpackage) => {
+      res.render("admin/addbatch", { allpackage: allpackage });
+    });
 });
 
 router.post("/addlote", (req, res) => {
@@ -726,7 +728,7 @@ router.get("/entregas/", (req, res) => {
     const datenow = new Date();
     const datenow1 = new Date();
     datenow1.setDate(datenow1.getDate() + 1);
-    datenow.setDate(datenow.getDate() - 1);
+    datenow.setDate(datenow.getDate() - 0);
     Delivery.find({
       date: { $gte: new Date(datenow), $lt: new Date(datenow1) },
     }).then((alldelivery) => {
