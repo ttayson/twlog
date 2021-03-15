@@ -182,6 +182,46 @@ function modal(img){
   $('#modelcomp').modal('show');
 }  
 
+function deletar(id) {
+                Swal.fire({
+                  title: 'Deseja deletar?',
+                  text: "",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Sim'
+                }).then((result) => {
+                  if (result.value) {
+                    var form = $('#typedel-'+id);
+                    $.ajax({
+                      url:'/admin/delpackage',
+                      method:'POST',
+                      data: $(form).serialize()
+                    })
+                    .done(async function(retorno){
+
+                    if (retorno.ok == "deletok"){
+
+                        await Swal.fire({
+                          position: 'top-end',
+                          icon: 'success',
+                          title: 'Deletado',
+                          showConfirmButton: false,
+                          timer: 1500
+                        })
+
+                        location.reload();
+
+                      } else {
+                        await Swal.fire('Lote já Iniciado', '', 'error')
+                      }
+                  })
+                  }  
+                })
+            }
+
+
 </script>
 
 

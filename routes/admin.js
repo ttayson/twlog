@@ -59,7 +59,7 @@ router.get("/pacotes", (req, res) => {
 
   const value = req.query;
 
-  if (req.query.filter != "") {
+  if (req.query.filter && req.query.filter != "") {
     const datenow = new Date();
     const datenow1 = new Date();
     datenow1.setDate(datenow1.getDate() + 1);
@@ -86,7 +86,7 @@ router.get("/pacotes", (req, res) => {
     datenow1.setDate(datenow1.getDate() + 1);
     datenow.setDate(datenow.getDate() - 1);
     Packages.find({
-      updatedAt: { $gte: new Date(datenow), $lt: new Date(datenow1) },
+      updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
     }).then((allpackages) => {
       Client.find().then((allcompany) => {
         res.render("admin/pacotes", {
@@ -729,21 +729,30 @@ router.post("/delcompany", (req, res) => {
 });
 
 router.get("/lotes", (req, res) => {
-  Batch.find()
+  Batch.find({ status: { $ne: "Concluido" } })
     .populate("Id_deliveryman")
     .then((allbatchs) => {
       for (item in allbatchs) {
-        for (i in allbatchs[item].Package_list) {
-          // console.log(allbatchs[item].Package_list.length);
-
-          Packages.find()
-            .and({ _id: allbatchs[item].Package_list[i], status: "Em rota" })
-            .then((pack) => {
-              if (pack[0]) {
-                console.log("count_");
-              }
-            });
-        }
+        Packages.find({
+          $and: [
+            { _id: allbatchs[item].Package_list },
+            {
+              $and: [
+                { status: "Em rota" },
+                { status: { $ne: "Pendente" } },
+                { status: { $ne: "Em lote" } },
+              ],
+            },
+          ],
+        }).then((pack) => {
+          // if (pack.length == 0) {
+          //   pack.status = "Concluído";
+          //   pack.save().then(() => {
+          //     Console.log("Pacote Concluído");
+          //   });
+          // }
+          console.log(pack.length);
+        });
       }
 
       res.render("admin/lotes", { allbatchs: allbatchs });
@@ -835,7 +844,7 @@ router.get("/entregas/", (req, res) => {
     datenow1.setDate(datenow1.getDate() + 1);
     datenow.setDate(datenow.getDate() - 1);
     Delivery.find({
-      date: { $gte: new Date(datenow), $lt: new Date(datenow1) },
+      updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
     }).then((alldelivery) => {
       res.render("admin/delivery", { alldelivery: alldelivery, date: date });
     });
@@ -853,7 +862,7 @@ router.get("/entregas/", (req, res) => {
 
     Delivery.find()
       .and({
-        date: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
+        updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
         status: req.query.status_filter,
       })
       .then((alldelivery) => {
@@ -867,7 +876,7 @@ router.get("/entregas/", (req, res) => {
     dateout = new Date(req.query.dateout);
     dateout.setDate(dateout.getDate() + 1);
     Delivery.find({
-      date: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
+      updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
     }).then((alldelivery) => {
       res.render("admin/delivery", {
         alldelivery: alldelivery,
