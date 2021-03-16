@@ -19,6 +19,10 @@ const Package = new Schema(
       type: String,
       require: true,
     },
+    district: {
+      type: String,
+      require: true,
+    },
     state: {
       type: String,
       require: true,

@@ -194,6 +194,14 @@ router.post("/addpacote", (req, res) => {
   }
 
   if (
+    !req.body.district ||
+    typeof req.body.district == undefined ||
+    req.body.district == null
+  ) {
+    erros.push({ text: "Bairro inválido" });
+  }
+
+  if (
     !req.body.city ||
     typeof req.body.city == undefined ||
     req.body.city == null
@@ -218,6 +226,7 @@ router.post("/addpacote", (req, res) => {
       Id_client: req.body.company,
       cep: req.body.cep,
       address: req.body.address,
+      district: req.body.district,
       city: req.body.city,
       state: req.body.state,
       status: "Pendente",
@@ -302,6 +311,14 @@ router.post("/editpacote", (req, res) => {
     }
 
     if (
+      !req.body.district ||
+      typeof req.body.district == undefined ||
+      req.body.district == null
+    ) {
+      erros.push({ text: "Bairro inválido" });
+    }
+
+    if (
       !req.body.city ||
       typeof req.body.city == undefined ||
       req.body.city == null
@@ -325,6 +342,7 @@ router.post("/editpacote", (req, res) => {
       package.receiver = req.body.receiver;
       package.cep = req.body.cep;
       package.address = req.body.address;
+      package.district = req.body.district;
       package.city = req.body.city;
       package.state = req.body.state;
 
@@ -906,6 +924,7 @@ router.post(
           receiver: PackageImport[item]["receiver"],
           city: PackageImport[item]["city"],
           address: PackageImport[item]["address"],
+          district: PackageImport[item]["district"],
           state: PackageImport[item]["state"],
           cep: PackageImport[item]["cep"],
           status: "Pendente",

@@ -47,6 +47,7 @@
                                     <th>Nº do Pacote</th>
                                     <th>Destinatário</th>
                                     <th>Endereço</th>
+                                    <th>Bairro</th>
                                     <th>Cliente</th>
 
                                 </tr>
@@ -58,6 +59,7 @@
                                     <td>{{code}}</td>
                                     <td>{{receiver}}</td>
                                     <td>{{address}}</td>
+                                    <td>{{district}}</td>
                                     {{#each Id_client}}
                                     <td>{{name}}</td>
                                     {{else}}
@@ -114,7 +116,6 @@ $(document).ready(function() {
     $.each(rows_selected, function(index, rowId){
 
       selected_items.push({id:rowId[0]});
-      console.log(selected_items)
       
     });   
     value = $("#deliveryman").val();

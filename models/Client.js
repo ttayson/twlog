@@ -24,7 +24,7 @@ const Client = new Schema(
       require: false,
     },
     cnpj: {
-      type: Number,
+      type: String,
       require: false,
       unique: true,
     },
