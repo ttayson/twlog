@@ -71,9 +71,8 @@ router.get("/pacotes", (req, res) => {
       .then((allpackages) => {
         Client.find().then((allcompany) => {
           res.render("admin/pacotes", {
-            allpackages: allpackages,
             date: date,
-            value: value,
+            allpackages: allpackages,
             allcompany: allcompany,
           });
         });
@@ -789,6 +788,8 @@ router.post("/addlote", (req, res) => {
   for (item in req.body) {
     if (req.body[item].id != undefined) {
       id_package.push(req.body[item].id);
+    } else {
+      note = req.body[item].note[0];
     }
   }
 
@@ -796,6 +797,7 @@ router.post("/addlote", (req, res) => {
     Package_list: id_package,
     received: false,
     status: "Pendente",
+    note: note,
   };
 
   new Batch(NewBatch)

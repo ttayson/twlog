@@ -20,6 +20,9 @@ const Batch = new Schema(
     status: {
       type: String,
     },
+    note: {
+      type: String,
+    },
     received: {
       type: Boolean,
     },
