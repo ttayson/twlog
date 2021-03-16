@@ -53,9 +53,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/pacotes", (req, res) => {
-  date = new Date().toLocaleDateString("pt-BR");
-  date = date.split("/");
-  date = date[2] + "-" + date[1] + "-" + date[0];
+  date = new Date().toISOString().slice(0, 10);
 
   const value = req.query;
 
