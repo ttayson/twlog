@@ -77,7 +77,11 @@ mongoose
       process.env.DB_USER +
       ":" +
       process.env.DB_PASS +
-      "@ttayson.cf:27017/" +
+      "@" +
+      process.env.DOMAIN +
+      ":" +
+      process.env.DB_PORT +
+      "/" +
       process.env.DB_NAME +
       "?authSource=admin",
     {

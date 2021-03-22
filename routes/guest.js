@@ -18,7 +18,7 @@ const { userLogin } = require("../helpers/userLogin");
 const router = express.Router();
 
 router.get("/", userLogin, (req, res) => {
-  res.render("admin/index");
+  res.render("guest/login");
 });
 
 router.get("/login", (req, res) => {
@@ -50,30 +50,30 @@ router.post(
 );
 
 router.get("/cadastrar", (req, res) => {
-  // const user = {
-  //   permission: "user",
-  //   name: "Usuário",
-  //   code: 0,
-  // };
-  // const user2 = {
-  //   permission: "admin",
-  //   name: "Administrador",
-  //   code: 1,
-  // };
-  // const user3 = {
-  //   permission: "deliveryman",
-  //   name: "Entregador",
-  //   code: 3,
-  // };
-  // const user4 = {
-  //   permission: "client",
-  //   name: "Cliente",
-  //   code: 4,
-  // };
-  // new User_type(user).save().then(() => {});
-  // new User_type(user2).save().then(() => {});
-  // new User_type(user3).save().then(() => {});
-  // new User_type(user4).save().then(() => {});
+  const user = {
+    permission: "user",
+    name: "Usuário",
+    code: 0,
+  };
+  const user2 = {
+    permission: "admin",
+    name: "Administrador",
+    code: 1,
+  };
+  const user3 = {
+    permission: "deliveryman",
+    name: "Entregador",
+    code: 3,
+  };
+  const user4 = {
+    permission: "client",
+    name: "Cliente",
+    code: 4,
+  };
+  new User_type(user).save().then(() => {});
+  new User_type(user2).save().then(() => {});
+  new User_type(user3).save().then(() => {});
+  new User_type(user4).save().then(() => {});
 });
 
 module.exports = router;
