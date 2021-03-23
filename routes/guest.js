@@ -18,16 +18,16 @@ const { userLogin } = require("../helpers/userLogin");
 const router = express.Router();
 
 router.get("/", userLogin, (req, res) => {
-  res.render("guest/login");
+  res.render("guest/login", { layout: "basic" });
 });
 
-router.get("/login", (req, res) => {
+router.get("/login", userLogin, (req, res) => {
   res.render("guest/login", { layout: "basic" });
-  // res.json({ ok: "Teste"})
 });
 
 router.post(
   "/login",
+  userLogin,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,

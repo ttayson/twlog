@@ -1,13 +1,13 @@
 {
   "workbench.iconTheme": "material-icon-theme",
   "sshfs.configs": [
-      {
-          "name": "pupper",
-          "host": "10.18.0.191",
-          "root": "/etc/puppetlabs/code/environments/production/",
-          "username": "root",
-          "password": "3uFrazIn0"
-      }
+    {
+      "name": "MeusPacotes",
+      "host": "157.230.59.254",
+      "root": "/opt/",
+      "username": "root",
+      "password": "fFfarias!2q"
+    }
   ],
   "prettier.eslintIntegration": true,
   "explorer.confirmDelete": false,
