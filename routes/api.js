@@ -16,7 +16,7 @@ const Packages = mongoose.model("package");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.json({ info: "teste" });
+  res.json({ info: "Api" });
 });
 
 router.post("/batch", (req, res) => {

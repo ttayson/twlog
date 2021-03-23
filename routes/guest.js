@@ -17,11 +17,11 @@ const { userLogin } = require("../helpers/userLogin");
 
 const router = express.Router();
 
-router.get("/", userLogin, (req, res) => {
+router.get("/", (req, res) => {
   res.render("guest/login", { layout: "basic" });
 });
 
-router.get("/login", userLogin, (req, res) => {
+router.get("/login", (req, res) => {
   res.render("guest/login", { layout: "basic" });
 });
 
