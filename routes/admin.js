@@ -767,12 +767,12 @@ router.get("/lotes", userAdmin, (req, res) => {
           }).then((pack) => {
             console.log(pack.length);
 
-            if (pack.length == 0) {
-              allbatchs[item].status = "Concluído";
-              allbatchs[item].save().then(() => {
-                console.log("Pacote Concluído");
-              });
-            }
+            // if (pack.length == 0) {
+            //   allbatchs[item].status = "Concluído";
+            //   allbatchs[item].save().then(() => {
+            //     console.log("Pacote Concluído");
+            //   });
+            // }
           });
         }
       }
