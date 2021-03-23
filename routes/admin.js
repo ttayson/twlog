@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const qr = require("qr-image");
 
 const { userLogin } = require("../helpers/userLogin");
+const { userAdmin } = require("../helpers/userLogin");
 
 //Tratamento do CSV
 const neatCsv = require("neat-csv");
@@ -357,13 +358,19 @@ router.post("/editpacote", userLogin, (req, res) => {
 });
 
 router.post("/delpackage", userLogin, (req, res) => {
-  Packages.deleteOne({ _id: req.body.id })
-    .then(() => {
-      res.json({ ok: "deletok" });
-    })
-    .catch((err) => {
-      console.log("Erro ao procurar pacote");
-    });
+  Packages.findOne({ _id: req.body.id }).then((package) => {
+    if (package.status != "Pendente") {
+      res.json({ ok: "accessdenied" });
+    } else {
+      Packages.deleteOne({ _id: req.body.id })
+        .then(() => {
+          res.json({ ok: "deletok" });
+        })
+        .catch((err) => {
+          console.log("Erro ao procurar pacote");
+        });
+    }
+  });
 });
 
 router.get("/user", userLogin, (req, res) => {
@@ -743,31 +750,31 @@ router.post("/delcompany", userLogin, (req, res) => {
     });
 });
 
-router.get("/lotes", userLogin, (req, res) => {
-  Batch.find({ status: { $ne: "Concluido" } })
+router.get("/lotes", userAdmin, (req, res) => {
+  Batch.find({ status: { $ne: "Concluído" } })
     .populate("Id_deliveryman")
     .then((allbatchs) => {
       for (item in allbatchs) {
-        Packages.find({
-          $and: [
-            { _id: allbatchs[item].Package_list },
-            {
-              $and: [
-                { status: "Em rota" },
-                { status: { $ne: "Pendente" } },
-                { status: { $ne: "Em lote" } },
-              ],
-            },
-          ],
-        }).then((pack) => {
-          // if (pack.length == 0) {
-          //   pack.status = "Concluído";
-          //   pack.save().then(() => {
-          //     Console.log("Pacote Concluído");
-          //   });
-          // }
-          console.log(pack.length);
-        });
+        if (allbatchs[item].status == "Em rota") {
+          console.log(allbatchs[item]);
+          Packages.find({
+            $and: [
+              { _id: allbatchs[item].Package_list },
+              {
+                $and: [{ status: "Em rota" }],
+              },
+            ],
+          }).then((pack) => {
+            console.log(pack.length);
+
+            if (pack.length == 0) {
+              allbatchs[item].status = "Concluído";
+              allbatchs[item].save().then(() => {
+                console.log("Pacote Concluído");
+              });
+            }
+          });
+        }
       }
 
       res.render("admin/lotes", { allbatchs: allbatchs });

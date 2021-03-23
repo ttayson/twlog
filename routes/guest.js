@@ -18,7 +18,7 @@ const { userLogin } = require("../helpers/userLogin");
 const router = express.Router();
 
 router.get("/", userLogin, (req, res) => {
-  res.render("admin/index");
+  res.redirect("/admin/");
 });
 
 router.get("/login", (req, res) => {

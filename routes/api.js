@@ -59,6 +59,7 @@ router.post("/batch", (req, res) => {
 
 router.post("/delivery", (req, res) => {
   User.findOne({ token: req.body.token }).then((user) => {
+    console.log(req.body);
     if (!user) {
       res.json({ error: "Invalid Token" });
     } else {

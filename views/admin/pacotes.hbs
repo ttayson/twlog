@@ -214,8 +214,12 @@ function deletar(id) {
 
                         location.reload();
 
-                      } else {
-                        await Swal.fire('Lote já Iniciado', '', 'error')
+                      }else if (retorno.ok == "accessdenied"){
+
+                          await Swal.fire('Acesso Bloqueado', '', 'error')
+
+                        location.reload();
+
                       }
                   })
                   }  
