@@ -1,0 +1,14 @@
+{{#if success_msg}}
+    <div class="alert alert-success">{{success_msg}}</div>
+{{/if}}
+
+{{#if error_msg}}
+    <div class="alert alert-danger">{{error_msg}}</div>
+{{/if}}
+
+<script type="text/javascript">
+    var a = setInterval(function(){
+        $('.alert').hide();
+        
+    },8000);
+</script>

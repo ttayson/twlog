@@ -108,7 +108,7 @@
                     <td>{{updatedAt}}</td>
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
-                      <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{img_received}}')" >
+                      <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{img_received}}','{{img_package}}');" >
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
                           <i class="fas fa-pencil-alt"></i> 
                           View 
@@ -166,9 +166,14 @@ function filter(){
 
   window.location='/admin/entregas?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
 }  
-function modal(img){
-  $('#img').attr('src',img);
-  $('#modelcomp').modal('show');
+function modal(img, img2){
+  if (!img){
+    $('#img').attr('src',img2);
+    $('#modelcomp').modal('show');
+  }else{
+    $('#img').attr('src',img);
+    $('#modelcomp').modal('show');
+  }
 }  
 
 </script>

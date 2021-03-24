@@ -33,7 +33,7 @@
                        <!-- /model -->
                           <div class="modal fade" id="modelqrcode" tabindex="-1" role="dialog" aria-labelledby="modelqrcodeLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
-                              <div class="modal-content">
+                              <div class="modal-content" id="printThis">
                                 <div class="modal-header">
                                   <h5 class="modal-title" id="modelqrcodeLabel">Vincular Entregador</h5>
                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -42,10 +42,11 @@
                                 </div>
                                 <div class="modal-body" style="align-self: center;">
                                   <img id="img"  src="" width="300">
+                                  <p id="notes" value=""></p>
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                  <button type="button" class="btn btn-primary">Save changes</button>
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                  <button type="button" id="btn" class="btn btn-primary">Imprimir</button>
                                 </div>
                               </div>
                             </div>
@@ -75,7 +76,7 @@
                     <td>{{note}}</td>
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}')">
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}','{{note}}')">
 
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
                           <i class="fas fa-pencil-alt"></i> 
@@ -123,8 +124,31 @@
 </script>
 
 <script>
+document.getElementById("btn").onclick = function () {
+    printElement(document.getElementById("printThis"));
+}
 
-function modal(id){
+function printElement(elem) {
+    var domClone = elem.cloneNode(true);
+    
+    var $printSection = document.getElementById("printSection");
+    
+    if (!$printSection) {
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
+    }
+    
+    $printSection.innerHTML = "";
+    $printSection.appendChild(domClone);
+    window.print();
+}
+
+</script>
+<script>
+
+function modal(id, note){
+  $("#notes").html(" <h5>Notas: "+note+"</h5>");
   $('#img').attr('src', '/admin/qrcode/'+id);
   $('#modelqrcode').modal('show');
 }  
@@ -169,3 +193,27 @@ function deletar(id) {
                 })
             }
 </script>
+
+<style>
+  @media screen {
+  #printSection {
+      display: none;
+  }
+}
+
+@media print {
+  body * {
+    visibility:hidden;
+  }
+  #printSection, #printSection * {
+    visibility:visible;
+  }
+  #printSection {
+    position:absolute;
+    left:0;
+    top:0;
+  }
+}
+
+
+</style>

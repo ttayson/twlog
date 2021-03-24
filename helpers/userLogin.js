@@ -7,7 +7,7 @@ module.exports = {
     if (req.isAuthenticated()) {
       return next();
     }
-    req.flash("error", "Login necessário");
+    // req.flash("error", "Login necessário");
     res.redirect("/login");
   },
 

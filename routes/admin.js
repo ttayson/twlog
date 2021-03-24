@@ -441,8 +441,8 @@ router.post("/adduser", userLogin, (req, res) => {
   } else {
     const NewUser = {
       name: req.body.name,
-      email: req.body.email,
-      login: req.body.user,
+      email: req.body.email.toLowerCase(),
+      login: req.body.user.toLowerCase(),
       type: req.body.type,
       Id_client: req.body.company,
       userpass: req.body.userpass,
@@ -459,6 +459,7 @@ router.post("/adduser", userLogin, (req, res) => {
             .save()
             .then(() => {
               console.log("Usuário Cadastrado");
+              req.flash("success_msg", "Usuário Cadastrado");
               res.redirect("/admin/adduser");
             })
             .catch((err) => {
@@ -639,7 +640,8 @@ router.post("/editempresa", userLogin, (req, res) => {
     }
 
     if (erros.length > 0) {
-      res.render("admin/addcompany", { erros: erros });
+      req.flash("error_msg", "Verifique campos em branco ou inválidos");
+      res.redirect("/admin/editempresa/" + req.body.id);
     } else {
       company.name = req.body.name;
       company.cnpj = req.body.cnpj;
@@ -656,6 +658,8 @@ router.post("/editempresa", userLogin, (req, res) => {
         })
         .catch((err) => {
           console.log("Erro ao Salvar no Banco (Empresa)");
+          req.flash("error_msg", "Erro ao cadastrar empresa, verifique dados");
+          res.redirect("/admin/editempresa/" + req.body.id);
         });
     }
   });
@@ -732,10 +736,13 @@ router.post("/addempresa", userLogin, (req, res) => {
       .save()
       .then(() => {
         console.log("Empresa cadastrada");
+        eq.flash("success_msg", "Empresa cadastrada");
         res.redirect("/admin/empresas");
       })
       .catch((err) => {
         console.log("Erro ao Salvar no Banco (Empresa)");
+        req.flash("error_msg", "Erro ao cadastrar empresa, verifique dados");
+        res.redirect("/admin/addempresa");
       });
   }
 });
@@ -750,13 +757,12 @@ router.post("/delcompany", userLogin, (req, res) => {
     });
 });
 
-router.get("/lotes", userAdmin, (req, res) => {
+router.get("/lotes", userLogin, (req, res) => {
   Batch.find({ status: { $ne: "Concluído" } })
     .populate("Id_deliveryman")
     .then((allbatchs) => {
       for (item in allbatchs) {
         if (allbatchs[item].status == "Em rota") {
-          console.log(allbatchs[item]);
           Packages.find({
             $and: [
               { _id: allbatchs[item].Package_list },

@@ -9,27 +9,21 @@ const Package = new Schema(
     },
     receiver: {
       type: String,
-      require: true,
     },
     city: {
       type: String,
-      require: true,
     },
     address: {
       type: String,
-      require: true,
     },
     district: {
       type: String,
-      require: true,
     },
     state: {
       type: String,
-      require: true,
     },
     cep: {
       type: String,
-      require: false,
     },
     status: {
       type: String,

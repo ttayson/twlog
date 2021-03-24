@@ -9,23 +9,18 @@ const Client = new Schema(
     },
     city: {
       type: String,
-      require: true,
     },
     state: {
       type: String,
-      require: true,
     },
     address: {
       type: String,
-      require: true,
     },
     cep: {
-      type: Number,
-      require: false,
+      type: String,
     },
     cnpj: {
       type: String,
-      require: false,
       unique: true,
     },
   },

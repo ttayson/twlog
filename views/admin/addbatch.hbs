@@ -48,6 +48,8 @@
                                     <th>Destinatário</th>
                                     <th>Endereço</th>
                                     <th>Bairro</th>
+                                    <th>Cidade</th>
+                                    <th>Estado</th>
                                     <th>Cliente</th>
 
                                 </tr>
@@ -60,6 +62,8 @@
                                     <td>{{receiver}}</td>
                                     <td>{{address}}</td>
                                     <td>{{district}}</td>
+                                    <td>{{city}}</td>
+                                    <td>{{state}}</td>
                                     {{#each Id_client}}
                                     <td>{{name}}</td>
                                     {{else}}
@@ -92,7 +96,7 @@ $(document).ready(function() {
    var table = $('#example').DataTable({
       "ordering": true,
       "info":     false, 
-      "lengthChange": false, 
+      "lengthChange": true, 
       "autoWidth": true,     
       'columnDefs': [
          {
