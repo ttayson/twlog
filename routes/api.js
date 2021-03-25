@@ -65,7 +65,7 @@ router.post("/delivery", (req, res) => {
     } else {
       Packages.findOne({
         $and: [
-          { code: req.body.barcode },
+          { code: req.body.barcode.toUpperCase() },
           { $or: [{ status: "Pendente" }, { status: "Em rota" }] },
         ],
       })
@@ -77,7 +77,7 @@ router.post("/delivery", (req, res) => {
             )
               .then(() => {
                 const Newdelivery = {
-                  barcode: req.body.barcode,
+                  barcode: req.body.barcode.toUpperCase(),
                   location: req.body.location,
                   img_package: req.body.img_package,
                   img_received: req.body.img_received,
@@ -97,7 +97,7 @@ router.post("/delivery", (req, res) => {
               });
           } else {
             const Newdelivery = {
-              barcode: req.body.barcode,
+              barcode: req.body.barcode.toUpperCase(),
               location: req.body.location,
               img_package: req.body.img_package,
               img_received: req.body.img_received,

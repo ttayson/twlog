@@ -219,7 +219,7 @@ router.post("/addpacote", userLogin, (req, res) => {
     res.render("admin/addpackage", { erros: erros });
   } else {
     const NewPackage = {
-      code: req.body.code,
+      code: req.body.code.toUpperCase(),
       receiver: req.body.receiver,
       Id_client: req.body.company,
       cep: req.body.cep,
@@ -736,7 +736,7 @@ router.post("/addempresa", userLogin, (req, res) => {
       .save()
       .then(() => {
         console.log("Empresa cadastrada");
-        eq.flash("success_msg", "Empresa cadastrada");
+        req.flash("success_msg", "Empresa cadastrada");
         res.redirect("/admin/empresas");
       })
       .catch((err) => {
@@ -923,6 +923,8 @@ router.post(
 
   (req, res) => {
     fs.readFile("./uploads/file.csv", async (err, data) => {
+      var erros = [];
+      var success = [];
       if (err) {
         console.error(err);
         return;
@@ -930,9 +932,18 @@ router.post(
       const PackageImport = await neatCsv(data);
 
       for (item in PackageImport) {
+        if (
+          !PackageImport[item]["code"] ||
+          typeof PackageImport[item]["code"] == undefined ||
+          PackageImport[item]["code"] == null
+        ) {
+          erros.push({ text: "Código inválido" });
+          continue;
+        }
+
         const newImport = {
           Id_client: req.body.company,
-          code: PackageImport[item]["code"],
+          code: PackageImport[item]["code"].toUpperCase(),
           receiver: PackageImport[item]["receiver"],
           city: PackageImport[item]["city"],
           address: PackageImport[item]["address"],
@@ -945,15 +956,29 @@ router.post(
         await new Packages(newImport)
           .save()
           .then(() => {
+            success.push({ text: "Pacote adicionado" });
             console.log("Pacotes Importados com Sucesso");
           })
           .catch((err) => {
             console.log("Erro ao Salvar no Banco (Pacotes)");
           });
       }
+      if (erros.length != 0) {
+        req.flash(
+          "error_msg",
+          erros.length +
+            " Pacotes c/ erro (Código em branco), " +
+            success.length +
+            " Adicionados com sucesso"
+        );
+      } else {
+        req.flash(
+          "success_msg",
+          success.length + " Pacotes foram adicionados com sucesso"
+        );
+      }
+      res.redirect("/admin/pacotes");
     });
-
-    res.redirect("/admin/pacotes");
   }
 );
 
