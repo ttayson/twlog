@@ -107,7 +107,7 @@ app.use("/admin", admin);
 app.use("/", guest);
 app.use("/api", api);
 
-const PORT = 3000;
+const PORT = process.env.APP_PORT;
 app.listen(PORT, () => {
-  console.log("Servidor Rodando!!");
+  console.log("Servidor Rodando na porta: " + PORT);
 });
