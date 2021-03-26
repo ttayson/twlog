@@ -26,6 +26,9 @@ const Delivery = new Schema(
     reason_description: {
       type: String,
     },
+    delivery_date: {
+      type: Date,
+    },
     Id_deliveryman: [
       {
         type: Schema.Types.ObjectId,

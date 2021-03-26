@@ -85,6 +85,7 @@ router.post("/delivery", (req, res) => {
                   reason: req.body.reason,
                   reason_description: req.body.reason_description,
                   Id_deliveryman: user._id,
+                  delivery_date: req.body.date,
                 };
 
                 new Delivery(Newdelivery).save().then(() => {
