@@ -24,12 +24,6 @@ require("dotenv").config();
 
 const app = express();
 
-const hbs = handlebars.create({
-  defaultLayout: "main",
-  extname: "hbs",
-  handlebars: allowInsecurePrototypeAccess(Handlebars),
-});
-
 //Configurações
 //session
 app.use(
@@ -60,6 +54,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Handlebars
+
+const hbs = handlebars.create({
+  defaultLayout: "main",
+  extname: "hbs",
+  handlebars: allowInsecurePrototypeAccess(Handlebars),
+  helpers: {
+    dateDelivery: (timestamp) => {
+      return new Date(timestamp).toLocaleDateString("pt-BR");
+    },
+    timeDelivery: (timestamp) => {
+      return new Date(timestamp).toLocaleTimeString("pt-BR");
+    },
+  },
+});
 
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");

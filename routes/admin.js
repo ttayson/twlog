@@ -862,7 +862,7 @@ router.post("/dellote", userLogin, (req, res) => {
   });
 });
 
-router.get("/entregas/", (req, res) => {
+router.get("/entregas/", userLogin, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
   const value = req.query;
 
@@ -873,18 +873,11 @@ router.get("/entregas/", (req, res) => {
     datenow.setDate(datenow.getDate() - 1);
     Delivery.find({
       updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
-    }).then((alldelivery) => {
-      for (item in alldelivery) {
-        data = new Date(alldelivery[item].delivery_date).toLocaleDateString(
-          "pt-BR"
-        );
-        hora = new Date(alldelivery[item].delivery_date).toLocaleTimeString(
-          "pt-BR"
-        );
-      }
-
-      res.render("admin/delivery", { alldelivery: alldelivery, date: date });
-    });
+    })
+      .populate("Id_deliveryman")
+      .then((alldelivery) => {
+        res.render("admin/delivery", { alldelivery: alldelivery, date: date });
+      });
   } else if (req.query.npackage != "") {
     Delivery.find({ barcode: req.query.npackage }).then((alldelivery) => {
       res.render("admin/delivery", {
