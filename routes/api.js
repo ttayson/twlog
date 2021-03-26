@@ -88,10 +88,6 @@ router.post("/delivery", (req, res) => {
                   delivery_date: req.body.date,
                 };
 
-                console.log(Newdelivery);
-                teste = new Date(req.body.date);
-                console.log(teste);
-
                 new Delivery(Newdelivery).save().then(() => {
                   console.log("Pacote salvo");
                   res.json({ success: "Delivery ok" });

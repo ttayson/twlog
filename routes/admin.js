@@ -862,9 +862,8 @@ router.post("/dellote", userLogin, (req, res) => {
   });
 });
 
-router.get("/entregas/", userLogin, (req, res) => {
+router.get("/entregas/", (req, res) => {
   date = new Date().toISOString().slice(0, 10);
-
   const value = req.query;
 
   if (req.query.npackage == undefined) {
@@ -875,6 +874,15 @@ router.get("/entregas/", userLogin, (req, res) => {
     Delivery.find({
       updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
     }).then((alldelivery) => {
+      for (item in alldelivery) {
+        data = new Date(alldelivery[item].delivery_date).toLocaleDateString(
+          "pt-BR"
+        );
+        hora = new Date(alldelivery[item].delivery_date).toLocaleTimeString(
+          "pt-BR"
+        );
+      }
+
       res.render("admin/delivery", { alldelivery: alldelivery, date: date });
     });
   } else if (req.query.npackage != "") {
