@@ -15,6 +15,7 @@ const passport = require("passport");
 require("./config/Auth")(passport);
 
 const admin = require("./routes/admin");
+const client = require("./routes/client");
 const guest = require("./routes/guest");
 const api = require("./routes/api");
 
@@ -66,6 +67,49 @@ const hbs = handlebars.create({
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-BR");
     },
+    statusColor: (status) => {
+      switch (status) {
+        case "Pendente":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-warning">' + status + "</span>"
+          );
+          break;
+        case "Em lote":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-info">' + status + "</span>"
+          );
+          reak;
+        case "Em rota":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-primary">' + status + "</span>"
+          );
+          break;
+        case "Entregue":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-success">' + status + "</span>"
+          );
+          break;
+        case "Falha na Entrega":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-danger">' + status + "</span>"
+          );
+          break;
+        case "Fora do sistema":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-secondary"> ' + status + " </span>"
+          );
+          break;
+        case "Concluído":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-success"> ' + status + " </span>"
+          );
+          break;
+        default:
+          return new Handlebars.SafeString(
+            '<span class="badge bg-warning"> Sem Status </span>'
+          );
+      }
+    },
   },
 });
 
@@ -112,6 +156,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Rotas
 
 app.use("/admin", admin);
+app.use("/client", client);
 app.use("/", guest);
 app.use("/api", api);
 

@@ -59,14 +59,19 @@ router.post("/batch", (req, res) => {
 
 router.post("/delivery", (req, res) => {
   User.findOne({ token: req.body.token }).then((user) => {
-    console.log(req.body);
     if (!user) {
       res.json({ error: "Invalid Token" });
     } else {
       Packages.findOne({
         $and: [
           { code: req.body.barcode.toUpperCase() },
-          { $or: [{ status: "Pendente" }, { status: "Em rota" }] },
+          {
+            $or: [
+              { status: "Pendente" },
+              { status: "Em rota" },
+              { status: "Falha na Entrega" },
+            ],
+          },
         ],
       })
         .then(async (pack) => {

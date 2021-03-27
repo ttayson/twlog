@@ -757,8 +757,9 @@ router.post("/delcompany", userLogin, (req, res) => {
     });
 });
 
-router.get("/lotes", userLogin, (req, res) => {
-  Batch.find({ status: { $ne: "Concluído" } })
+router.get("/lotes", (req, res) => {
+  // Batch.find({ status: { $ne: "Concluído" } })
+  Batch.find()
     .populate("Id_deliveryman")
     .then((allbatchs) => {
       for (item in allbatchs) {
@@ -766,19 +767,15 @@ router.get("/lotes", userLogin, (req, res) => {
           Packages.find({
             $and: [
               { _id: allbatchs[item].Package_list },
-              {
-                $and: [{ status: "Em rota" }],
-              },
+              { $or: [{ status: "Em rota" }, { status: "Falha na Entrega" }] },
             ],
           }).then((pack) => {
-            console.log(pack.length);
-
-            // if (pack.length == 0) {
-            //   allbatchs[item].status = "Concluído";
-            //   allbatchs[item].save().then(() => {
-            //     console.log("Pacote Concluído");
-            //   });
-            // }
+            if (pack.length == 0) {
+              allbatchs[item].status = "Concluído";
+              allbatchs[item].save().then(() => {
+                console.log("Lote Concluído");
+              });
+            }
           });
         }
       }
@@ -862,6 +859,36 @@ router.post("/dellote", userLogin, (req, res) => {
   });
 });
 
+router.get("/inlote/:id", (req, res) => {
+  Batch.findOne({ _id: req.params.id })
+    .populate("Package_list")
+    .then((allPackageinbatchs) => {
+      res.render("admin/inlote", { allPackageinbatchs: allPackageinbatchs });
+    });
+});
+
+router.post("/inlote/delpackage/", (req, res) => {
+  if (req.body[0].idStatus == "Pendente") {
+    Batch.updateOne(
+      { _id: req.body[0].idBatch },
+      { $pull: { Package_list: { $in: req.body[0].idPackage } } }
+    ).then((UpdateBatch) => {
+      if (UpdateBatch.nModified == 1) {
+        Packages.updateOne(
+          { _id: req.body[0].idPackage },
+          { $set: { status: "Pendente" } }
+        ).then((teste) => {
+          res.json({ ok: "deletok" });
+        });
+      } else {
+        res.json({ ok: "accessdenied" });
+      }
+    });
+  } else {
+    res.json({ ok: "accessdenied" });
+  }
+});
+
 router.get("/entregas/", userLogin, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
   const value = req.query;
@@ -879,13 +906,15 @@ router.get("/entregas/", userLogin, (req, res) => {
         res.render("admin/delivery", { alldelivery: alldelivery, date: date });
       });
   } else if (req.query.npackage != "") {
-    Delivery.find({ barcode: req.query.npackage }).then((alldelivery) => {
-      res.render("admin/delivery", {
-        alldelivery: alldelivery,
-        date: date,
-        value: value,
+    Delivery.find({ barcode: req.query.npackage })
+      .populate("Id_deliveryman")
+      .then((alldelivery) => {
+        res.render("admin/delivery", {
+          alldelivery: alldelivery,
+          date: date,
+          value: value,
+        });
       });
-    });
   } else if (req.query.status_filter != "") {
     dateout = new Date(req.query.dateout);
     dateout.setDate(dateout.getDate() + 1);
@@ -895,6 +924,7 @@ router.get("/entregas/", userLogin, (req, res) => {
         updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
         status: req.query.status_filter,
       })
+      .populate("Id_deliveryman")
       .then((alldelivery) => {
         res.render("admin/delivery", {
           alldelivery: alldelivery,
@@ -907,13 +937,15 @@ router.get("/entregas/", userLogin, (req, res) => {
     dateout.setDate(dateout.getDate() + 1);
     Delivery.find({
       updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
-    }).then((alldelivery) => {
-      res.render("admin/delivery", {
-        alldelivery: alldelivery,
-        date: date,
-        value: value,
+    })
+      .populate("Id_deliveryman")
+      .then((alldelivery) => {
+        res.render("admin/delivery", {
+          alldelivery: alldelivery,
+          date: date,
+          value: value,
+        });
       });
-    });
   }
 });
 

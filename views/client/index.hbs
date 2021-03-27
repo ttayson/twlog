@@ -1,0 +1,75 @@
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <h1 class="m-0">Dashboard</h1><br><br>
+
+
+<div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{pending}}</h3>
+
+                <p>Pacotes Pendentes</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="/admin/pacotes?filter=Pendente" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{delyvered}}</h3>
+
+                <p>Entregues</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-checkmark-round"></i>
+              </div>
+              <a href="/admin/pacotes?filter=Entregue" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{onroute}}</h3>
+
+                <p>Em rota</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-alert-circled"></i>
+              </div>
+              <a href="/admin/pacotes?filter=Em%20rota" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{faiuldelivery}}</h3>
+
+                <p>Fala na Entrega</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-close-circled"></i>
+              </div>
+              <a href="/admin/pacotes?filter=Falha na Entrega" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+
+</div>
+</div>
+</div>
+</div>

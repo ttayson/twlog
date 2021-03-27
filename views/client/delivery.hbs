@@ -111,7 +111,7 @@
                     <td>{{reason}} {{reason_description}}</td>
                     <td>{{dateDelivery delivery_date}}</td>
                     <td>{{timeDelivery delivery_date}}</td>
-                    <td>{{statusColor status}}</td>
+                    <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
                       <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{img_received}}','{{img_package}}');" >
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >

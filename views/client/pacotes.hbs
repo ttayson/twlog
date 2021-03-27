@@ -66,6 +66,41 @@
               </div>
               <!-- /.card-header -->
             <div class="card-body">
+
+                              <div class="row" >
+                  <div class="col-lg-2 col-6">
+                    <input id="npackage" value="{{value.npackage}}" class="form-control" placeholder="Nº Pacote" type="text">
+                  </div>
+                    <div class="col-lg-2 col-6">
+                      <select id="status_filter" class="form-control">
+                        <option selected value="">Filtrar por status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em lote">Em lote</option>
+                        <option value="Em rota">Em rota</option>
+                        <option value="Falha na Entrega">Falha na Entrega</option>
+                        <option value="Fora do sistema">Fora do sistema</option>
+                        <option value="Entregue">Entregue</option>
+                      </select>
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    {{#if value}}
+                    <input class="form-control" type="date" value="{{value.datein}}" id="datein">
+                    {{else}}
+                    <input class="form-control" type="date" value="{{date}}" id="datein">
+                    {{/if}}
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    {{#if value}}
+                    <input class="form-control" type="date" value="{{value.dateout}}" id="dateout">
+                    {{else}}
+                    <input class="form-control" type="date" value="{{date}}" id="dateout">
+                    {{/if}}                  
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    <button class="btn btn-info" onclick="filter()">Filtrar</button>                  
+                  </div>
+                  </div>
+                  <br>
                 
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
@@ -73,16 +108,22 @@
                     <th>Nº Pacote</th>
                     <th>Destinatário</th>
                     <th>Endereço</th>
+                    <th>Bairro</th>
+                    <th>CEP</th>
+                    <th>Estado</th>
                     <th>Status</th>
                     <th>Ações</th>
                   </tr>
                   </thead>
                   <tbody>
-                      {{#each allpackage}}
+                      {{#each allpackages}}
                   <tr>
                     <td>{{code}}</td>
                     <td>{{receiver}}</td>
                     <td>{{address}}</td>
+                    <td>{{district}}</td>
+                    <td>{{cep}}</td>
+                    <td>{{state}}</td>
                     <td><span class="badge bg-warning">{{status}}</span></td>
                     <td>
                         <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
@@ -126,13 +167,27 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": true,
+      "searching": true, "responsive": true, "lengthChange": false, "bInfo" : false, "autoWidth": false,
       "buttons": ["excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
 
 <script>
+function filter(){
+
+    const datein = document.getElementById("datein").value
+    const dateout = document.getElementById("dateout").value
+    const npackage = document.getElementById("npackage").value
+    const status_filter = document.getElementById("status_filter").value
+
+
+  window.location='/admin/pacotes?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
+}  
+function modal(img){
+  $('#img').attr('src',img);
+  $('#modelcomp').modal('show');
+}  
 
 function deletar(id) {
                 Swal.fire({
@@ -165,11 +220,19 @@ function deletar(id) {
 
                         location.reload();
 
+                      }else if (retorno.ok == "accessdenied"){
+
+                          await Swal.fire('Acesso Bloqueado', '', 'error')
+
+                        location.reload();
+
                       }
                   })
                   }  
                 })
             }
+
+
 </script>
 
 

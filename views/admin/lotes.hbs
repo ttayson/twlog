@@ -74,13 +74,17 @@
                     <td>Não definido</td>
                     {{/each}} 
                     <td>{{note}}</td>
-                    <td><span class="badge bg-warning">{{status}}</span></td>
+                    <td>{{statusColor status}}</td>
                     <td>
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}','{{note}}')">
 
-                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
+                      <button class="btn btn-info btn-sm" onclick="window.location='/admin/inlote/{{id}}'">
                           <i class="fas fa-pencil-alt"></i> 
                           View 
+                        </button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}','{{note}}')">
+                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
+                          <i class="fas fa-pencil-alt"></i> 
+                          QR 
                         </button>
                         <button class="btn btn-danger btn-sm" onclick="deletar('{{id}}')" >
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
