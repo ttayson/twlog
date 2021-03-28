@@ -19,7 +19,7 @@ const Delivery = mongoose.model("delivery");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", userLogin, (req, res) => {
   Packages.countDocuments({
     status: "Pendente",
     Id_client: res.locals.user.Id_client,
