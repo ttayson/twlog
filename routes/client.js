@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const { userLogin } = require("../helpers/userLogin");
+const { userClient } = require("../helpers/userLogin");
 
 require("../models/Package");
 require("../models/Client");
@@ -19,7 +20,7 @@ const Delivery = mongoose.model("delivery");
 
 const router = express.Router();
 
-router.get("/", userLogin, (req, res) => {
+router.get("/", userClient, (req, res) => {
   Packages.countDocuments({
     status: "Pendente",
     Id_client: res.locals.user.Id_client,
@@ -60,7 +61,7 @@ router.get("/", userLogin, (req, res) => {
   });
 });
 
-router.get("/pacotes", userLogin, (req, res) => {
+router.get("/pacotes", userClient, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
   const value = req.query;
 
@@ -160,7 +161,7 @@ router.get("/pacotes", userLogin, (req, res) => {
   }
 });
 
-router.get("/entregas/", userLogin, (req, res) => {
+router.get("/entregas/", userClient, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
   const value = req.query;
 
