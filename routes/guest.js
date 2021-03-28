@@ -47,7 +47,6 @@ router.post(
       .populate("type")
       .then((userLogin) => {
         if (userLogin.type[0].code == 0 || userLogin.type[0].code == 1) {
-          console.log(userLogin);
           res.redirect("/admin");
           next();
         } else {
@@ -72,12 +71,12 @@ router.get("/cadastrar", (req, res) => {
   const user3 = {
     permission: "deliveryman",
     name: "Entregador",
-    code: 3,
+    code: 2,
   };
   const user4 = {
     permission: "client",
     name: "Cliente",
-    code: 4,
+    code: 3,
   };
   new User_type(user).save().then(() => {});
   new User_type(user2).save().then(() => {});
