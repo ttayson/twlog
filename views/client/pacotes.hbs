@@ -11,50 +11,11 @@
           </div><!-- /.col -->
         </div><!-- /.row -->
         <br>
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#importmodal"> Importar Pacotes </button>
         
-        <a href="/admin/addpacote">
-          <button class="btn btn-info"> Adicionar</button>
+        <a href="/client/">
+          <button class="btn btn-info"> Voltar</button>
         </a>
-        
-            <div class="modal fade" id="importmodal" tabindex="-1" role="dialog" aria-labelledby="importmodalTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Importar Pacotes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
 
-
-                <div class="modal-body">
-
-                    <form action="/admin/importpackage" enctype="multipart/form-data" method="post" style="align-items: flex-end;">
-                      <div class="form-group">
-                          <label for="">Empresa cliente</label>
-                          <select class="form-control" name="company">
-                            {{#each allcompany}}
-                            <option value={{_id}}>{{name}}</option>
-                            {{else}}
-                            <option>Empresas Não cadastradas</option>
-                            {{/each}}
-                          </select>
-                        </div>
-                        <input  type="file" name="file" required="required">
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                            <button type="submit" class="btn btn-primary">Upload</button>
-                        </div>
-			        </form>  
-                </div>
-
-                </div>
-            </div>
-            </div>
-
-        <br>
-        <br>
     </div><!-- /.container-fluid -->
 </div>
 
@@ -66,6 +27,41 @@
               </div>
               <!-- /.card-header -->
             <div class="card-body">
+
+                              <div class="row" >
+                  <div class="col-lg-2 col-6">
+                    <input id="npackage" value="{{value.npackage}}" class="form-control" placeholder="Nº Pacote" type="text">
+                  </div>
+                    <div class="col-lg-2 col-6">
+                      <select id="status_filter" class="form-control">
+                        <option selected value="">Filtrar por status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em lote">Em lote</option>
+                        <option value="Em rota">Em rota</option>
+                        <option value="Falha na Entrega">Falha na Entrega</option>
+                        <option value="Fora do sistema">Fora do sistema</option>
+                        <option value="Entregue">Entregue</option>
+                      </select>
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    {{#if value}}
+                    <input class="form-control" type="date" value="{{value.datein}}" id="datein">
+                    {{else}}
+                    <input class="form-control" type="date" value="{{date}}" id="datein">
+                    {{/if}}
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    {{#if value}}
+                    <input class="form-control" type="date" value="{{value.dateout}}" id="dateout">
+                    {{else}}
+                    <input class="form-control" type="date" value="{{date}}" id="dateout">
+                    {{/if}}                  
+                  </div>
+                  <div class="col-lg-2 col-6">
+                    <button class="btn btn-info" onclick="filter()">Filtrar</button>                  
+                  </div>
+                  </div>
+                  <br>
                 
                 <table id="example1" class="table table-bordered table-striped">
                   <thead>
@@ -73,30 +69,22 @@
                     <th>Nº Pacote</th>
                     <th>Destinatário</th>
                     <th>Endereço</th>
+                    <th>Bairro</th>
+                    <th>CEP</th>
+                    <th>Estado</th>
                     <th>Status</th>
-                    <th>Ações</th>
                   </tr>
                   </thead>
                   <tbody>
-                      {{#each allpackage}}
+                      {{#each allpackages}}
                   <tr>
                     <td>{{code}}</td>
                     <td>{{receiver}}</td>
                     <td>{{address}}</td>
-                    <td><span class="badge bg-warning">{{status}}</span></td>
-                    <td>
-                        <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
-                          <i class="fas fa-pencil-alt"></i> 
-                          Editar 
-                        </button>
-
-                        <button class="btn btn-danger btn-sm" onclick="deletar('{{id}}')">
-                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}">
-                          <i class="fas fa-pencil-alt"></i> 
-                          Deletar 
-                        </button>
-                      </td>
-                    </td>
+                    <td>{{district}}</td>
+                    <td>{{cep}}</td>
+                    <td>{{state}}</td>
+                    <td>{{statusColor status}}</td>
                   </tr>
                     {{else}}
 					{{/each}} 
@@ -126,13 +114,28 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": true, "autoWidth": true,
+      "lengthMenu": [[10, 50, 100, 500, 1000], [10, 50, 100, 500, 1000]],
+      "searching": true, "responsive": true, "lengthChange": true, "bInfo" : false, "autoWidth": false,
       "buttons": ["excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
 </script>
 
 <script>
+function filter(){
+
+    const datein = document.getElementById("datein").value
+    const dateout = document.getElementById("dateout").value
+    const npackage = document.getElementById("npackage").value
+    const status_filter = document.getElementById("status_filter").value
+
+
+  window.location='/client/pacotes?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
+}  
+function modal(img){
+  $('#img').attr('src',img);
+  $('#modelcomp').modal('show');
+}  
 
 function deletar(id) {
                 Swal.fire({
@@ -165,11 +168,19 @@ function deletar(id) {
 
                         location.reload();
 
+                      }else if (retorno.ok == "accessdenied"){
+
+                          await Swal.fire('Acesso Bloqueado', '', 'error')
+
+                        location.reload();
+
                       }
                   })
                   }  
                 })
             }
+
+
 </script>
 
 

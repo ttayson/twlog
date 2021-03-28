@@ -59,14 +59,19 @@ router.post("/batch", (req, res) => {
 
 router.post("/delivery", (req, res) => {
   User.findOne({ token: req.body.token }).then((user) => {
-    console.log(req.body);
     if (!user) {
       res.json({ error: "Invalid Token" });
     } else {
       Packages.findOne({
         $and: [
-          { code: req.body.barcode },
-          { $or: [{ status: "Pendente" }, { status: "Em rota" }] },
+          { code: req.body.barcode.toUpperCase() },
+          {
+            $or: [
+              { status: "Pendente" },
+              { status: "Em rota" },
+              { status: "Falha na Entrega" },
+            ],
+          },
         ],
       })
         .then(async (pack) => {
@@ -77,7 +82,7 @@ router.post("/delivery", (req, res) => {
             )
               .then(() => {
                 const Newdelivery = {
-                  barcode: req.body.barcode,
+                  barcode: req.body.barcode.toUpperCase(),
                   location: req.body.location,
                   img_package: req.body.img_package,
                   img_received: req.body.img_received,
@@ -85,6 +90,7 @@ router.post("/delivery", (req, res) => {
                   reason: req.body.reason,
                   reason_description: req.body.reason_description,
                   Id_deliveryman: user._id,
+                  delivery_date: req.body.date,
                 };
 
                 new Delivery(Newdelivery).save().then(() => {
@@ -97,7 +103,7 @@ router.post("/delivery", (req, res) => {
               });
           } else {
             const Newdelivery = {
-              barcode: req.body.barcode,
+              barcode: req.body.barcode.toUpperCase(),
               location: req.body.location,
               img_package: req.body.img_package,
               img_received: req.body.img_received,
@@ -105,6 +111,7 @@ router.post("/delivery", (req, res) => {
               reason: req.body.reason,
               reason_description: req.body.reason_description,
               Id_deliveryman: user._id,
+              delivery_date: req.body.date,
             };
 
             new Delivery(Newdelivery).save().then(() => {

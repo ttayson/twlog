@@ -51,6 +51,7 @@
                                     <th>Cidade</th>
                                     <th>Estado</th>
                                     <th>Cliente</th>
+                                    <th>Data</th>
 
                                 </tr>
                             </thead>
@@ -68,6 +69,7 @@
                                     <td>{{name}}</td>
                                     {{else}}
                                     {{/each}} 
+                                    <td>{{dateDelivery createdAt}}</td>
                                 </tr>
 
                                 {{else}}
@@ -97,6 +99,7 @@ $(document).ready(function() {
       "ordering": true,
       "info":     false, 
       "lengthChange": true, 
+      "lengthMenu": [[10, 50, 100, 500, 1000, -1], [10, 50, 100, 500, 1000, "All"]],
       "autoWidth": true,     
       'columnDefs': [
          {

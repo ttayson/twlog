@@ -15,6 +15,7 @@ const passport = require("passport");
 require("./config/Auth")(passport);
 
 const admin = require("./routes/admin");
+const client = require("./routes/client");
 const guest = require("./routes/guest");
 const api = require("./routes/api");
 
@@ -23,12 +24,6 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
-
-const hbs = handlebars.create({
-  defaultLayout: "main",
-  extname: "hbs",
-  handlebars: allowInsecurePrototypeAccess(Handlebars),
-});
 
 //Configurações
 //session
@@ -60,6 +55,63 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Handlebars
+
+const hbs = handlebars.create({
+  defaultLayout: "main",
+  extname: "hbs",
+  handlebars: allowInsecurePrototypeAccess(Handlebars),
+  helpers: {
+    dateDelivery: (timestamp) => {
+      return new Date(timestamp).toLocaleDateString("pt-BR");
+    },
+    timeDelivery: (timestamp) => {
+      return new Date(timestamp).toLocaleTimeString("pt-BR");
+    },
+    statusColor: (status) => {
+      switch (status) {
+        case "Pendente":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-warning">' + status + "</span>"
+          );
+          break;
+        case "Em lote":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-info">' + status + "</span>"
+          );
+          reak;
+        case "Em rota":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-primary">' + status + "</span>"
+          );
+          break;
+        case "Entregue":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-success">' + status + "</span>"
+          );
+          break;
+        case "Falha na Entrega":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-danger">' + status + "</span>"
+          );
+          break;
+        case "Fora do sistema":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-secondary"> ' + status + " </span>"
+          );
+          break;
+        case "Concluído":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-success"> ' + status + " </span>"
+          );
+          break;
+        default:
+          return new Handlebars.SafeString(
+            '<span class="badge bg-warning"> Sem Status </span>'
+          );
+      }
+    },
+  },
+});
 
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
@@ -104,6 +156,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Rotas
 
 app.use("/admin", admin);
+app.use("/client", client);
 app.use("/", guest);
 app.use("/api", api);
 

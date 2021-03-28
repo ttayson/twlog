@@ -124,7 +124,7 @@
                     <td>{{district}}</td>
                     <td>{{cep}}</td>
                     <td>{{state}}</td>
-                    <td><span class="badge bg-warning">{{status}}</span></td>
+                    <td>{{statusColor status}}</td>
                     <td>
                         <button class="btn btn-primary btn-sm" onclick="window.location='/admin/editpacote/{{id}}'">
                           <i class="fas fa-pencil-alt"></i> 
@@ -167,7 +167,8 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "searching": true, "responsive": true, "lengthChange": false, "bInfo" : false, "autoWidth": false,
+      "lengthMenu": [[10, 50, 100, 500, 1000], [10, 50, 100, 500, 1000]],
+      "searching": true, "responsive": true, "lengthChange": true, "bInfo" : false, "autoWidth": false,
       "buttons": ["excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });

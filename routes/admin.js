@@ -219,7 +219,7 @@ router.post("/addpacote", userLogin, (req, res) => {
     res.render("admin/addpackage", { erros: erros });
   } else {
     const NewPackage = {
-      code: req.body.code,
+      code: req.body.code.toUpperCase(),
       receiver: req.body.receiver,
       Id_client: req.body.company,
       cep: req.body.cep,
@@ -736,7 +736,7 @@ router.post("/addempresa", userLogin, (req, res) => {
       .save()
       .then(() => {
         console.log("Empresa cadastrada");
-        eq.flash("success_msg", "Empresa cadastrada");
+        req.flash("success_msg", "Empresa cadastrada");
         res.redirect("/admin/empresas");
       })
       .catch((err) => {
@@ -757,8 +757,9 @@ router.post("/delcompany", userLogin, (req, res) => {
     });
 });
 
-router.get("/lotes", userLogin, (req, res) => {
-  Batch.find({ status: { $ne: "Concluído" } })
+router.get("/lotes", (req, res) => {
+  // Batch.find({ status: { $ne: "Concluído" } })
+  Batch.find()
     .populate("Id_deliveryman")
     .then((allbatchs) => {
       for (item in allbatchs) {
@@ -766,19 +767,15 @@ router.get("/lotes", userLogin, (req, res) => {
           Packages.find({
             $and: [
               { _id: allbatchs[item].Package_list },
-              {
-                $and: [{ status: "Em rota" }],
-              },
+              { $or: [{ status: "Em rota" }, { status: "Falha na Entrega" }] },
             ],
           }).then((pack) => {
-            console.log(pack.length);
-
-            // if (pack.length == 0) {
-            //   allbatchs[item].status = "Concluído";
-            //   allbatchs[item].save().then(() => {
-            //     console.log("Pacote Concluído");
-            //   });
-            // }
+            if (pack.length == 0) {
+              allbatchs[item].status = "Concluído";
+              allbatchs[item].save().then(() => {
+                console.log("Lote Concluído");
+              });
+            }
           });
         }
       }
@@ -862,9 +859,38 @@ router.post("/dellote", userLogin, (req, res) => {
   });
 });
 
+router.get("/inlote/:id", (req, res) => {
+  Batch.findOne({ _id: req.params.id })
+    .populate("Package_list")
+    .then((allPackageinbatchs) => {
+      res.render("admin/inlote", { allPackageinbatchs: allPackageinbatchs });
+    });
+});
+
+router.post("/inlote/delpackage/", (req, res) => {
+  if (req.body[0].idStatus == "Pendente") {
+    Batch.updateOne(
+      { _id: req.body[0].idBatch },
+      { $pull: { Package_list: { $in: req.body[0].idPackage } } }
+    ).then((UpdateBatch) => {
+      if (UpdateBatch.nModified == 1) {
+        Packages.updateOne(
+          { _id: req.body[0].idPackage },
+          { $set: { status: "Pendente" } }
+        ).then((teste) => {
+          res.json({ ok: "deletok" });
+        });
+      } else {
+        res.json({ ok: "accessdenied" });
+      }
+    });
+  } else {
+    res.json({ ok: "accessdenied" });
+  }
+});
+
 router.get("/entregas/", userLogin, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
-
   const value = req.query;
 
   if (req.query.npackage == undefined) {
@@ -874,17 +900,21 @@ router.get("/entregas/", userLogin, (req, res) => {
     datenow.setDate(datenow.getDate() - 1);
     Delivery.find({
       updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
-    }).then((alldelivery) => {
-      res.render("admin/delivery", { alldelivery: alldelivery, date: date });
-    });
-  } else if (req.query.npackage != "") {
-    Delivery.find({ barcode: req.query.npackage }).then((alldelivery) => {
-      res.render("admin/delivery", {
-        alldelivery: alldelivery,
-        date: date,
-        value: value,
+    })
+      .populate("Id_deliveryman")
+      .then((alldelivery) => {
+        res.render("admin/delivery", { alldelivery: alldelivery, date: date });
       });
-    });
+  } else if (req.query.npackage != "") {
+    Delivery.find({ barcode: req.query.npackage })
+      .populate("Id_deliveryman")
+      .then((alldelivery) => {
+        res.render("admin/delivery", {
+          alldelivery: alldelivery,
+          date: date,
+          value: value,
+        });
+      });
   } else if (req.query.status_filter != "") {
     dateout = new Date(req.query.dateout);
     dateout.setDate(dateout.getDate() + 1);
@@ -894,6 +924,7 @@ router.get("/entregas/", userLogin, (req, res) => {
         updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
         status: req.query.status_filter,
       })
+      .populate("Id_deliveryman")
       .then((alldelivery) => {
         res.render("admin/delivery", {
           alldelivery: alldelivery,
@@ -906,13 +937,15 @@ router.get("/entregas/", userLogin, (req, res) => {
     dateout.setDate(dateout.getDate() + 1);
     Delivery.find({
       updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
-    }).then((alldelivery) => {
-      res.render("admin/delivery", {
-        alldelivery: alldelivery,
-        date: date,
-        value: value,
+    })
+      .populate("Id_deliveryman")
+      .then((alldelivery) => {
+        res.render("admin/delivery", {
+          alldelivery: alldelivery,
+          date: date,
+          value: value,
+        });
       });
-    });
   }
 });
 
@@ -923,6 +956,8 @@ router.post(
 
   (req, res) => {
     fs.readFile("./uploads/file.csv", async (err, data) => {
+      var erros = [];
+      var success = [];
       if (err) {
         console.error(err);
         return;
@@ -930,9 +965,18 @@ router.post(
       const PackageImport = await neatCsv(data);
 
       for (item in PackageImport) {
+        if (
+          !PackageImport[item]["code"] ||
+          typeof PackageImport[item]["code"] == undefined ||
+          PackageImport[item]["code"] == null
+        ) {
+          erros.push({ text: "Código inválido" });
+          continue;
+        }
+
         const newImport = {
           Id_client: req.body.company,
-          code: PackageImport[item]["code"],
+          code: PackageImport[item]["code"].toUpperCase(),
           receiver: PackageImport[item]["receiver"],
           city: PackageImport[item]["city"],
           address: PackageImport[item]["address"],
@@ -945,15 +989,29 @@ router.post(
         await new Packages(newImport)
           .save()
           .then(() => {
+            success.push({ text: "Pacote adicionado" });
             console.log("Pacotes Importados com Sucesso");
           })
           .catch((err) => {
             console.log("Erro ao Salvar no Banco (Pacotes)");
           });
       }
+      if (erros.length != 0) {
+        req.flash(
+          "error_msg",
+          erros.length +
+            " Pacotes c/ erro (Código em branco), " +
+            success.length +
+            " Adicionados com sucesso"
+        );
+      } else {
+        req.flash(
+          "success_msg",
+          success.length + " Pacotes foram adicionados com sucesso"
+        );
+      }
+      res.redirect("/admin/pacotes");
     });
-
-    res.redirect("/admin/pacotes");
   }
 );
 
