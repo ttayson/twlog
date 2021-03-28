@@ -17,8 +17,8 @@ const { userLogin } = require("../helpers/userLogin");
 
 const router = express.Router();
 
-router.get("/", userLogin, (req, res) => {
-  res.redirect("/admin/");
+router.get("/", (req, res) => {
+  res.redirect("/login");
 });
 
 router.get("/login", (req, res) => {
@@ -47,10 +47,10 @@ router.post(
       .populate("type")
       .then((userLogin) => {
         if (userLogin.type[0].code == 0 || userLogin.type[0].code == 1) {
-          res.redirect("/admin");
+          res.redirect("/admin/");
           next();
         } else {
-          res.redirect("/client");
+          res.redirect("/client/");
           next();
         }
       });
