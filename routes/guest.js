@@ -43,8 +43,18 @@ router.post(
       .catch((err) => {
         console.log(err);
       });
-    res.redirect("/admin");
-    next();
+    User.findOne({ _id: req.user._id })
+      .populate("type")
+      .then((userLogin) => {
+        if (userLogin.type[0].code == 0 || userLogin.type[0].code == 1) {
+          console.log(userLogin);
+          res.redirect("/admin");
+          next();
+        } else {
+          res.redirect("/client");
+          next();
+        }
+      });
   }
 );
 

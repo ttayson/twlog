@@ -121,7 +121,8 @@
 <script>
   $(function () {
     $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": true,
+      "lengthMenu": [[10, 50, 100, 500, 1000], [10, 50, 100, 500, 1000]],
+      "responsive": true, "lengthChange": true, "autoWidth": true,
       "buttons": ["excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });

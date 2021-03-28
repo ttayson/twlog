@@ -7,7 +7,8 @@
     <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Informações do Lote {{allPackageinbatchs._id}}</h1>
+            <h1 class="m-0">Informações do Lote: {{allPackageinbatchs._id}}</h1>
+            <h3 class="m-0"> Notas: {{allPackageinbatchs.note}}</h3>
             <input type="hidden" id="idBatch" name="idBatch" value="{{allPackageinbatchs._id}}">
             <input type="hidden" id="statusBatch" name="statusBatch" value="{{allPackageinbatchs.status}}">
           </div><!-- /.col -->
@@ -27,7 +28,7 @@
 
 <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Pacotes do Lote {{allPackageinbatchs._id}} </h3>
+                <h3 class="card-title">Pacotes do Lote: {{allPackageinbatchs._id}} </h3>
               </div>
             <div class="card-body">
 

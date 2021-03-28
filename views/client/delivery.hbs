@@ -11,7 +11,7 @@
         </div><!-- /.row -->
         <br>
         
-        <a href="/admin">
+        <a href="/client/">
           <button class="btn btn-info"> Voltar</button>
         </a>
 
@@ -111,7 +111,7 @@
                     <td>{{reason}} {{reason_description}}</td>
                     <td>{{dateDelivery delivery_date}}</td>
                     <td>{{timeDelivery delivery_date}}</td>
-                    <td><span class="badge bg-warning">{{status}}</span></td>
+                    <td>{{statusColor status}}</td>
                     <td>
                       <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{img_received}}','{{img_package}}');" >
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
@@ -153,8 +153,8 @@
 
 <script>
   $(function () {
-    $("#example1").DataTable({
-      "searching": false, "responsive": true, "lengthChange": false, "bInfo" : false, "autoWidth": true,
+    $("#example1").DataTable({"lengthMenu": [[10, 50, 100, 500, 1000], [10, 50, 100, 500, 1000]],
+      "searching": true, "responsive": true, "lengthChange": true, "bInfo" : false, "autoWidth": true,
       "buttons": ["excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
@@ -169,7 +169,7 @@ function filter(){
     const status_filter = document.getElementById("status_filter").value
 
 
-  window.location='/admin/entregas?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
+  window.location='/client/entregas?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
 }  
 function modal(img, img2){
   if (!img){
