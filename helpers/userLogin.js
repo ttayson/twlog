@@ -15,6 +15,9 @@ module.exports = {
             res.redirect("/login");
           }
         });
+    } else {
+      req.flash("error", "Realize o Login");
+      res.redirect("/login");
     }
   },
 
@@ -30,6 +33,9 @@ module.exports = {
             res.redirect("/login");
           }
         });
+    } else {
+      req.flash("error", "Realize o Login");
+      res.redirect("/login");
     }
   },
 };
