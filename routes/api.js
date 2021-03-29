@@ -69,7 +69,7 @@ router.post("/delivery", (req, res) => {
     } else {
       Packages.findOne({
         $and: [
-          { code: req.body.barcode.toUpperCase() },
+          { code: req.body.barcode.toUpperCase().trim() },
           {
             $or: [
               { status: "Pendente" },
