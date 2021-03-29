@@ -65,7 +65,7 @@ const hbs = handlebars.create({
       return new Date(timestamp).toLocaleDateString("pt-BR");
     },
     timeDelivery: (timestamp) => {
-      return new Date(timestamp).toLocaleTimeString("pt-BR");
+      return new Date(timestamp).toLocaleTimeString("pt-BR", { hour12: false });
     },
     statusColor: (status) => {
       switch (status) {
