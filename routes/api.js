@@ -25,33 +25,38 @@ router.post("/batch", (req, res) => {
       if (!user) {
         res.json({ error: "Invalid Token" });
       } else {
-        Batch.findOne({ _id: req.body.qr }).then((batch) => {
-          if (batch) {
-            if (batch.status != "Em rota") {
-              batch.Id_deliveryman = user._id;
-              batch.status = "Em rota";
-
-              batch
-                .save()
-                .then(() => {
-                  console.log("Lote recebido");
-                  Packages.updateMany(
-                    { _id: batch.Package_list },
-                    { $set: { status: "Em rota" } }
-                  ).then(() => {
-                    res.json({ success: "ok" });
+        Batch.findOne({ _id: req.body.qr })
+          .populate("Package_list")
+          .then((batch) => {
+            console.log(batch);
+            if (batch) {
+              if (batch.status == "Pendente") {
+                batch.Id_deliveryman = user._id;
+                batch.status = "Em rota";
+                batch
+                  .save()
+                  .then(() => {
+                    console.log("Lote recebido");
+                    Packages.updateMany(
+                      { _id: batch.Package_list },
+                      { $set: { status: "Em rota" } }
+                    ).then(() => {
+                      res.json({ success: "ok", batchInfo: batch });
+                    });
+                  })
+                  .catch((err) => {
+                    console.log("Erro no recebimento de lote");
                   });
-                })
-                .catch((err) => {
-                  console.log("Erro no recebimento de lote");
-                });
-            } else if (batch.status == "Em rota") {
-              res.json({ error: "Batch received" });
+              } else if (
+                batch.status == "Em rota" ||
+                batch.status == "Concluído"
+              ) {
+                res.json({ error: "Batch received" });
+              }
+            } else {
+              res.json({ error: "Invalid Batch" });
             }
-          } else {
-            res.json({ error: "Invalid Batch" });
-          }
-        });
+          });
       }
     })
     .catch(() => {});

@@ -757,14 +757,14 @@ router.post("/delcompany", userLogin, (req, res) => {
     });
 });
 
-router.get("/lotes", (req, res) => {
+router.get("/lotes", userLogin, (req, res) => {
   // Batch.find({ status: { $ne: "Concluído" } })
   Batch.find()
     .populate("Id_deliveryman")
-    .then((allbatchs) => {
+    .then(async (allbatchs) => {
       for (item in allbatchs) {
         if (allbatchs[item].status == "Em rota") {
-          Packages.find({
+          await Packages.find({
             $and: [
               { _id: allbatchs[item].Package_list },
               { $or: [{ status: "Em rota" }, { status: "Falha na Entrega" }] },
@@ -859,7 +859,7 @@ router.post("/dellote", userLogin, (req, res) => {
   });
 });
 
-router.get("/inlote/:id", (req, res) => {
+router.get("/inlote/:id", userLogin, (req, res) => {
   Batch.findOne({ _id: req.params.id })
     .populate("Package_list")
     .then((allPackageinbatchs) => {
@@ -867,7 +867,7 @@ router.get("/inlote/:id", (req, res) => {
     });
 });
 
-router.post("/inlote/delpackage/", (req, res) => {
+router.post("/inlote/delpackage/", userLogin, (req, res) => {
   if (req.body[0].idStatus == "Pendente") {
     Batch.updateOne(
       { _id: req.body[0].idBatch },
