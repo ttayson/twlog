@@ -219,14 +219,14 @@ router.post("/addpacote", userLogin, (req, res) => {
     res.render("admin/addpackage", { erros: erros });
   } else {
     const NewPackage = {
-      code: req.body.code.toUpperCase(),
-      receiver: req.body.receiver,
+      code: req.body.code.toUpperCase().trim(),
+      receiver: req.body.receiver.trim(),
       Id_client: req.body.company,
-      cep: req.body.cep,
-      address: req.body.address,
-      district: req.body.district,
-      city: req.body.city,
-      state: req.body.state,
+      cep: req.body.cep.trim(),
+      address: req.body.address.trim(),
+      district: req.body.district.trim(),
+      city: req.body.city.trim(),
+      state: req.body.state.trim(),
       status: "Pendente",
     };
 
@@ -440,9 +440,9 @@ router.post("/adduser", userLogin, (req, res) => {
     res.render("admin/adduser", { erros: erros });
   } else {
     const NewUser = {
-      name: req.body.name,
-      email: req.body.email.toLowerCase(),
-      login: req.body.user.toLowerCase(),
+      name: req.body.name.trim(),
+      email: req.body.email.toLowerCase().trim(),
+      login: req.body.user.toLowerCase().trim(),
       type: req.body.type,
       Id_client: req.body.company,
       userpass: req.body.userpass,
@@ -510,9 +510,9 @@ router.post("/edituser", userLogin, (req, res) => {
     if (erros.length > 0) {
       res.render("admin/edituser", { erros: erros });
     } else {
-      edituser.name = req.body.name;
-      edituser.email = req.body.email;
-      edituser.login = req.body.user;
+      edituser.name = req.body.name.trim();
+      edituser.email = req.body.email.toLowerCase().trim();
+      edituser.login = req.body.user.toLowerCase().trim();
       edituser.type = req.body.type;
       edituser.Id_client = req.body.company;
       edituser.userpass = req.body.userpass;
@@ -643,12 +643,12 @@ router.post("/editempresa", userLogin, (req, res) => {
       req.flash("error_msg", "Verifique campos em branco ou inválidos");
       res.redirect("/admin/editempresa/" + req.body.id);
     } else {
-      company.name = req.body.name;
+      company.name = req.body.name.trim();
       company.cnpj = req.body.cnpj;
-      company.cep = req.body.cep;
+      company.cep = req.body.cep.trim();
       company.address = req.body.address;
-      company.city = req.body.city;
-      company.state = req.body.state;
+      company.city = req.body.city.trim();
+      company.state = req.body.state.trim();
 
       company
         .save()
@@ -724,12 +724,12 @@ router.post("/addempresa", userLogin, (req, res) => {
     res.render("admin/addcompany", { erros: erros });
   } else {
     const NewCompany = {
-      name: req.body.name,
+      name: req.body.name.trim(),
       cnpj: req.body.cnpj,
-      cep: req.body.cep,
+      cep: req.body.cep.trim(),
       address: req.body.address,
-      city: req.body.city,
-      state: req.body.state,
+      city: req.body.city.trim(),
+      state: req.body.state.trim(),
     };
 
     new Client(NewCompany)
@@ -976,13 +976,13 @@ router.post(
 
         const newImport = {
           Id_client: req.body.company,
-          code: PackageImport[item]["code"].toUpperCase(),
-          receiver: PackageImport[item]["receiver"],
-          city: PackageImport[item]["city"],
-          address: PackageImport[item]["address"],
-          district: PackageImport[item]["district"],
-          state: PackageImport[item]["state"],
-          cep: PackageImport[item]["cep"],
+          code: PackageImport[item]["code"].toUpperCase().trim(),
+          receiver: PackageImport[item]["receiver"].trim(),
+          city: PackageImport[item]["city"].trim(),
+          address: PackageImport[item]["address"].trim(),
+          district: PackageImport[item]["district"].trim(),
+          state: PackageImport[item]["state"].trim(),
+          cep: PackageImport[item]["cep"].trim(),
           status: "Pendente",
         };
 
