@@ -62,7 +62,9 @@ const hbs = handlebars.create({
   handlebars: allowInsecurePrototypeAccess(Handlebars),
   helpers: {
     dateDelivery: (timestamp) => {
-      return new Date(timestamp).toLocaleDateString("pt-BR");
+      return new Date(timestamp).toLocaleDateString("pt-BR", {
+        timeZone: "America/Recife",
+      });
     },
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-BR", { hour12: false });
