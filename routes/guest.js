@@ -38,7 +38,7 @@ router.post(
       { $set: { token: randToken.generate(64) } }
     )
       .then(() => {
-        console.log("Token Salvo");
+        console.log("Login Web: " + req.body.login);
       })
       .catch((err) => {
         console.log(err);

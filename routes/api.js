@@ -98,7 +98,7 @@ router.post("/delivery", (req, res) => {
                 };
 
                 new Delivery(Newdelivery).save().then(() => {
-                  console.log("Pacote salvo");
+                  console.log("Pacote Sincronizado - usuário: " + user.name);
                   res.json({ success: "Delivery ok" });
                 });
               })
