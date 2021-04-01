@@ -28,7 +28,6 @@ router.post("/batch", (req, res) => {
         Batch.findOne({ _id: req.body.qr })
           .populate("Package_list")
           .then((batch) => {
-            console.log(batch);
             if (batch) {
               if (batch.status == "Pendente") {
                 batch.Id_deliveryman = user._id;
@@ -144,6 +143,7 @@ router.post(
     )
       .then(() => {
         User.findOne({ login: req.body.login }).then((user) => {
+          console.log("Login APP: " + user.name);
           res.json({
             name: user.name,
             user: user.login,
