@@ -112,10 +112,13 @@
                     <td>{{timeDelivery delivery_date}}</td>
                     <td>{{statusColor status}}</td>
                     <td>
-                      <button class="btn btn-info btn-sm" data-toggle="modal" onclick="modal('{{img_received}}','{{img_package}}');" >
+                      <button class="btn btn-info btn-sm" data-toggle="modal" onclick="modal('{{img_received}}');" >
                           <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
                           <i class="far fa-eye"></i> 
-                           
+                      </button>
+                      <button class="btn btn-warning btn-sm" data-toggle="modal" onclick="modal('{{img_package}}');" >
+                          <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
+                          <i class="fas fa-home"></i> 
                       </button>
                       <button class="btn btn-danger btn-sm" data-toggle="modal"target="_blank" onclick="window.open('http://maps.google.com/maps?q={{location}}&ll={{location}}&z=17')"  >
                           <input type="hidden" value="New Tab"  >
@@ -170,14 +173,10 @@ function filter(){
 
   window.location='/client/entregas?datein='+datein+"&dateout="+dateout+"&npackage="+npackage+"&status_filter="+status_filter
 }  
-function modal(img, img2){
-  if (!img){
-    $('#img').attr('src',img2);
-    $('#modelcomp').modal('show');
-  }else{
+
+function modal(img){
     $('#img').attr('src',img);
     $('#modelcomp').modal('show');
-  }
 }  
 
 </script>
