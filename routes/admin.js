@@ -19,6 +19,7 @@ require("../models/User");
 require("../models/User_type");
 require("../models/Batch");
 require("../models/Delivery");
+require("../models/Package_Type");
 
 const Packages = mongoose.model("package");
 const Client = mongoose.model("client");
@@ -26,6 +27,7 @@ const User = mongoose.model("user");
 const User_Type = mongoose.model("user_type");
 const Batch = mongoose.model("batch");
 const Delivery = mongoose.model("delivery");
+const Package_Types = mongoose.model("package_types");
 
 const router = express.Router();
 
@@ -569,6 +571,110 @@ router.post("/deluser", userLogin, (req, res) => {
     .catch((err) => {
       console.log("Erro ao procurar user");
     });
+});
+
+router.get("/tipos", userLogin, (req, res) => {
+  Package_Types.find().then((alltypes) => {
+    res.render("admin/types", { alltypes: alltypes });
+  });
+});
+
+router.get("/addtipos", userLogin, (req, res) => {
+  res.render("admin/addPackagetypes");
+});
+
+router.post("/addtipos", userLogin, (req, res) => {
+  var erros = [];
+
+  if (
+    !req.body.description ||
+    typeof req.body.description == undefined ||
+    req.body.description == null
+  ) {
+    erros.push({ text: "Nome inválido" });
+  }
+
+  if (
+    !req.body.type ||
+    typeof req.body.type == undefined ||
+    req.body.type == null
+  ) {
+    erros.push({ text: "Tipo inválido" });
+  }
+
+  if (erros.length > 0) {
+    res.render("admin/addPackagetypes", { erros: erros });
+  } else {
+    const Newtype = {
+      description: req.body.description.trim(),
+      type: req.body.type.trim(),
+    };
+
+    new Package_Types(Newtype)
+      .save()
+      .then(() => {
+        console.log("Tipo cadastrado");
+        req.flash("success_msg", "Tipo Cadastrado");
+        res.redirect("/admin/tipos");
+      })
+      .catch((err) => {
+        console.log("Erro ao Salvar no Banco (Tipos)");
+        req.flash("error_msg", "Erro ao cadastrar empresa, verifique dados");
+        res.redirect("/admin/addtipos");
+      });
+  }
+});
+
+router.get("/edittipos/:id", userLogin, (req, res) => {
+  Package_Types.findOne({ _id: req.params.id })
+    .then((types) => {
+      res.render("admin/EditPackagetypes", { types: types });
+    })
+    .catch((err) => {
+      console.log("Erro ao editar um Tipo");
+    });
+});
+
+router.post("/edittipos", userLogin, (req, res) => {
+  Package_Types.findOne({ _id: req.body.id }).then((types) => {
+    var erros = [];
+
+    if (
+      !req.body.type ||
+      typeof req.body.type == undefined ||
+      req.body.type == null
+    ) {
+      erros.push({ text: "Tipo inválido" });
+    }
+
+    if (
+      !req.body.description ||
+      typeof req.body.description == undefined ||
+      req.body.description == null
+    ) {
+      erros.push({ text: "Descrição inválida" });
+    }
+
+    if (erros.length > 0) {
+      req.flash("error_msg", "Verifique campos em branco ou inválidos");
+      res.redirect("/admin/edittipos/" + req.body.id);
+    } else {
+      types.type = req.body.type.trim();
+      types.description = req.body.description.trim();
+
+      types
+        .save()
+        .then(() => {
+          console.log("Tipo editado");
+          res.redirect("/admin/tipos");
+        })
+        .catch((err) => {
+          console.log("Erro ao Salvar no Banco (Tipos)");
+          req.flash("error_msg", "Erro ao cadastrar tipo, verifique dados");
+          res.redirect("/admin/edittipos/" + req.body.id);
+        });
+    }
+  });
 });
 
 router.get("/empresas", userLogin, (req, res) => {

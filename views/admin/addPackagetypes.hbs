@@ -1,0 +1,56 @@
+{{#each erros}}
+  <div class="alert alert-danger">{{text}}</div>
+{{else}}
+{{/each}}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Adicionar Tipo de item</h1>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+        <br>
+
+        <a href="/admin/tipos">
+          <button class="btn btn-info"> Voltar </button>
+        </a>
+        
+        <br>
+        <br>
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<div class="col-md-6" style="display: contents;">
+            <!-- general form elements -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">Novo Tipo</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form action="/admin/addtipos" method="POST">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="">Tipo</label>
+                    <input type="text" class="form-control" name="type" placeholder="Tipo">
+                  </div>
+                  <div class="form-group">
+                    <label for="">Descrição</label>
+                    <input type="text" class="form-control" name="description" placeholder="Descrição do Tipo">
+                  </div>         
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-info">Criar</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+</div>
