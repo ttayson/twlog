@@ -7,6 +7,9 @@ const Package = new Schema(
       type: String,
       require: true,
     },
+    note_number: {
+      type: Number,
+    },
     receiver: {
       type: String,
     },
@@ -32,6 +35,13 @@ const Package = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "client",
+        require: false,
+      },
+    ],
+    Id_type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "package_types",
         require: false,
       },
     ],

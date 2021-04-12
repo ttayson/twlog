@@ -41,6 +41,21 @@
                             {{/each}}
                           </select>
                         </div>
+
+                        <div class="form-group">
+                          <label for="">Tipo do Item</label>
+                          <select class="form-control" name="company">
+                            {{#each alltypes}}
+                            <option value={{_id}}>{{type}}</option>
+                            {{else}}
+                            <option>Tipo Não cadastradas</option>
+                            {{/each}}
+                          </select>
+                        </div>
+                        <div class="form-group">
+                         <label for="">Nº da Nota Fiscal</label> 
+                          <input  class="form-control" type="text" name="nota">
+                        </div>
                         <input  type="file" name="file" required="required">
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>

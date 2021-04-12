@@ -89,10 +89,13 @@ router.get("/pacotes", userLogin, (req, res) => {
       updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
     }).then((allpackages) => {
       Client.find().then((allcompany) => {
-        res.render("admin/pacotes", {
-          allpackages: allpackages,
-          date: date,
-          allcompany: allcompany,
+        Package_Types.find().then((alltypes) => {
+          res.render("admin/pacotes", {
+            alltypes: alltypes,
+            allpackages: allpackages,
+            date: date,
+            allcompany: allcompany,
+          });
         });
       });
     });
