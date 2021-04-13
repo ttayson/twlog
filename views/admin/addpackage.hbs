@@ -46,6 +46,21 @@
                         {{/each}}
                       </select>
                   </div>
+
+                  <div class="form-group">
+                      <label for="">Tipo do Item</label>
+                      <select class="form-control" name="type">
+                        {{#each alltypes}}
+                        <option value={{_id}}>{{type}}</option>
+                        {{else}}
+                        <option>Tipo Não cadastradas</option>
+                        {{/each}}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="">Nº da Nota</label>
+                    <input type="number" class="form-control" name="notenumber" placeholder="Número da nota fiscal">
+                  </div>
                   <div class="form-group">
                     <label for="">Destinatário</label>
                     <input type="text" class="form-control" name="receiver" placeholder="Destinatário">

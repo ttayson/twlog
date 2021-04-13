@@ -44,7 +44,7 @@
 
                         <div class="form-group">
                           <label for="">Tipo do Item</label>
-                          <select class="form-control" name="company">
+                          <select class="form-control" name="type">
                             {{#each alltypes}}
                             <option value={{_id}}>{{type}}</option>
                             {{else}}
@@ -54,7 +54,7 @@
                         </div>
                         <div class="form-group">
                          <label for="">Nº da Nota Fiscal</label> 
-                          <input  class="form-control" type="text" name="nota">
+                          <input  class="form-control" type="text" name="notenumber">
                         </div>
                         <input  type="file" name="file" required="required">
                         <div class="modal-footer">
@@ -121,6 +121,7 @@
                   <thead>
                   <tr>
                     <th>Nº Pacote</th>
+                    <th>Tipo</th>
                     <th>Destinatário</th>
                     <th>Endereço</th>
                     <th>Bairro</th>
@@ -134,6 +135,11 @@
                       {{#each allpackages}}
                   <tr>
                     <td>{{code}}</td>
+                    {{#each Id_type}}
+                    <td>{{type}}</td>
+                    {{else}}
+                    <td>S/ Cadastro</td>
+				          	{{/each}} 
                     <td>{{receiver}}</td>
                     <td>{{address}}</td>
                     <td>{{district}}</td>
@@ -155,7 +161,7 @@
                     </td>
                   </tr>
                     {{else}}
-					{{/each}} 
+				          	{{/each}} 
                   </tbody>
                  </table>
 

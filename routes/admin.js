@@ -71,12 +71,16 @@ router.get("/pacotes", userLogin, (req, res) => {
         updatedAt: { $gte: new Date(datenow), $lt: new Date(datenow1) },
         status: req.query.filter,
       })
+      .populate("Id_type")
       .then((allpackages) => {
         Client.find().then((allcompany) => {
-          res.render("admin/pacotes", {
-            date: date,
-            allpackages: allpackages,
-            allcompany: allcompany,
+          Package_Types.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              alltypes: alltypes,
+              date: date,
+              allpackages: allpackages,
+              allcompany: allcompany,
+            });
           });
         });
       });
@@ -87,29 +91,36 @@ router.get("/pacotes", userLogin, (req, res) => {
     datenow.setDate(datenow.getDate() - 1);
     Packages.find({
       updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
-    }).then((allpackages) => {
-      Client.find().then((allcompany) => {
-        Package_Types.find().then((alltypes) => {
-          res.render("admin/pacotes", {
-            alltypes: alltypes,
-            allpackages: allpackages,
-            date: date,
-            allcompany: allcompany,
+    })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          Package_Types.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              alltypes: alltypes,
+              allpackages: allpackages,
+              date: date,
+              allcompany: allcompany,
+            });
           });
         });
       });
-    });
   } else if (req.query.npackage != "") {
-    Packages.find({ code: req.query.npackage }).then((allpackages) => {
-      Client.find().then((allcompany) => {
-        res.render("admin/pacotes", {
-          allpackages: allpackages,
-          date: date,
-          value: value,
-          allcompany: allcompany,
+    Packages.find({ code: req.query.npackage })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          Package_Types.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              allpackages: allpackages,
+              alltypes: alltypes,
+              date: date,
+              value: value,
+              allcompany: allcompany,
+            });
+          });
         });
       });
-    });
   } else if (req.query.status_filter != "") {
     dateout = new Date(req.query.dateout);
     dateout.setDate(dateout.getDate() + 1);
@@ -119,13 +130,17 @@ router.get("/pacotes", userLogin, (req, res) => {
         updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
         status: req.query.status_filter,
       })
+      .populate("Id_type")
       .then((allpackages) => {
         Client.find().then((allcompany) => {
-          res.render("admin/pacotes", {
-            allpackages: allpackages,
-            date: date,
-            value: value,
-            allcompany: allcompany,
+          Package_Types.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              allpackages: allpackages,
+              alltypes: alltypes,
+              date: date,
+              value: value,
+              allcompany: allcompany,
+            });
           });
         });
       });
@@ -134,22 +149,32 @@ router.get("/pacotes", userLogin, (req, res) => {
     dateout.setDate(dateout.getDate() + 1);
     Packages.find({
       updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
-    }).then((allpackages) => {
-      Client.find().then((allcompany) => {
-        res.render("admin/pacotes", {
-          allpackages: allpackages,
-          date: date,
-          value: value,
-          allcompany: allcompany,
+    })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          Package_Types.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              allpackages: allpackages,
+              alltypes: alltypes,
+              date: date,
+              value: value,
+              allcompany: allcompany,
+            });
+          });
         });
       });
-    });
   }
 });
 
 router.get("/addpacote", userLogin, (req, res) => {
   Client.find().then((allcompany) => {
-    res.render("admin/addpackage", { allcompany: allcompany });
+    Package_Types.find().then((alltypes) => {
+      res.render("admin/addpackage", {
+        allcompany: allcompany,
+        alltypes: alltypes,
+      });
+    });
   });
 });
 
@@ -227,6 +252,8 @@ router.post("/addpacote", userLogin, (req, res) => {
       code: req.body.code.toUpperCase().trim(),
       receiver: req.body.receiver.trim(),
       Id_client: req.body.company,
+      Id_type: req.body.type,
+      note_number: req.body.notenumber,
       cep: req.body.cep.trim(),
       address: req.body.address.trim(),
       district: req.body.district.trim(),
@@ -254,13 +281,19 @@ router.get("/editpacote", userLogin, (req, res) => {
 router.get("/editpacote/:id", userLogin, (req, res) => {
   Packages.findOne({ _id: req.params.id })
     .populate("Id_client")
+    .populate("Id_type")
     .then((package) => {
       Client.find({ _id: { $ne: package.Id_client[0]._id } }).then(
         (allcompany) => {
-          res.render("admin/editpackage", {
-            package: package,
-            allcompany: allcompany,
-          });
+          Package_Types.find({ _id: { $ne: package.Id_type[0]._id } }).then(
+            (alltypes) => {
+              res.render("admin/editpackage", {
+                package: package,
+                allcompany: allcompany,
+                alltypes: alltypes,
+              });
+            }
+          );
         }
       );
     })
@@ -342,6 +375,8 @@ router.post("/editpacote", userLogin, (req, res) => {
     } else {
       package.code = req.body.code;
       package.Id_client = req.body.company;
+      package.Id_type = req.body.type;
+      package.note_number = req.body.notenumber;
       package.receiver = req.body.receiver;
       package.cep = req.body.cep;
       package.address = req.body.address;
@@ -1085,6 +1120,8 @@ router.post(
 
         const newImport = {
           Id_client: req.body.company,
+          Id_type: req.body.type,
+          note_number: req.body.notenumber,
           code: PackageImport[item]["code"].toUpperCase().trim(),
           receiver: PackageImport[item]["receiver"].trim(),
           city: PackageImport[item]["city"].trim(),
