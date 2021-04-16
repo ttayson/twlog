@@ -71,9 +71,9 @@ const hbs = handlebars.create({
     },
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-br", {
-        timeStyle: "short",
+        timeStyle: "medium",
         timeZone: "America/Recife",
-        hour12: false,
+        hour12: true,
       });
     },
     statusColor: (status) => {
