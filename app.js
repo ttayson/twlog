@@ -63,13 +63,13 @@ const hbs = handlebars.create({
   helpers: {
     dateDelivery: (timestamp) => {
       console.log(
-        new Date(timestamp).toLocaleDateString("pt-br", {
-          timezone: "Brazil/brt",
+        new Date(timestamp).toLocaleDateString("pt-BR", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
         })
       );
-      return new Date(timestamp).toLocaleDateString("pt-br", {
-        timezone: "Brazil/brt",
-      });
+      return new Date(timestamp).toLocaleDateString("pt-BR");
     },
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-br", { hour12: false });
