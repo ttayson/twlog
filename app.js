@@ -63,16 +63,17 @@ const hbs = handlebars.create({
   helpers: {
     dateDelivery: (timestamp) => {
       console.log(
-        new Date(timestamp).toLocaleDateString("pt-BR", { dateStyle: "short" })
+        new Date(timestamp).toLocaleDateString("pt-br", { dateStyle: "short" })
       );
-      return new Date(timestamp).toLocaleDateString("pt-BR", {
+      return new Date(timestamp).toLocaleDateString("pt-br", {
         dateStyle: "short",
       });
     },
     timeDelivery: (timestamp) => {
-      return new Date(timestamp).toLocaleTimeString("pt-BR", {
+      return new Date(timestamp).toLocaleTimeString("pt-br", {
         timeStyle: "short",
-        timeZone: "America/Sao_Paulo",
+        timeZone: "America/Recife",
+        hour12: false,
       });
     },
     statusColor: (status) => {
