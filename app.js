@@ -62,12 +62,7 @@ const hbs = handlebars.create({
   handlebars: allowInsecurePrototypeAccess(Handlebars),
   helpers: {
     dateDelivery: (timestamp) => {
-      console.log(
-        new Date(timestamp).toLocaleDateString("pt-br", { dateStyle: "short" })
-      );
-      return new Date(timestamp).toLocaleDateString("pt-br", {
-        dateStyle: "short",
-      });
+      return new Intl.DateTimeFormat("pt-BR").format(new Date(timestamp));
     },
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-br", {
