@@ -1047,7 +1047,6 @@ router.get("/entregas/", userLogin, (req, res) => {
     })
       .populate("Id_deliveryman")
       .then((alldelivery) => {
-        console.log(alldelivery);
         res.render("admin/delivery", { alldelivery: alldelivery, date: date });
       });
   } else if (req.query.npackage != "") {

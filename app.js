@@ -62,13 +62,17 @@ const hbs = handlebars.create({
   handlebars: allowInsecurePrototypeAccess(Handlebars),
   helpers: {
     dateDelivery: (timestamp) => {
-      return new Intl.DateTimeFormat("pt-BR").format(new Date(timestamp));
+      try {
+        return new Intl.DateTimeFormat("pt-BR").format(new Date(timestamp));
+      } catch (error) {
+        return timestamp;
+      }
     },
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-br", {
         timeStyle: "medium",
         timeZone: "America/Recife",
-        hour12: true,
+        hour12: false,
       });
     },
     statusColor: (status) => {
