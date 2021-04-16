@@ -77,6 +77,7 @@ router.get("/pacotes", userClient, (req, res) => {
         status: req.query.filter,
         Id_client: res.locals.user.Id_client,
       })
+      .populate("Id_type")
       .then((allpackages) => {
         Client.find().then((allcompany) => {
           res.render("client/pacotes", {
@@ -95,31 +96,35 @@ router.get("/pacotes", userClient, (req, res) => {
     Packages.find({
       updatedAt: { $gt: new Date(datenow), $lt: new Date(datenow1) },
       Id_client: res.locals.user.Id_client,
-    }).then((allpackages) => {
-      Client.find().then((allcompany) => {
-        res.render("client/pacotes", {
-          layout: "client",
-          allpackages: allpackages,
-          date: date,
-          allcompany: allcompany,
+    })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          res.render("client/pacotes", {
+            layout: "client",
+            allpackages: allpackages,
+            date: date,
+            allcompany: allcompany,
+          });
         });
       });
-    });
   } else if (req.query.npackage != "") {
     Packages.find({
       code: req.query.npackage,
       Id_client: res.locals.user.Id_client,
-    }).then((allpackages) => {
-      Client.find().then((allcompany) => {
-        res.render("client/pacotes", {
-          layout: "client",
-          allpackages: allpackages,
-          date: date,
-          value: value,
-          allcompany: allcompany,
+    })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          res.render("client/pacotes", {
+            layout: "client",
+            allpackages: allpackages,
+            date: date,
+            value: value,
+            allcompany: allcompany,
+          });
         });
       });
-    });
   } else if (req.query.status_filter != "") {
     dateout = new Date(req.query.dateout);
     dateout.setDate(dateout.getDate() + 1);
@@ -130,6 +135,7 @@ router.get("/pacotes", userClient, (req, res) => {
         status: req.query.status_filter,
         Id_client: res.locals.user.Id_client,
       })
+      .populate("Id_type")
       .then((allpackages) => {
         Client.find().then((allcompany) => {
           res.render("client/pacotes", {
@@ -147,17 +153,19 @@ router.get("/pacotes", userClient, (req, res) => {
     Packages.find({
       updatedAt: { $gte: new Date(req.query.datein), $lt: new Date(dateout) },
       Id_client: res.locals.user.Id_client,
-    }).then((allpackages) => {
-      Client.find().then((allcompany) => {
-        res.render("client/pacotes", {
-          layout: "client",
-          allpackages: allpackages,
-          date: date,
-          value: value,
-          allcompany: allcompany,
+    })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          res.render("client/pacotes", {
+            layout: "client",
+            allpackages: allpackages,
+            date: date,
+            value: value,
+            allcompany: allcompany,
+          });
         });
       });
-    });
   }
 });
 

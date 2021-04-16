@@ -911,7 +911,7 @@ router.get("/lotes", userLogin, (req, res) => {
           await Packages.find({
             $and: [
               { _id: allbatchs[item].Package_list },
-              { $or: [{ status: "Em rota" }, { status: "Falha na Entrega" }] },
+              { status: "Em rota" },
             ],
           }).then((pack) => {
             if (pack.length == 0) {
@@ -1047,6 +1047,7 @@ router.get("/entregas/", userLogin, (req, res) => {
     })
       .populate("Id_deliveryman")
       .then((alldelivery) => {
+        console.log(alldelivery);
         res.render("admin/delivery", { alldelivery: alldelivery, date: date });
       });
   } else if (req.query.npackage != "") {

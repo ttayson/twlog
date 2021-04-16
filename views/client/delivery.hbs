@@ -89,7 +89,6 @@
                   <thead>
                   <tr>
                     <th>Código</th>
-                    <th>Entregador</th>
                     <th>Motivo</th>
                     <th>Data</th>
                     <th>Hora</th>
@@ -103,10 +102,6 @@
 
                   <tr>
                     <td>{{barcode}}</td>
-                    {{#each Id_deliveryman}}
-                    <td>{{name}}</td>
-                    {{else}}
-                    {{/each}}
                     <td>{{reason}} {{reason_description}}</td>
                     <td>{{dateDelivery delivery_date}}</td>
                     <td>{{timeDelivery delivery_date}}</td>

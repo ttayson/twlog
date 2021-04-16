@@ -67,6 +67,8 @@
                   <thead>
                   <tr>
                     <th>Nº Pacote</th>
+                    <th>Nº Nota</th>
+                    <th>Tipo</th>
                     <th>Destinatário</th>
                     <th>Endereço</th>
                     <th>Bairro</th>
@@ -79,6 +81,12 @@
                       {{#each allpackages}}
                   <tr>
                     <td>{{code}}</td>
+                    <td>{{note_number}}</td>
+                    {{#each Id_type}}
+                    <td>{{type}}</td>
+                    {{else}}
+                    <td>S/ Cadastro</td>
+				          	{{/each}} 
                     <td>{{receiver}}</td>
                     <td>{{address}}</td>
                     <td>{{district}}</td>
