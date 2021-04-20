@@ -66,6 +66,14 @@ router.post("/delivery", (req, res) => {
     if (!user) {
       res.json({ error: "Invalid Token" });
     } else {
+      console.log(
+        "TS - usuário: " +
+          user.name +
+          " Imei:" +
+          req.body.imei +
+          " Versão:" +
+          req.body.app_version
+      );
       Packages.findOne({
         $and: [
           { code: req.body.barcode.toUpperCase().trim() },
@@ -88,6 +96,7 @@ router.post("/delivery", (req, res) => {
                 const Newdelivery = {
                   barcode: req.body.barcode.toUpperCase(),
                   location: req.body.location,
+                  receiver_name: req.body.receiver_name,
                   img_package: req.body.img_package,
                   img_received: req.body.img_received,
                   status: req.body.status,
@@ -109,6 +118,7 @@ router.post("/delivery", (req, res) => {
             const Newdelivery = {
               barcode: req.body.barcode.toUpperCase(),
               location: req.body.location,
+              receiver_name: req.body.receiver_name,
               img_package: req.body.img_package,
               img_received: req.body.img_received,
               status: "Fora do sistema",
@@ -119,7 +129,9 @@ router.post("/delivery", (req, res) => {
             };
 
             new Delivery(Newdelivery).save().then(() => {
-              console.log("Pacote salvo");
+              console.log(
+                "Pacote Sincronizado (Fora do Sistema) - usuário: " + user.name
+              );
               res.json({ success: "Delivery ok" });
             });
           }
