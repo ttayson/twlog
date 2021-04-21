@@ -90,6 +90,7 @@
                   <tr>
                     <th>Código</th>
                     <th>Entregador</th>
+                    <th>Recebedor</th>
                     <th>Motivo</th>
                     <th>Data</th>
                     <th>Hora</th>
@@ -107,6 +108,7 @@
                     <td>{{name}}</td>
                     {{else}}
                     {{/each}}
+                    <td>{{receiver_name}}</td>
                     <td>{{reason}} {{reason_description}}</td>
                     <td>{{dateDelivery delivery_date}}</td>
                     <td>{{timeDelivery delivery_date}}</td>
