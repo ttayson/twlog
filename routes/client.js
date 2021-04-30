@@ -172,7 +172,6 @@ router.get("/pacotes", userClient, (req, res) => {
 router.get("/entregas/", userClient, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
   const value = req.query;
-
   if (req.query.datein == "" || req.query.datein == undefined) {
     const datenow = new Date();
     const datenow1 = new Date();
@@ -216,7 +215,7 @@ router.get("/entregas/", userClient, (req, res) => {
       Delivery.find({ barcode: req.query.npackage })
         .populate("Id_deliveryman")
         .then((alldelivery) => {
-          res.render("admin/delivery", {
+          res.render("client/delivery", {
             layout: "client",
             alldelivery: alldelivery,
             date: date,
@@ -254,7 +253,7 @@ router.get("/entregas/", userClient, (req, res) => {
               })
               .populate("Id_deliveryman")
               .then((alldelivery) => {
-                res.render("admin/delivery", {
+                res.render("client/delivery", {
                   layout: "client",
                   alldelivery: alldelivery,
                   date: date,
@@ -273,7 +272,7 @@ router.get("/entregas/", userClient, (req, res) => {
             })
               .populate("Id_deliveryman")
               .then((alldelivery) => {
-                res.render("admin/delivery", {
+                res.render("client/delivery", {
                   layout: "client",
                   alldelivery: alldelivery,
                   date: date,
