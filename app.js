@@ -19,6 +19,9 @@ const client = require("./routes/client");
 const guest = require("./routes/guest");
 const api = require("./routes/api");
 
+//data
+const format = require("date-fns/format");
+
 // Banco de Dados
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -62,9 +65,10 @@ const hbs = handlebars.create({
   handlebars: allowInsecurePrototypeAccess(Handlebars),
   helpers: {
     dateDelivery: (timestamp) => {
-      return new Date(timestamp).toLocaleDateString("en-GB", {
-        dateStyle: "short",
-      });
+      if (timestamp == undefined) {
+        return "Invalid Date";
+      }
+      return format(new Date(timestamp), "dd/MM/yyyy");
     },
     timeDelivery: (timestamp) => {
       return new Date(timestamp).toLocaleTimeString("pt-br", {
