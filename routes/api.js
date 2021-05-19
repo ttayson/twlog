@@ -27,7 +27,7 @@ router.post("/", (req, res) => {
   if (token != process.env.INTELIPOST_TOKEN) {
     res
       .status(401)
-      .send({ type: "EROOR", text: "Este pedido requer autenticação." });
+      .send({ type: "ERROR", text: "Este pedido requer autenticação." });
   } else {
     Integration_Intelipost.findOne({
       intelipost_pre_shipment_list: req.body.intelipost_pre_shipment_list,
