@@ -3,20 +3,50 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const randToken = require("rand-token");
 
+require("dotenv").config();
+
 require("../models/User");
 require("../models/Batch");
 require("../models/Delivery");
 require("../models/Package");
+require("../models/Integration_Intelipost");
 
 const User = mongoose.model("user");
 const Batch = mongoose.model("batch");
 const Delivery = mongoose.model("delivery");
 const Packages = mongoose.model("package");
+const Integration_Intelipost = mongoose.model("intelipost");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.json({ info: "Api" });
+const routerteste = "carro";
+
+router.post("/", (req, res) => {
+  token = req.get("logistic-provider-api-key");
+
+  if (token != process.env.INTELIPOST_TOKEN) {
+    res
+      .status(401)
+      .send({ type: "EROOR", text: "Este pedido requer autenticação." });
+  } else {
+    Integration_Intelipost.findOne({
+      intelipost_pre_shipment_list: req.body.intelipost_pre_shipment_list,
+    }).then(async (response) => {
+      if (response) {
+        res
+          .status(400)
+          .send({ type: "EROOR", text: "Pre lista já adicionada." });
+      } else {
+        await new Integration_Intelipost(req.body).save().then(() => {
+          console.log("Pacote de integração");
+          res.json({
+            type: "SUCCESS",
+            text: "Operação realizada com sucesso.",
+          });
+        });
+      }
+    });
+  }
 });
 
 router.post("/batch", (req, res) => {
