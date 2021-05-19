@@ -35,7 +35,7 @@ router.post("/", (req, res) => {
       if (response) {
         res
           .status(400)
-          .send({ type: "EROOR", text: "Pre lista já adicionada." });
+          .send({ type: "ERROR", text: "Pre lista já adicionada." });
       } else {
         await new Integration_Intelipost(req.body).save().then(() => {
           console.log("Pacote de integração");
