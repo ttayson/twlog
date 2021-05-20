@@ -21,7 +21,33 @@ const router = express.Router();
 
 const routerteste = "carro";
 
-router.post("/", (req, res) => {
+router.post("/prelist", (req, res) => {
+  var reponseArray = [];
+  const logistics_provider_shipment_list =
+    req.body.intelipost_pre_shipment_list;
+
+  orders_array = [];
+  shipment_order_volume_array = [];
+
+  for (item in req.body.shipment_order_array) {
+    order_number = req.body.shipment_order_array[item].order_number;
+    shipment_order_volume_array = [];
+
+    for (x in req.body.shipment_order_array[item].shipment_order_volume_array) {
+      shipment_order_volume_array[x] = {
+        shipment_order_volume_number:
+          req.body.shipment_order_array[item].shipment_order_volume_array[x]
+            .shipment_order_volume_number,
+      };
+    }
+    orders_array.push({
+      order_number,
+      shipment_order_volume_array,
+    });
+  }
+
+  reponseArray.push({ logistics_provider_shipment_list, orders_array });
+
   token = req.get("logistic-provider-api-key");
 
   if (token != process.env.INTELIPOST_TOKEN) {
@@ -39,10 +65,7 @@ router.post("/", (req, res) => {
       } else {
         await new Integration_Intelipost(req.body).save().then(() => {
           console.log("Pacote de integração");
-          res.json({
-            type: "SUCCESS",
-            text: "Operação realizada com sucesso.",
-          });
+          res.status(200).send(reponseArray[0]);
         });
       }
     });
