@@ -23,6 +23,7 @@ const routerteste = "carro";
 
 router.post("/prelist", (req, res) => {
   console.log(req.body);
+  console.log(req.headers);
 
   var reponseArray = [];
   const logistics_provider_shipment_list =
