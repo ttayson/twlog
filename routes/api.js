@@ -22,6 +22,8 @@ const router = express.Router();
 const routerteste = "carro";
 
 router.post("/prelist", (req, res) => {
+  console.log(req.body);
+
   var reponseArray = [];
   const logistics_provider_shipment_list =
     req.body.intelipost_pre_shipment_list;
