@@ -180,6 +180,7 @@ module.exports = {
                                 { $set: { sync: true } }
                               ).then(() => {
                                 console.log("Evento Atualizado (intelipost)");
+                                console.log(response.data);
                               });
                             })
                             .catch(function (error) {
