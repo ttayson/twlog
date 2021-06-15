@@ -17,14 +17,11 @@ const Delivery = mongoose.model("delivery");
 const Packages = mongoose.model("package");
 const Integration_Intelipost = mongoose.model("intelipost");
 
+const { import_intelipost } = require("../helpers/Import_List");
+
 const router = express.Router();
 
-const routerteste = "carro";
-
 router.post("/prelist", (req, res) => {
-  console.log(req.body);
-  console.log(req.headers);
-
   var reponseArray = [];
   const logistics_provider_shipment_list =
     req.body.intelipost_pre_shipment_list;
@@ -66,10 +63,13 @@ router.post("/prelist", (req, res) => {
           .status(400)
           .send({ type: "ERROR", text: "Pre lista já adicionada." });
       } else {
-        await new Integration_Intelipost(req.body).save().then(() => {
-          console.log("Pacote de integração");
-          res.status(200).send(reponseArray[0]);
-        });
+        await new Integration_Intelipost(req.body)
+          .save()
+          .then(async (params) => {
+            console.log("Pacote de integração");
+            await import_intelipost(params._id);
+            res.status(200).send(reponseArray[0]);
+          });
       }
     });
   }

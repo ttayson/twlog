@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const qr = require("qr-image");
+const format = require("date-fns/format");
 
 const { userLogin } = require("../helpers/userLogin");
 const { userAdmin } = require("../helpers/userLogin");
@@ -12,6 +13,7 @@ const fs = require("fs");
 
 // Upload files
 const UploadCSV = require("../helpers/uploadCSV");
+const { import_intelipost } = require("../helpers/Import_List");
 
 require("../models/Package");
 require("../models/Client");
@@ -20,6 +22,7 @@ require("../models/User_type");
 require("../models/Batch");
 require("../models/Delivery");
 require("../models/Package_Type");
+require("../models/List_import");
 
 const Packages = mongoose.model("package");
 const Client = mongoose.model("client");
@@ -28,6 +31,7 @@ const User_Type = mongoose.model("user_type");
 const Batch = mongoose.model("batch");
 const Delivery = mongoose.model("delivery");
 const Package_Types = mongoose.model("package_types");
+const List_Import = mongoose.model("list_import");
 
 const router = express.Router();
 
@@ -55,12 +59,26 @@ router.get("/", userLogin, (req, res) => {
   });
 });
 
-router.get("/pacotes", userLogin, (req, res) => {
+router.get("/pacotes", (req, res) => {
   date = new Date().toISOString().slice(0, 10);
 
   const value = req.query;
-
-  if (req.query.filter && req.query.filter != "") {
+  if (req.query.nlist && req.query.nlist != "") {
+    Packages.find({ Id_List: req.query.nlist })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          Package_Types.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              alltypes: alltypes,
+              date: date,
+              allpackages: allpackages,
+              allcompany: allcompany,
+            });
+          });
+        });
+      });
+  } else if (req.query.filter && req.query.filter != "") {
     const datenow = new Date();
     const datenow1 = new Date();
     datenow1.setDate(datenow1.getDate() + 1);
@@ -1093,6 +1111,31 @@ router.get("/entregas/", userLogin, (req, res) => {
   }
 });
 
+router.get("/listas/", (req, res) => {
+  var delivered = [];
+  List_Import.find()
+    .populate("Id_client")
+    .then(async (alllist) => {
+      res.render("admin/listas", { alllist: alllist });
+    });
+});
+
+router.post("/listas/del", (req, res) => {
+  List_Import.findOne({ _id: req.body.id }).then(async (list) => {
+    if (list.status == "Não Iniciada" && list.type == "interna") {
+      Packages.deleteMany({ Id_List: list.Id_List }).then((result) => {
+        List_Import.deleteOne({ _id: req.body.id }).then((listdel) => {
+          res.json({ ok: "deletok" });
+        });
+      });
+    } else if (list.status != "Não Iniciada" && list.type == "interna") {
+      res.json({ ok: "deleterror" });
+    } else if (list.status == "Não Iniciada" && list.type != "interna") {
+      res.json({ ok: "delfail" });
+    }
+  });
+});
+
 router.post(
   "/importpackage",
   UploadCSV.single("file"),
@@ -1102,6 +1145,8 @@ router.post(
     fs.readFile("./uploads/file.csv", async (err, data) => {
       var erros = [];
       var success = [];
+      var Id_List = (await Math.floor(Math.random() * (99999 - 10000))) + 10000;
+
       if (err) {
         console.error(err);
         return;
@@ -1119,6 +1164,7 @@ router.post(
         }
 
         const newImport = {
+          Id_List: Id_List,
           Id_client: req.body.company,
           Id_type: req.body.type,
           note_number: req.body.notenumber,
@@ -1156,6 +1202,25 @@ router.post(
           success.length + " Pacotes foram adicionados com sucesso"
         );
       }
+      const listimport = {
+        Id_List: Id_List,
+        Qt_Sucess: success.length,
+        Qt_error: erros.length,
+        User_add: req.user.login,
+        Id_client: req.body.company,
+        note_number: req.body.notenumber,
+        type: "interna",
+      };
+
+      await new List_Import(listimport)
+        .save()
+        .then(() => {
+          console.log("Lista de Importação Adicionada");
+        })
+        .catch((err) => {
+          console.log("Erro ao Salvar no Banco (Lista de importação)");
+        });
+
       res.redirect("/admin/pacotes");
     });
   }

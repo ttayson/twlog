@@ -19,6 +19,10 @@ const client = require("./routes/client");
 const guest = require("./routes/guest");
 const api = require("./routes/api");
 
+//Cron
+const cron = require("node-cron");
+const { import_intelipost } = require("./helpers/Import_List");
+
 //data
 const format = require("date-fns/format");
 
@@ -27,6 +31,9 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
+
+//cron
+// cron.schedule("*/5 * * * *", () => import_intelipost());
 
 //Configurações
 //session

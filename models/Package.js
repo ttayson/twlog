@@ -10,6 +10,9 @@ const Package = new Schema(
     note_number: {
       type: Number,
     },
+    Id_List: {
+      type: Number,
+    },
     receiver: {
       type: String,
     },
