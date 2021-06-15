@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const List_Import = new Schema(
   {
     Id_List: {
-      type: Number,
+      type: String,
       require: true,
     },
     Qt_Sucess: {

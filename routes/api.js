@@ -160,6 +160,7 @@ router.post("/delivery", (req, res) => {
                   reason_description: req.body.reason_description,
                   Id_deliveryman: user._id,
                   delivery_date: req.body.date,
+                  sync: false,
                 };
 
                 new Delivery(Newdelivery).save().then(() => {
@@ -182,6 +183,7 @@ router.post("/delivery", (req, res) => {
               reason_description: req.body.reason_description,
               Id_deliveryman: user._id,
               delivery_date: req.body.date,
+              sync: false,
             };
 
             new Delivery(Newdelivery).save().then(() => {

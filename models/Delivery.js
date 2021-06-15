@@ -32,6 +32,9 @@ const Delivery = new Schema(
     delivery_date: {
       type: Date,
     },
+    sync: {
+      type: Boolean,
+    },
     Id_deliveryman: [
       {
         type: Schema.Types.ObjectId,

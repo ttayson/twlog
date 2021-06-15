@@ -1,16 +1,19 @@
 const mongoose = require("mongoose");
 const addMinutes = require("date-fns/addMinutes");
 const format = require("date-fns/format");
+const axios = require("axios");
 
 require("../models/Integration_Intelipost");
 require("../models/Client");
 require("../models/Package");
 require("../models/List_import");
+require("../models/Delivery");
 
 const Intelipost = mongoose.model("intelipost");
 const Client = mongoose.model("client");
 const Packages = mongoose.model("package");
 const List_import = mongoose.model("list_import");
+const Delivery = mongoose.model("delivery");
 
 module.exports = {
   import_intelipost: async function (id) {
@@ -104,6 +107,93 @@ module.exports = {
           .catch((err) => {
             console.log("Erro ao Salvar no Banco (import Intelipost)");
           });
+      }
+    });
+  },
+  event_inteliport: async function () {
+    await Delivery.find({ sync: false }).then(async (result) => {
+      for (item in result) {
+        await Packages.findOne({ code: result[item].barcode }).then(
+          async (packages) => {
+            await List_import.findOne({ Id_List: packages.Id_List }).then(
+              async (list) => {
+                if (list.type != "interna") {
+                  await Intelipost.findOne({
+                    intelipost_pre_shipment_list: list.Id_List,
+                  }).then(async (prelist) => {
+                    for (item in prelist.shipment_order_array) {
+                      for (i in prelist.shipment_order_array[item]
+                        .shipment_order_volume_array) {
+                        if (
+                          prelist.shipment_order_array[item]
+                            .shipment_order_volume_array[i]
+                            .shipment_order_volume_number === packages.code
+                        ) {
+                          data = {
+                            logistic_provider: "Lm Translog",
+                            shipper: "Livraria Juspodivm",
+                            invoice_key:
+                              prelist.shipment_order_array[item]
+                                .shipment_order_volume_array[i]
+                                .shipment_order_volume_invoice_array[0]
+                                .invoice_key,
+                            invoice_series:
+                              prelist.shipment_order_array[item]
+                                .shipment_order_volume_array[i]
+                                .shipment_order_volume_invoice_array[0]
+                                .invoice_series,
+                            invoice_number:
+                              prelist.shipment_order_array[item]
+                                .shipment_order_volume_array[i]
+                                .shipment_order_volume_invoice_array[0]
+                                .invoice_number,
+                            tracking_code: packages.code,
+                            order_number:
+                              prelist.shipment_order_array[item].order_number,
+                            volume_number: "1",
+                            events: [
+                              {
+                                event_date: new Date(),
+                                original_code: "14A",
+                                original_message: "Entregue",
+                              },
+                            ],
+                          };
+
+                          const options = {
+                            method: "POST",
+                            url: "https://api.intelipost.com.br/api/v1/tracking/add/events",
+                            headers: {
+                              "Content-Type": "application/json",
+                              "logistic-provider-api-key":
+                                "10e32e63-7a24-458a-eafd-ab41524eb9c9",
+                              platform: "intelipost-docs",
+                            },
+                            data,
+                          };
+
+                          await axios
+                            .request(options)
+                            .then(function (response) {
+                              Delivery.updateOne(
+                                { barcode: packages.code },
+                                { $set: { sync: true } }
+                              ).then(() => {
+                                console.log("Evento Atualizado (intelipost)");
+                              });
+                            })
+                            .catch(function (error) {
+                              console.error(error);
+                            });
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+            );
+          }
+        );
       }
     });
   },

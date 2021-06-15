@@ -13,7 +13,10 @@ const fs = require("fs");
 
 // Upload files
 const UploadCSV = require("../helpers/uploadCSV");
-const { import_intelipost } = require("../helpers/Import_List");
+const {
+  import_intelipost,
+  event_inteliport,
+} = require("../helpers/Import_List");
 
 require("../models/Package");
 require("../models/Client");
@@ -1112,6 +1115,7 @@ router.get("/entregas/", userLogin, (req, res) => {
 });
 
 router.get("/listas/", (req, res) => {
+  event_inteliport();
   var delivered = [];
   List_Import.find()
     .populate("Id_client")

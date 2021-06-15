@@ -21,7 +21,10 @@ const api = require("./routes/api");
 
 //Cron
 const cron = require("node-cron");
-const { import_intelipost } = require("./helpers/Import_List");
+const {
+  import_intelipost,
+  event_inteliport,
+} = require("./helpers/Import_List");
 
 //data
 const format = require("date-fns/format");
@@ -33,7 +36,7 @@ require("dotenv").config();
 const app = express();
 
 //cron
-// cron.schedule("*/5 * * * *", () => import_intelipost());
+cron.schedule("*/1 * * * *", () => event_inteliport());
 
 //Configurações
 //session
