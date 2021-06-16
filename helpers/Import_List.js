@@ -154,7 +154,7 @@ module.exports = {
                             events: [
                               {
                                 event_date: new Date(),
-                                original_code: "14A",
+                                original_code: "14",
                                 original_message: "Entregue",
                               },
                             ],
