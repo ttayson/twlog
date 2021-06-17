@@ -3,6 +3,8 @@ const addMinutes = require("date-fns/addMinutes");
 const format = require("date-fns/format");
 const axios = require("axios");
 
+require("dotenv").config();
+
 require("../models/Integration_Intelipost");
 require("../models/Client");
 require("../models/Package");
@@ -124,6 +126,13 @@ module.exports = {
                     for (item in prelist.shipment_order_array) {
                       for (i in prelist.shipment_order_array[item]
                         .shipment_order_volume_array) {
+                        if (packages.status == "Entregue") {
+                          var delivery_code = 35;
+                          var delivery_message = "Entregue";
+                        } else {
+                          var delivery_code = 44;
+                          var delivery_message = "Falha na Entrega";
+                        }
                         if (
                           prelist.shipment_order_array[item]
                             .shipment_order_volume_array[i]
@@ -154,8 +163,8 @@ module.exports = {
                             events: [
                               {
                                 event_date: new Date(),
-                                original_code: "14",
-                                original_message: "Entregue",
+                                original_code: delivery_code,
+                                original_message: delivery_message,
                               },
                             ],
                           };
@@ -166,7 +175,7 @@ module.exports = {
                             headers: {
                               "Content-Type": "application/json",
                               "logistic-provider-api-key":
-                                "10e32e63-7a24-458a-eafd-ab41524eb9c9",
+                                process.env.INTELIPOST_TOKEN,
                               platform: "intelipost-docs",
                             },
                             data,
@@ -180,7 +189,7 @@ module.exports = {
                                 { $set: { sync: true } }
                               ).then(() => {
                                 console.log("Evento Atualizado (intelipost)");
-                                console.log(response.data);
+                                // console.log(response.data);
                               });
                             })
                             .catch(function (error) {

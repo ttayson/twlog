@@ -1115,11 +1115,33 @@ router.get("/entregas/", userLogin, (req, res) => {
 });
 
 router.get("/listas/", (req, res) => {
-  event_inteliport();
   var delivered = [];
   List_Import.find()
     .populate("Id_client")
     .then(async (alllist) => {
+      for (item in alllist) {
+        if (alllist[item].status == "Não Iniciada") {
+          await Packages.find({ Id_List: alllist[item].Id_List }).then(
+            async (pack) => {
+              console.log(pack);
+              for (i in pack) {
+                if (pack[i].status != "Pendente") {
+                  console.log("Enteou");
+                  await List_Import.updateOne(
+                    { _id: alllist[item]._id },
+                    { $set: { status: "Iniciada" } }
+                  )
+                    .then(() => {})
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              }
+            }
+          );
+        }
+      }
+
       res.render("admin/listas", { alllist: alllist });
     });
 });
@@ -1132,7 +1154,7 @@ router.post("/listas/del", (req, res) => {
           res.json({ ok: "deletok" });
         });
       });
-    } else if (list.status != "Não Iniciada" && list.type == "interna") {
+    } else if (list.status != "Não Iniciada") {
       res.json({ ok: "deleterror" });
     } else if (list.status == "Não Iniciada" && list.type != "interna") {
       res.json({ ok: "delfail" });

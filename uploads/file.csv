@@ -1,9 +1,9 @@
-code,receiver,city,address,district,state,cep,note_number
-12314534,Talles Tayson         ,Natal,"Rua Luiz Lucas, 29",Lagoa nova,RN,59114254,
-56878,Thalita Freires,Macaiba,"Rua Luiz Lucas, 30       ",Quintas,RN,59095151,
-90875646,Carlos,Natal,"Rua Luiz Lucas, 31",Ribeira,RN,59095151,
-45636788,João Maria,Macaiba,"Rua Luiz Lucas, 32",Nova Natal,RN,59095151,
-563456,Maria Chica,Natal,"Rua Luiz Lucas, 33",Lagoa nova,RN   ,59095151,
-45353453,Wlisses Guerra,Macaiba,"Rua Luiz Lucas, 34",Quintas,RN,59095151,
-34543534543,Telles Silva,Natal,"Rua Luiz Lucas, 35",Ribeira,RN,59095151,
-45345353453,Bruno Carlos,Macaiba,"Rua Luiz Lucas, 36",Ribeira,RN,59095151,
+code,receiver,city,address,district,state,cep
+12314534,Talles Tayson         ,Natal,"Rua Luiz Lucas, 29",Lagoa nova,RN,59114254
+56878,Thalita Freires,Macaiba,"Rua Luiz Lucas, 30       ",Quintas,RN,59095151
+90875646,Carlos,Natal,"Rua Luiz Lucas, 31",Ribeira,RN,59095151
+45636788,João Maria,Macaiba,"Rua Luiz Lucas, 32",Nova Natal,RN,59095151
+563456,Maria Chica,Natal,"Rua Luiz Lucas, 33",Lagoa nova,RN   ,59095151
+45353453,Wlisses Guerra,Macaiba,"Rua Luiz Lucas, 34",Quintas,RN,59095151
+34543534543,Telles Silva,Natal,"Rua Luiz Lucas, 35",Ribeira,RN,59095151
+45345353453,Bruno Carlos,Macaiba,"Rua Luiz Lucas, 36",Ribeira,RN,59095151
