@@ -62,7 +62,7 @@ router.get("/", userLogin, (req, res) => {
   });
 });
 
-router.get("/pacotes", (req, res) => {
+router.get("/pacotes", userLogin, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
 
   const value = req.query;
