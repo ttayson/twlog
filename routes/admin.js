@@ -17,6 +17,7 @@ const {
   import_intelipost,
   event_inteliport,
 } = require("../helpers/Import_List");
+const { tag } = require("../helpers/etiqueta");
 
 require("../models/Package");
 require("../models/Client");
@@ -1123,10 +1124,8 @@ router.get("/listas/", (req, res) => {
         if (alllist[item].status == "Não Iniciada") {
           await Packages.find({ Id_List: alllist[item].Id_List }).then(
             async (pack) => {
-              console.log(pack);
               for (i in pack) {
                 if (pack[i].status != "Pendente") {
-                  console.log("Enteou");
                   await List_Import.updateOne(
                     { _id: alllist[item]._id },
                     { $set: { status: "Iniciada" } }
@@ -1258,6 +1257,51 @@ router.get("/qrcode/:code", userLogin, (req, res) => {
   res.type("svg");
 
   code.pipe(res);
+});
+
+router.get("/etiquetas/:id/:local?", async (req, res) => {
+  var tags = "";
+  if (req.params.local == "batch") {
+    tags = await Batch.find({ _id: req.params.id })
+      .populate("Package_list")
+      .then(async (lotes) => {
+        const data = await tag(lotes, req.params.local);
+        return data;
+      });
+  } else if (req.params.local == "package") {
+    tags = await Packages.find({ _id: req.params.id }).then(
+      async (packages) => {
+        const data = await tag(packages, req.params.local);
+        return data;
+      }
+    );
+  } else if (req.params.local == "list") {
+  }
+
+  var PdfPrinter = require("pdfmake/src/printer");
+  var fs = require("fs");
+
+  var fonts = {
+    Roboto: {
+      normal: "public/fonts/Roboto-Regular.ttf",
+      bold: "public/fonts/Roboto-Medium.ttf",
+      italics: "public/fonts/Roboto-Italic.ttf",
+      bolditalics: "public/fonts/Roboto-MediumItalic.ttf",
+    },
+  };
+  var printer = new PdfPrinter(fonts);
+
+  var options = {
+    // ...
+  };
+
+  var pdfDoc = printer.createPdfKitDocument(tags, options);
+  let stream = pdfDoc.pipe((temp123 = fs.createWriteStream("document.pdf")));
+  pdfDoc.end();
+
+  stream.on("finish", function () {
+    res.download("document.pdf");
+  });
 });
 
 router.get("/logout", (req, res) => {
