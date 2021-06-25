@@ -435,9 +435,9 @@ module.exports = {
             var tagEnd = {
               style: "tableExample",
               pageBreak: "after",
-              margin: [0, 0, 0, 15],
+              margin: [0, 0, 0, 5],
               table: {
-                widths: [160, 405],
+                widths: [170, 395],
                 body: [
                   [
                     [
@@ -465,34 +465,34 @@ module.exports = {
                           fontSize: 10,
                         },
                         {
-                          text: `Destinatário: ${receiver}`,
+                          text: `Nome: ${receiver}`,
                           margin: [5, 0, 0, 0],
-                          fontSize: 10,
+                          fontSize: 8,
                           alignment: "left",
                         },
                         {
-                          text: `Endereço: ${address}`,
+                          text: `End.: ${address}`,
                           margin: [5, 0, 0, 0],
-                          fontSize: 10,
+                          fontSize: 8,
                         },
                         {
                           columns: [
                             {
                               text: `Cidade: ${city}`,
                               margin: [5, 0, 0, 0],
-                              fontSize: 10,
+                              fontSize: 8,
                             },
                             {
                               text: `Estado: ${state}`,
                               margin: [5, 0, 0, 0],
-                              fontSize: 10,
+                              fontSize: 8,
                             },
                           ],
                         },
                         {
                           text: `CEP: ${cep}`,
                           margin: [5, 0, 0, 0],
-                          fontSize: 10,
+                          fontSize: 8,
                         },
                       ],
                     ],
@@ -507,8 +507,8 @@ module.exports = {
                           },
                           {
                             text: clientName,
-                            margin: [10, 0, 10, 0],
-                            fontSize: 20,
+                            margin: [10, 0, 10, 10],
+                            fontSize: 15,
                             alignment: "right",
                           },
                         ],
@@ -517,12 +517,12 @@ module.exports = {
                         columns: [
                           [
                             {
-                              text: `Destinatário: ${receiver}`,
+                              text: `Nome: ${receiver}`,
                               margin: [5, 0, 0, 0],
                               fontSize: 10,
                             },
                             {
-                              text: `Endereço: ${address}`,
+                              text: `End.: ${address}`,
                               margin: [5, 0, 0, 0],
                               fontSize: 10,
                             },
@@ -626,9 +626,9 @@ module.exports = {
           } else {
             var tag = {
               style: "tableExample",
-              margin: [0, 0, 0, 15],
+              margin: [0, 0, 0, 5],
               table: {
-                widths: [160, 405],
+                widths: [170, 395],
                 body: [
                   [
                     [
@@ -656,34 +656,34 @@ module.exports = {
                           fontSize: 10,
                         },
                         {
-                          text: `Destinatário: ${receiver}`,
+                          text: `Nome: ${receiver}`,
                           margin: [5, 0, 0, 0],
-                          fontSize: 10,
+                          fontSize: 8,
                           alignment: "left",
                         },
                         {
-                          text: `Endereço: ${address}`,
+                          text: `End.: ${address}`,
                           margin: [5, 0, 0, 0],
-                          fontSize: 10,
+                          fontSize: 8,
                         },
                         {
                           columns: [
                             {
                               text: `Cidade: ${city}`,
                               margin: [5, 0, 0, 0],
-                              fontSize: 10,
+                              fontSize: 8,
                             },
                             {
                               text: `Estado: ${state}`,
                               margin: [5, 0, 0, 0],
-                              fontSize: 10,
+                              fontSize: 8,
                             },
                           ],
                         },
                         {
                           text: `CEP: ${cep}`,
                           margin: [5, 0, 0, 0],
-                          fontSize: 10,
+                          fontSize: 8,
                         },
                       ],
                     ],
@@ -698,8 +698,8 @@ module.exports = {
                           },
                           {
                             text: clientName,
-                            margin: [10, 0, 10, 0],
-                            fontSize: 20,
+                            margin: [10, 0, 10, 10],
+                            fontSize: 15,
                             alignment: "right",
                           },
                         ],
@@ -708,12 +708,12 @@ module.exports = {
                         columns: [
                           [
                             {
-                              text: `Destinatário: ${receiver}`,
+                              text: `Nome: ${receiver}`,
                               margin: [5, 0, 0, 0],
                               fontSize: 10,
                             },
                             {
-                              text: `Endereço: ${address}`,
+                              text: `End.: ${address}`,
                               margin: [5, 0, 0, 0],
                               fontSize: 10,
                             },
