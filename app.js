@@ -1,5 +1,6 @@
 //MOdulos
 const express = require("express");
+var favicon = require("serve-favicon");
 const handlebars = require("express-handlebars");
 const Handlebars = require("handlebars");
 const {
@@ -31,12 +32,16 @@ const format = require("date-fns/format");
 
 // Banco de Dados
 const mongoose = require("mongoose");
+const { deliveryUpdate } = require("./helpers/cron");
 require("dotenv").config();
 
 const app = express();
 
 //cron
-cron.schedule("*/1 * * * *", () => event_inteliport());
+cron.schedule("*/1 * * * *", () => {
+  event_inteliport();
+  deliveryUpdate();
+});
 
 //Configurações
 //session
@@ -124,6 +129,16 @@ const hbs = handlebars.create({
             '<span class="badge bg-success"> ' + status + " </span>"
           );
           break;
+        case "Intelipost":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-success"> ' + status + " </span>"
+          );
+          break;
+        case "interna":
+          return new Handlebars.SafeString(
+            '<span class="badge bg-danger"> ' + status + " </span>"
+          );
+          break;
         default:
           return new Handlebars.SafeString(
             '<span class="badge bg-warning"> Sem Status </span>'
@@ -172,6 +187,7 @@ mongoose
 //Public
 app.use(express.static("images"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
 // Rotas
 

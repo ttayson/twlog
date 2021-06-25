@@ -12,8 +12,7 @@
                 <blockquote>
                   <p><strong>Empresa: </strong>{{clientData.name}}</p>
                   <p><strong>CNPJ: </strong>{{clientData.cnpj}}</p>
-                  <p><strong>Endereço: </strong>{{clientData.address}}</p>
-                  <p><strong>CEP: </strong>{{clientData.cep}}</p>
+
                 </blockquote>
               </div>
             </div>
@@ -23,10 +22,6 @@
         <div class="row mb-2">
           <div class="col-sm-12">
             <h1 class="m-0">Dashboard</h1><br><br>
-            
-            
-
-
 <div class="row">
           <div class="col-lg-3 col-6">
             <!-- small box -->
@@ -89,6 +84,42 @@
           </div>
           <!-- ./col -->
         </div>
+
+                  <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">Listas</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                  <thead>
+                  <tr>
+                    <th>Nº da Lista</th>
+                    <th>Status</th>
+                    <th>Qt. de Pacotes</th>
+                    <th>Tipo</th>
+                    <th>Data de Adição</th>
+                    <th>Entregues</th>
+                    <th>Falha na Entrega</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                {{#each list}}
+                  <tr>
+                    <td><a href="/client/pacotes?nlist={{Id_List}}">{{Id_List}}</a></td>
+                    <td>{{status}}</td>
+                    <td>{{Qt_Sucess}}</td>
+                    <td>{{statusColor type}}</td>
+                    <td>{{dateDelivery createdAt}}</td>
+                    <td>{{Qt_delivery}}</td> 
+                    <td>{{Qt_errorDelivery}}</td>
+                  </tr>
+                    {{else}}
+                    <td>Não definido</td>
+                    {{/each}} 
+                   </tbody>
+                </table>
+              </div>
+            </div>
 
 </div>
 </div>

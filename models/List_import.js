@@ -11,7 +11,13 @@ const List_Import = new Schema(
       type: Number,
     },
     Qt_error: {
-      type: String,
+      type: Number,
+    },
+    Qt_delivery: {
+      type: Number,
+    },
+    Qt_errorDelivery: {
+      type: Number,
     },
     status: {
       type: String,

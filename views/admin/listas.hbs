@@ -84,8 +84,8 @@
                     <td>{{User_add}}</td>
                     <td>{{type}}</td>
                     <td>{{dateDelivery createdAt}}</td>
-                    <td></td> 
-                    <td></td>
+                    <td>{{Qt_delivery}}</td> 
+                    <td>{{Qt_errorDelivery}}</td>
                     <td>
 
                       <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}','{{note}}')">
@@ -95,6 +95,9 @@
                       <button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deletar('{{id}}')">
                         <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
                         <i class="fas fa-qrcode"></i>
+                      </button>
+                      <button class="btn btn-success btn-sm" onclick="window.location='/admin/etiquetas/{{id}}/list'">
+                          <i class="fas fa-barcode"></i> 
                       </button>
                     </td>
                     </td>

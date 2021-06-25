@@ -18,6 +18,7 @@ const {
   event_inteliport,
 } = require("../helpers/Import_List");
 const { tag } = require("../helpers/etiqueta");
+const { deliveryUpdate } = require("../helpers/cron");
 
 require("../models/Package");
 require("../models/Client");
@@ -47,12 +48,15 @@ router.get("/", userLogin, (req, res) => {
           (faiuldelivery) => {
             Packages.countDocuments({ status: "Fora do sistema" }).then(
               (systemout) => {
-                res.render("admin/index", {
-                  pending: pending,
-                  delyvered: delyvered,
-                  faiuldelivery: faiuldelivery,
-                  onroute: onroute,
-                  systemout: systemout,
+                List_Import.find().then((list) => {
+                  res.render("admin/index", {
+                    pending: pending,
+                    delyvered: delyvered,
+                    faiuldelivery: faiuldelivery,
+                    onroute: onroute,
+                    systemout: systemout,
+                    list: list,
+                  });
                 });
               }
             );
@@ -1115,37 +1119,15 @@ router.get("/entregas/", userLogin, (req, res) => {
   }
 });
 
-router.get("/listas/", (req, res) => {
-  var delivered = [];
+router.get("/listas/", userLogin, (req, res) => {
   List_Import.find()
     .populate("Id_client")
     .then(async (alllist) => {
-      for (item in alllist) {
-        if (alllist[item].status == "Não Iniciada") {
-          await Packages.find({ Id_List: alllist[item].Id_List }).then(
-            async (pack) => {
-              for (i in pack) {
-                if (pack[i].status != "Pendente") {
-                  await List_Import.updateOne(
-                    { _id: alllist[item]._id },
-                    { $set: { status: "Iniciada" } }
-                  )
-                    .then(() => {})
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }
-              }
-            }
-          );
-        }
-      }
-
       res.render("admin/listas", { alllist: alllist });
     });
 });
 
-router.post("/listas/del", (req, res) => {
+router.post("/listas/del", userLogin, (req, res) => {
   List_Import.findOne({ _id: req.body.id }).then(async (list) => {
     if (list.status == "Não Iniciada" && list.type == "interna") {
       Packages.deleteMany({ Id_List: list.Id_List }).then((result) => {
@@ -1259,7 +1241,7 @@ router.get("/qrcode/:code", userLogin, (req, res) => {
   code.pipe(res);
 });
 
-router.get("/etiquetas/:id/:local?", async (req, res) => {
+router.get("/etiquetas/:id/:local?", userLogin, async (req, res) => {
   var tags = "";
   if (req.params.local == "batch") {
     tags = await Batch.find({ _id: req.params.id })
@@ -1276,6 +1258,17 @@ router.get("/etiquetas/:id/:local?", async (req, res) => {
       }
     );
   } else if (req.params.local == "list") {
+    tags = await List_Import.findOne({ _id: req.params.id }).then(
+      async (list) => {
+        const temp = await Packages.find({ Id_List: list.Id_List }).then(
+          async (packages) => {
+            const data = await tag(packages, req.params.local);
+            return data;
+          }
+        );
+        return temp;
+      }
+    );
   }
 
   var PdfPrinter = require("pdfmake/src/printer");
@@ -1296,11 +1289,13 @@ router.get("/etiquetas/:id/:local?", async (req, res) => {
   };
 
   var pdfDoc = printer.createPdfKitDocument(tags, options);
-  let stream = pdfDoc.pipe((temp123 = fs.createWriteStream("document.pdf")));
+  let stream = pdfDoc.pipe(
+    (temp123 = fs.createWriteStream("public/document.pdf"))
+  );
   pdfDoc.end();
 
   stream.on("finish", function () {
-    res.download("document.pdf");
+    res.download("public/document.pdf");
   });
 });
 

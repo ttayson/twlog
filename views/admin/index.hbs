@@ -66,8 +66,44 @@
               <a href="/admin/pacotes?filter=Falha na Entrega" class="small-box-footer">Mais Informações <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
+          </div>
           <!-- ./col -->
-        </div>
+          <div class="card">
+              <div class="card-header border-0">
+                <h3 class="card-title">Listas</h3>
+              </div>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                  <thead>
+                  <tr>
+                    <th>Nº da Lista</th>
+                    <th>Status</th>
+                    <th>Qt. de Pacotes</th>
+                    <th>Tipo</th>
+                    <th>Data de Adição</th>
+                    <th>Entregues</th>
+                    <th>Falha na Entrega</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                {{#each list}}
+                  <tr>
+                    <td><a href="/admin/pacotes?nlist={{Id_List}}">{{Id_List}}</a></td>
+                    <td>{{status}}</td>
+                    <td>{{Qt_Sucess}}</td>
+                    <td>{{statusColor type}}</td>
+                    <td>{{dateDelivery createdAt}}</td>
+                    <td>{{Qt_delivery}}</td> 
+                    <td>{{Qt_errorDelivery}}</td>
+                  </tr>
+                    {{else}}
+                    <td>Não definido</td>
+                    {{/each}} 
+                   </tbody>
+                </table>
+              </div>
+            </div>
+
 
 </div>
 </div>

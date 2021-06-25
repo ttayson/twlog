@@ -414,7 +414,7 @@ module.exports = {
       dd = { ...dd, content };
       count = 0;
       return dd;
-    } else if (type == "package") {
+    } else if (type == "package" || type == "list") {
       var count = 0;
       for (item in data) {
         count += 1;

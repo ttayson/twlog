@@ -10,6 +10,8 @@ require("../models/User");
 require("../models/User_type");
 require("../models/Batch");
 require("../models/Delivery");
+require("../models/List_import");
+require("../models/Package_Type");
 
 const Packages = mongoose.model("package");
 const Client = mongoose.model("client");
@@ -17,6 +19,8 @@ const User = mongoose.model("user");
 const User_Type = mongoose.model("user_type");
 const Batch = mongoose.model("batch");
 const Delivery = mongoose.model("delivery");
+const List_import = mongoose.model("list_import");
+const Package_Type = mongoose.model("package_types");
 
 const router = express.Router();
 
@@ -43,15 +47,20 @@ router.get("/", userClient, (req, res) => {
           }).then((systemout) => {
             Client.findOne({ _id: res.locals.user.Id_client }).then(
               (clientData) => {
-                res.render("client/index", {
-                  layout: "client",
-                  clientData: clientData,
-                  pending: pending,
-                  delyvered: delyvered,
-                  faiuldelivery: faiuldelivery,
-                  onroute: onroute,
-                  systemout: systemout,
-                });
+                List_import.find({ Id_client: res.locals.user.Id_client }).then(
+                  (list) => {
+                    res.render("client/index", {
+                      layout: "client",
+                      clientData: clientData,
+                      pending: pending,
+                      delyvered: delyvered,
+                      faiuldelivery: faiuldelivery,
+                      onroute: onroute,
+                      systemout: systemout,
+                      list: list,
+                    });
+                  }
+                );
               }
             );
           });
@@ -64,8 +73,26 @@ router.get("/", userClient, (req, res) => {
 router.get("/pacotes", userClient, (req, res) => {
   date = new Date().toISOString().slice(0, 10);
   const value = req.query;
-
-  if (req.query.filter && req.query.filter != "") {
+  if (req.query.nlist && req.query.nlist != "") {
+    Packages.find()
+      .and({
+        Id_List: req.query.nlist,
+        Id_client: res.locals.user.Id_client,
+      })
+      .populate("Id_type")
+      .then((allpackages) => {
+        Client.find().then((allcompany) => {
+          Package_Type.find().then((alltypes) => {
+            res.render("admin/pacotes", {
+              alltypes: alltypes,
+              date: date,
+              allpackages: allpackages,
+              allcompany: allcompany,
+            });
+          });
+        });
+      });
+  } else if (req.query.filter && req.query.filter != "") {
     const datenow = new Date();
     const datenow1 = new Date();
     datenow1.setDate(datenow1.getDate() + 1);
