@@ -88,13 +88,9 @@
                     <td>{{Qt_errorDelivery}}</td>
                     <td>
 
-                      <button class="btn btn-primary btn-sm" data-toggle="modal" onclick="modal('{{id}}','{{note}}')">
-                        <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
-                        <i class="fas fa-qrcode"></i>
-                      </button>
                       <button class="btn btn-danger btn-sm" data-toggle="modal" onclick="deletar('{{id}}')">
                         <input type="hidden" id="typedel-{{id}}" name="id" value="{{id}}" >
-                        <i class="fas fa-qrcode"></i>
+                        <i class="far fa-trash-alt"></i>
                       </button>
                       <button class="btn btn-success btn-sm" onclick="window.location='/admin/etiquetas/{{id}}/list'">
                           <i class="fas fa-barcode"></i> 

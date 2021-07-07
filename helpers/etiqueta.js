@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 require("../models/Client");
 const Client = mongoose.model("client");
+const format = require("date-fns/format");
 
 module.exports = {
   tag: async function (data, type) {
@@ -23,6 +24,11 @@ module.exports = {
           const cep = data[0].Package_list[item].cep;
           const city = data[0].Package_list[item].city;
           const code = data[0].Package_list[item].code;
+          const date = format(
+            new Date(data[0].Package_list[item].createdAt),
+            "dd/MM/yyyy"
+          );
+          const note = data[0].Package_list[item].note_number;
           const clientName = client.name;
 
           if (count % 4 === 0) {
@@ -104,7 +110,7 @@ module.exports = {
                           {
                             text: clientName,
                             margin: [10, 0, 10, 0],
-                            fontSize: 20,
+                            fontSize: 16,
                             alignment: "right",
                           },
                         ],
@@ -205,6 +211,11 @@ module.exports = {
                           ],
                           [
                             {
+                              text: date,
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
                               qr: code,
                               fit: "",
                               margin: [40, 10, 0, 0],
@@ -212,7 +223,12 @@ module.exports = {
                             },
                             {
                               text: code,
-                              margin: [40, 10, 0, 0],
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
+                              text: note,
+                              margin: [40, 3, 0, 0],
                               fontSize: 10,
                             },
                           ],
@@ -302,7 +318,7 @@ module.exports = {
                           {
                             text: clientName,
                             margin: [10, 0, 10, 0],
-                            fontSize: 20,
+                            fontSize: 16,
                             alignment: "right",
                           },
                         ],
@@ -403,6 +419,11 @@ module.exports = {
                           ],
                           [
                             {
+                              text: date,
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
                               qr: code,
                               fit: "",
                               margin: [40, 10, 0, 0],
@@ -410,7 +431,12 @@ module.exports = {
                             },
                             {
                               text: code,
-                              margin: [40, 10, 0, 0],
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
+                              text: note,
+                              margin: [40, 3, 0, 0],
                               fontSize: 10,
                             },
                           ],
@@ -443,6 +469,8 @@ module.exports = {
           const cep = data[item].cep;
           const city = data[item].city;
           const code = data[item].code;
+          const date = format(new Date(data[item].createdAt), "dd/MM/yyyy");
+          const note = data[item].note_number;
           const clientName = client.name;
 
           if (count % 4 === 0) {
@@ -524,7 +552,7 @@ module.exports = {
                           {
                             text: clientName,
                             margin: [10, 0, 10, 0],
-                            fontSize: 20,
+                            fontSize: 16,
                             alignment: "right",
                           },
                         ],
@@ -625,6 +653,11 @@ module.exports = {
                           ],
                           [
                             {
+                              text: date,
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
                               qr: code,
                               fit: "",
                               margin: [40, 10, 0, 0],
@@ -632,7 +665,12 @@ module.exports = {
                             },
                             {
                               text: code,
-                              margin: [40, 10, 0, 0],
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
+                              text: note,
+                              margin: [40, 3, 0, 0],
                               fontSize: 10,
                             },
                           ],
@@ -722,7 +760,7 @@ module.exports = {
                           {
                             text: clientName,
                             margin: [10, 0, 10, 0],
-                            fontSize: 20,
+                            fontSize: 16,
                             alignment: "right",
                           },
                         ],
@@ -823,6 +861,11 @@ module.exports = {
                           ],
                           [
                             {
+                              text: date,
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
                               qr: code,
                               fit: "",
                               margin: [40, 10, 0, 0],
@@ -830,7 +873,12 @@ module.exports = {
                             },
                             {
                               text: code,
-                              margin: [40, 10, 0, 0],
+                              margin: [40, 3, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
+                              text: note,
+                              margin: [40, 3, 0, 0],
                               fontSize: 10,
                             },
                           ],
