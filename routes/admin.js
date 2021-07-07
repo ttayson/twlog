@@ -1130,6 +1130,7 @@ router.get("/listas/", userLogin, (req, res) => {
 router.post("/listas/del", userLogin, (req, res) => {
   List_Import.findOne({ _id: req.body.id }).then(async (list) => {
     if (list.status == "Não Iniciada" && list.type == "interna") {
+      // if (list.status == "Não Iniciada") {
       Packages.deleteMany({ Id_List: list.Id_List }).then((result) => {
         List_Import.deleteOne({ _id: req.body.id }).then((listdel) => {
           res.json({ ok: "deletok" });
