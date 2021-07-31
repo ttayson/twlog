@@ -1119,7 +1119,7 @@ router.get("/entregas/", userLogin, (req, res) => {
   }
 });
 
-router.get("/listas/", userLogin, (req, res) => {
+router.get("/listas/", async (req, res) => {
   List_Import.find()
     .populate("Id_client")
     .then(async (alllist) => {
