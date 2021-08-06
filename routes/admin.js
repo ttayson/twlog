@@ -928,8 +928,7 @@ router.post("/delcompany", userLogin, (req, res) => {
 });
 
 router.get("/lotes", userLogin, (req, res) => {
-  // Batch.find({ status: { $ne: "Concluído" } })
-  Batch.find()
+  Batch.find({ status: { $ne: "Concluído" } })
     .populate("Id_deliveryman")
     .then(async (allbatchs) => {
       for (item in allbatchs) {

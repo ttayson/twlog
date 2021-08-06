@@ -208,6 +208,11 @@ module.exports = {
                               margin: [5, 5, 0, 0],
                               fontSize: 10,
                             },
+                            {
+                              text: "Data  ____/____/______",
+                              margin: [5, 5, 0, 0],
+                              fontSize: 10,
+                            },
                           ],
                           [
                             {
@@ -413,6 +418,11 @@ module.exports = {
                             },
                             {
                               text: "Parentesco____________________________________",
+                              margin: [5, 5, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
+                              text: "Data  ____/____/______",
                               margin: [5, 5, 0, 0],
                               fontSize: 10,
                             },
@@ -650,6 +660,11 @@ module.exports = {
                               margin: [5, 5, 0, 0],
                               fontSize: 10,
                             },
+                            {
+                              text: "Data  ____/____/______",
+                              margin: [5, 5, 0, 0],
+                              fontSize: 10,
+                            },
                           ],
                           [
                             {
@@ -855,6 +870,11 @@ module.exports = {
                             },
                             {
                               text: "Parentesco____________________________________",
+                              margin: [5, 5, 0, 0],
+                              fontSize: 10,
+                            },
+                            {
+                              text: "Data  ____/____/______",
                               margin: [5, 5, 0, 0],
                               fontSize: 10,
                             },
