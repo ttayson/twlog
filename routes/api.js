@@ -227,9 +227,4 @@ router.post(
   }
 );
 
-router.get("/teste", (req, res) => {
-  event_inteliport()
-  res.status(200).json({Teste: "ok"})
-});
-
 module.exports = router;
