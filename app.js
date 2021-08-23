@@ -39,7 +39,12 @@ const app = express();
 
 //cron
 cron.schedule("*/1 * * * *", () => {
-  deliveryUpdate(), event_inteliport();
+  deliveryUpdate();
+});
+
+
+cron.schedule("*/5 * * * *", () => {
+  event_inteliport();
 });
 
 //Configurações
