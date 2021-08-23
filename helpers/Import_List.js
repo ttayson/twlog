@@ -111,101 +111,105 @@ module.exports = {
       }
     });
   },
-  // event_inteliport: async function () {
-  //   await Delivery.find({ sync: false }).then(async (result) => {
-  //     for (item in result) {
-  //       console.log(result[item].barcode);
-  //       await Packages.findOne({ code: result[item].barcode }).then(
-  //         async (packages) => {
-  //           console.log(packages);
-  //           await List_import.findOne({ Id_List: packages.Id_List }).then(
-  //             async (list) => {
-  //               if (list.type != "interna") {
-  //                 await Intelipost.findOne({
-  //                   intelipost_pre_shipment_list: list.Id_List,
-  //                 }).then(async (prelist) => {
-  //                   for (item in prelist.shipment_order_array) {
-  //                     for (i in prelist.shipment_order_array[item]
-  //                       .shipment_order_volume_array) {
-  //                       if (packages.status == "Entregue") {
-  //                         var delivery_code = 35;
-  //                         var delivery_message = "Entregue";
-  //                       } else {
-  //                         var delivery_code = 44;
-  //                         var delivery_message = "Falha na Entrega";
-  //                       }
-  //                       if (
-  //                         prelist.shipment_order_array[item]
-  //                           .shipment_order_volume_array[i]
-  //                           .shipment_order_volume_number === packages.code
-  //                       ) {
-  //                         data = {
-  //                           logistic_provider: "Lm Translog",
-  //                           shipper: "Livraria Juspodivm",
-  //                           invoice_key:
-  //                             prelist.shipment_order_array[item]
-  //                               .shipment_order_volume_array[i]
-  //                               .shipment_order_volume_invoice_array[0]
-  //                               .invoice_key,
-  //                           invoice_series:
-  //                             prelist.shipment_order_array[item]
-  //                               .shipment_order_volume_array[i]
-  //                               .shipment_order_volume_invoice_array[0]
-  //                               .invoice_series,
-  //                           invoice_number:
-  //                             prelist.shipment_order_array[item]
-  //                               .shipment_order_volume_array[i]
-  //                               .shipment_order_volume_invoice_array[0]
-  //                               .invoice_number,
-  //                           tracking_code: packages.code,
-  //                           order_number:
-  //                             prelist.shipment_order_array[item].order_number,
-  //                           volume_number: "1",
-  //                           events: [
-  //                             {
-  //                               event_date: new Date(),
-  //                               original_code: delivery_code,
-  //                               original_message: delivery_message,
-  //                             },
-  //                           ],
-  //                         };
+  event_inteliport: async function () {
+    var count = 0
+    await Delivery.find({ sync: false }).then(async (result) => {
+      for (item in result) {
+        await Packages.findOne({ code: result[item].barcode }).then(
+          async (packages) => {
+            if(packages && packages.Id_List){
+              await List_import.findOne({ Id_List: packages.Id_List, type: "Intelipost" }).then(
+                async (list) => {
+              if(list){
+                if (list.type != "interna") {
+                  count = count + 1
+                  console.log(count)
+                  await Intelipost.findOne({
+                    intelipost_pre_shipment_list: list.Id_List,
+                  }).then(async (prelist) => {
+                    for (item in prelist.shipment_order_array) {
+                      for (i in prelist.shipment_order_array[item]
+                        .shipment_order_volume_array) {
+                        if (packages.status == "Entregue") {
+                          var delivery_code = 35;
+                          var delivery_message = "Entregue";
+                        } else {
+                          var delivery_code = 44;
+                          var delivery_message = "Falha na Entrega";
+                        }
+                        
+                        if (
+                          prelist.shipment_order_array[item].order_number === packages.code
+                          ) {
 
-  //                         const options = {
-  //                           method: "POST",
-  //                           url: "https://api.intelipost.com.br/api/v1/tracking/add/events",
-  //                           headers: {
-  //                             "Content-Type": "application/json",
-  //                             "logistic-provider-api-key":
-  //                               process.env.INTELIPOST_TOKEN,
-  //                             platform: "intelipost-docs",
-  //                           },
-  //                           data,
-  //                         };
+                            data = {
+                              logistic_provider: "Lm Translog",
+                              shipper: "Livraria Juspodivm",
+                              invoice_key:
+                              prelist.shipment_order_array[item]
+                                .shipment_order_volume_array[i]
+                                .shipment_order_volume_invoice_array[0]
+                                .invoice_key,
+                            invoice_series:
+                              prelist.shipment_order_array[item]
+                                .shipment_order_volume_array[i]
+                                .shipment_order_volume_invoice_array[0]
+                                .invoice_series,
+                            invoice_number:
+                              prelist.shipment_order_array[item]
+                                .shipment_order_volume_array[i]
+                                .shipment_order_volume_invoice_array[0]
+                                .invoice_number,
+                            tracking_code: packages.code,
+                            order_number:
+                              prelist.shipment_order_array[item].order_number,
+                            volume_number: "1",
+                            events: [
+                              {
+                                event_date: new Date(),
+                                original_code: delivery_code,
+                                original_message: delivery_message,
+                              },
+                            ],
+                          };
 
-  //                         await axios
-  //                           .request(options)
-  //                           .then(function (response) {
-  //                             Delivery.updateOne(
-  //                               { barcode: packages.code },
-  //                               { $set: { sync: true } }
-  //                             ).then(() => {
-  //                               console.log("Evento Atualizado (intelipost)");
-  //                               // console.log(response.data);
-  //                             });
-  //                           })
-  //                           .catch(function (error) {
-  //                             console.error(error);
-  //                           });
-  //                       }
-  //                     }
-  //                   }
-  //                 });
-  //               }
-  //             }
-  //           );
-  //         }
-  //       );
-  //     }
-  //   });
-  // },
+                          const options = {
+                            method: "POST",
+                            url: "https://api.intelipost.com.br/api/v1/tracking/add/events",
+                            headers: {
+                              "Content-Type": "application/json",
+                              "logistic-provider-api-key":
+                                process.env.INTELIPOST_TOKEN,
+                              platform: "intelipost-docs",
+                            },
+                            data,
+                          };
+                          await axios
+                            .request(options)
+                            .then(function (response) {
+                              Delivery.updateOne(
+                                { barcode: packages.code },
+                                { $set: { sync: true } }
+                              ).then(() => {
+                                console.log("Evento Atualizado (intelipost)");
+                                // console.log(response.data);
+                              });
+                            })
+                            .catch(function (error) {
+                              console.error(error);
+                            });
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+              }
+            );
+          }
+          }
+        );
+      }
+    });
+  },
 };

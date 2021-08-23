@@ -17,7 +17,7 @@ const Delivery = mongoose.model("delivery");
 const Packages = mongoose.model("package");
 const Integration_Intelipost = mongoose.model("intelipost");
 
-const { import_intelipost } = require("../helpers/Import_List");
+const { import_intelipost, event_inteliport } = require("../helpers/Import_List");
 
 const router = express.Router();
 
@@ -226,5 +226,10 @@ router.post(
       });
   }
 );
+
+router.get("/teste", (req, res) => {
+  event_inteliport()
+  res.status(200).json({Teste: "ok"})
+});
 
 module.exports = router;
