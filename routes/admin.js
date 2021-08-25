@@ -16,6 +16,7 @@ const UploadCSV = require("../helpers/uploadCSV");
 const {
   import_intelipost,
   event_inteliport,
+  event_inteliport_batch,
 } = require("../helpers/Import_List");
 const { tag } = require("../helpers/etiqueta");
 const { deliveryUpdate } = require("../helpers/cron");
@@ -1297,6 +1298,21 @@ router.get("/etiquetas/:id/:local?", userLogin, async (req, res) => {
   stream.on("finish", function () {
     res.download("public/document.pdf");
   });
+});
+
+
+router.get("/teste", (req, res) => {
+
+  Batch.findOne({ _id: "6102a4e6ea3e860013be76de" })
+          .populate("Package_list")
+          .then((batch) => {
+
+            console.log(batch.Package_list)
+
+            event_inteliport_batch(batch.Package_list)
+
+   });
+  res.json({Teste: "teste"})
 });
 
 router.get("/logout", (req, res) => {

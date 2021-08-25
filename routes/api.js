@@ -17,7 +17,7 @@ const Delivery = mongoose.model("delivery");
 const Packages = mongoose.model("package");
 const Integration_Intelipost = mongoose.model("intelipost");
 
-const { import_intelipost, event_inteliport } = require("../helpers/Import_List");
+const { import_intelipost, event_inteliport, event_inteliport_batch } = require("../helpers/Import_List");
 
 const router = express.Router();
 
@@ -96,6 +96,7 @@ router.post("/batch", (req, res) => {
                       { _id: batch.Package_list },
                       { $set: { status: "Em rota" } }
                     ).then(() => {
+                      event_inteliport_batch(batch.Package_list)
                       res.json({ success: "ok", batchInfo: batch });
                     });
                   })
